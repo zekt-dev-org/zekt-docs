@@ -35,6 +35,9 @@ jobs:
       - name: Copy build output to docs folder
         run: cp -r shaggy-series/dist/* docs/
 
+      - name: Create .nojekyll file
+        run: touch docs/.nojekyll
+
       - name: Commit and push changes
         run: |
           git config --local user.email "action@github.com"
