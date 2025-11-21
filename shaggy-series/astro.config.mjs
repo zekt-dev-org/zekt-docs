@@ -19,6 +19,7 @@ export default defineConfig({
 						{ label: 'Overview', slug: 'overview/zekt-overview' },
 						{ label: 'Personas', slug: 'overview/zekt-personas' },
 						{ label: 'Directory', slug: 'overview/zekt-directory' },
+						{ label: 'Management', slug: 'overview/zekt-management' },
 					],
 				},
 				{
