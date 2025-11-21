@@ -1,0 +1,23 @@
+
+
+
+1. Clone repo locally
+2. Move to the: shaggy-series directory (cd ..)
+3. Once in the shaggy-series dir, run command: npm run dev
+4. Starts local webserver
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
