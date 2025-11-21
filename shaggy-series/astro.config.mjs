@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
+// Astro configuration for Zekt Docs site with Starlight
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://zekt-dev-org.github.io',
