@@ -4,8 +4,11 @@ description: Overview documentation for the Zekt services
 template: splash # Remove or comment out this line to display the site sidebar on this page.
 hero:
   tagline: Join the Zekt - read the docs!
-  image:
-    file: ../../assets/houston.webp
+  html: |
+    <svg width="200" height="200" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Zekt Logo" style="transform: scale(3.33);">
+      <circle cx="30" cy="30" r="28" stroke="var(--color-accent)" stroke-width="2" fill="none"></circle>
+      <path d="M20 35 L25 25 L35 25 L30 35 L40 35" stroke="var(--color-accent)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
   actions:
     - text: Overview
       link: /zekt-docs/overview/zekt-overview/
@@ -16,25 +19,3 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-
-## Next steps
-
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>

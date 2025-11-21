@@ -21,13 +21,21 @@ export default defineConfig({
 						{ label: 'Personas', slug: 'overview/zekt-personas' },
 						{ label: 'Directory', slug: 'overview/zekt-directory' },
 						{ label: 'Management', slug: 'overview/zekt-management' },
+						{ label: 'Zekt apps', slug: 'overview/zekt-apps' },
 					],
 				},
 				{
 					label: 'Zekt Guides',
 					items: [
 						// Each item here is one entry in the navigation menu.
-						{ label: 'Sign-up', slug: 'guides/zekt-onboarding' },
+						{ label: 'Sign-up & Sing-in', slug: 'guides/zekt-onboarding' },
+					],
+				},
+				{
+					label: 'Zekt Security',
+					items: [
+						// Each item here is one entry in the navigation menu.
+						{ label: 'Security', slug: 'security/zekt-security-overview' },
 					],
 				},
 			],

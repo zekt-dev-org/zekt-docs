@@ -25,3 +25,12 @@ NOTE: When the initial onboarding has been conducted - and we have verified that
 
 - When performing your initial onboarding (sign-up) or logging in as existing Zekt (sign-in) - Zekt will use your "github identity". Zekt does not offer its own identity services, rather make use of the federated github identity through our custom OAuth app. This allows us to make use of your personal "access_token" - which is needed when we onboard repoistories to Zekt. Consenting and logging in through the custom Zekt OAuth app is a requirement for the solution to work.
 Zekt front-end / backend - support logging in as github accounts - providing support for MFA procedures to increase the security of your identity. Zekt strongly recommend to enable MFA on your Github account.
+
+## Sign-up process
+
+- the sign-up process - is handled within the same logical path inside of the Zekt offering. Once you have authenticated through your Github identity, we will sense if you are an existing or new customer to Zekt. In case you are not a registered Zekt customer, we will guide you to the onboarding path, described previously - where you will have to submit personal contact information, your SKU choice, your persona alternative & billing information. Once you are cleared - ✅ - you will be routed to the launch pad where you can access the Zekt management tool.
+
+## Sign-in process
+
+- the sign-in process - Zekt will automatically detect that you are an existing customer, thereby routing you to the management console launch pad - where you move on to perform your duties of setting up Zekt configuration!
+
