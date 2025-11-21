@@ -15,11 +15,13 @@ Zekt support both "individuals" & "corporations" - we just want the customer to 
 
 NOTE: When the initial onboarding has been conducted - and we have verified that all requirements have been successfully handled - you will be routed back to launch-pad - where your only option is to launch the Zekt management tool.
 
-## Further reading
+## Personal vs corporate accounts (github related)
 
-- Read [about how-to guides](https://diataxis.fr/how-to-guides/) in the Diátaxis framework
+- From a Zekt perspective - there is no difference if a repository is "owned" (placed) below a Github organization, or if it is placed below a personal account. When logging into Zekt - we will make use of your "personal access" already associated with your account - and gain access to onboard repositories as the next step.
 
+- Zekt is associating the billable e-mail address (customer) with specific github repositories that they chose to enable. As such - the SKU counting - will match that of individual accounts. Nothing is restricting "serveral differnt" users from within a company, to each have their own Zekt SKU (repositories) associated with them. 
 
-## Further reading
+## Zekt OAuth github app
 
-- Read [about how-to guides](https://diataxis.fr/how-to-guides/) in the Diátaxis framework
+- When performing your initial onboarding (sign-up) or logging in as existing Zekt (sign-in) - Zekt will use your "github identity". Zekt does not offer its own identity services, rather make use of the federated github identity through our custom OAuth app. This allows us to make use of your personal "access_token" - which is needed when we onboard repoistories to Zekt. Consenting and logging in through the custom Zekt OAuth app is a requirement for the solution to work.
+Zekt front-end / backend - support logging in as github accounts - providing support for MFA procedures to increase the security of your identity. Zekt strongly recommend to enable MFA on your Github account.
