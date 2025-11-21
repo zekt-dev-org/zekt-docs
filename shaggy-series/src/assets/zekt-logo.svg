@@ -1,0 +1,16 @@
+<svg id="zektLogo" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- White background -->
+                <rect width="200" height="200" fill="white"/>
+                
+                <!-- Zekt logo scaled up -->
+                <g transform="translate(100, 100)">
+                    <!-- Outer circle -->
+                    <circle cx="0" cy="0" r="60" stroke="#00ff88" stroke-width="6" fill="none"/>
+                    
+                    <!-- Z-shaped path -->
+                    <path d="M-20 12 L-8 -20 L8 -20 L-4 12 L20 12" stroke="#00ff88" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    
+                    <!-- Brand text -->
+                    <text x="0" y="90" font-family="Inter, sans-serif" font-size="24" font-weight="700" fill="#00ff88" text-anchor="middle">Zekt</text>
+                </g>
+            </svg>

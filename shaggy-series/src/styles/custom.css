@@ -1,0 +1,260 @@
+/* Zekt Custom Dark Theme */
+
+:root[data-theme='dark'] {
+	/* Accent color - green */
+	--sl-color-accent-low: #1a4d33;
+	--sl-color-accent: #00ff88;
+	--sl-color-accent-high: #00ff88;
+
+	/* Background colors */
+	--sl-color-bg: #0f0f0f;
+	--sl-color-bg-pad: #0f0f0f;
+	--sl-color-bg-inline-code: #1a1a1a;
+
+	/* Text colors */
+	--sl-color-white: #e0e0e0;
+	--sl-color-gray-1: #e0e0e0;
+	--sl-color-gray-2: #b0b0b0;
+	--sl-color-gray-3: #b0b0b0;
+	--sl-color-gray-4: #666666;
+	--sl-color-gray-5: #333333;
+	--sl-color-gray-6: #1a1a1a;
+	--sl-color-gray-7: #0f0f0f;
+
+	/* Border and shadow colors */
+	--sl-color-gray-5-25: rgba(51, 51, 51, 0.25);
+	--sl-color-hairline: #333333;
+	--sl-color-divider: #333333;
+
+	/* Sidebar styling */
+	--sl-sidebar-bg: #333333;
+	--sl-sidebar-text-color: #e0e0e0;
+
+	/* Code blocks */
+	--sl-color-code-bg: #1a1a1a;
+	--sl-color-code-text: #b0b0b0;
+}
+
+/* Override button text color to black */
+:root[data-theme='dark'] {
+	--sl-color-text-accent: #0f0f0f !important;
+}
+
+/* Ensure proper contrast for links */
+:root[data-theme='dark'] a {
+	color: #00ff88;
+	text-decoration: none;
+}
+
+:root[data-theme='dark'] a:hover {
+	color: #00ff88;
+	opacity: 0.8;
+}
+
+/* Button styling */
+:root[data-theme='dark'] button,
+:root[data-theme='dark'] [role='button'] {
+	color: #0f0f0f !important;
+	background-color: #00ff88 !important;
+	border-color: #00ff88 !important;
+}
+
+:root[data-theme='dark'] button:hover,
+:root[data-theme='dark'] [role='button']:hover {
+	background-color: #00ff88 !important;
+	border-color: #00ff88 !important;
+	opacity: 0.9;
+}
+
+/* Force black text on all button-like elements */
+:root[data-theme='dark'] button,
+:root[data-theme='dark'] [role='button'],
+:root[data-theme='dark'] .sl-c-button,
+:root[data-theme='dark'] .sl-c-button *,
+:root[data-theme='dark'] button *,
+:root[data-theme='dark'] [role='button'] * {
+	color: #0f0f0f !important;
+}
+
+/* Starlight specific overrides */
+:root[data-theme='dark'] .sl-c-button {
+	color: #0f0f0f !important;
+	background-color: #00ff88 !important;
+	border-color: #00ff88 !important;
+}
+
+:root[data-theme='dark'] .sl-c-sidebar {
+	background-color: #333333;
+}
+
+:root[data-theme='dark'] .sl-c-sidebar-content {
+	color: #e0e0e0;
+}
+
+:root[data-theme='dark'] .sl-c-sidebar-item-current {
+	background-color: #00ff88;
+	border-color: #00ff88;
+	color: #0f0f0f;
+}
+
+:root[data-theme='dark'] .sl-c-sidebar-item {
+	color: #b0b0b0;
+}
+
+:root[data-theme='dark'] .sl-c-sidebar-item:hover {
+	color: #e0e0e0;
+}
+
+:root[data-theme='dark'] .sl-c-sidebar-item a {
+	color: inherit;
+}
+
+:root[data-theme='dark'] .sl-c-sidebar-item a:hover {
+	color: #00ff88;
+}
+
+/* Header/navigation bar */
+:root[data-theme='dark'] .sl-c-nav {
+	background-color: #333333;
+	border-color: #333333;
+}
+
+:root[data-theme='dark'] .sl-c-nav a {
+	color: #e0e0e0;
+}
+
+:root[data-theme='dark'] .sl-c-nav a:hover {
+	color: #00ff88;
+}
+
+/* Page heading */
+:root[data-theme='dark'] h1,
+:root[data-theme='dark'] h2,
+:root[data-theme='dark'] h3,
+:root[data-theme='dark'] h4,
+:root[data-theme='dark'] h5,
+:root[data-theme='dark'] h6 {
+	color: #e0e0e0;
+}
+
+/* Splash page hero actions */
+:root[data-theme='dark'] .sl-c-hero-actions .sl-c-button {
+	color: #0f0f0f !important;
+	background-color: #00ff88 !important;
+	border-color: #00ff88 !important;
+}
+
+:root[data-theme='dark'] .sl-c-hero-actions .sl-c-button:hover {
+	background-color: #00ff88 !important;
+	opacity: 0.9;
+}
+
+/* More specific button text selectors */
+:root[data-theme='dark'] .sl-c-hero-actions .sl-c-button * {
+	color: #0f0f0f !important;
+}
+
+:root[data-theme='dark'] .sl-c-button * {
+	color: #0f0f0f !important;
+}
+
+/* Target any span or text inside buttons */
+:root[data-theme='dark'] button span,
+:root[data-theme='dark'] .sl-c-button span,
+:root[data-theme='dark'] .sl-c-hero-actions span {
+	color: #0f0f0f !important;
+}
+
+/* Hero section text */
+:root[data-theme='dark'] .sl-c-hero {
+	color: #b0b0b0;
+	background-color: transparent !important;
+	background: transparent !important;
+}
+
+:root[data-theme='dark'] .sl-c-hero h1 {
+	color: #e0e0e0;
+}
+
+:root[data-theme='dark'] .sl-c-hero-tagline {
+	color: #b0b0b0;
+}
+
+/* Hero image - remove background */
+:root[data-theme='dark'] .sl-c-hero img {
+	background-color: transparent !important;
+	background: transparent !important;
+}
+
+:root[data-theme='dark'] .sl-c-hero-image {
+	background-color: transparent !important;
+	background: transparent !important;
+}
+
+:root[data-theme='dark'] .sl-c-hero-image img {
+	background-color: transparent !important;
+	background: transparent !important;
+}
+
+/* Cards */
+:root[data-theme='dark'] .sl-c-card {
+	background-color: #1a1a1a;
+	border-color: #333333;
+	color: #b0b0b0;
+}
+
+:root[data-theme='dark'] .sl-c-card h3 {
+	color: #e0e0e0;
+}
+
+/* Search and input fields */
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] textarea,
+:root[data-theme='dark'] select {
+	background-color: #1a1a1a;
+	color: #b0b0b0;
+	border-color: #333333;
+}
+
+:root[data-theme='dark'] input:focus,
+:root[data-theme='dark'] textarea:focus,
+:root[data-theme='dark'] select:focus {
+	border-color: #00ff88;
+	color: #e0e0e0;
+}
+
+/* Search specific styling */
+:root[data-theme='dark'] .sl-c-search {
+	background-color: #1a1a1a;
+	border-color: #333333;
+}
+
+:root[data-theme='dark'] .sl-c-search input {
+	background-color: #1a1a1a !important;
+	color: #b0b0b0 !important;
+	border-color: #333333 !important;
+}
+
+:root[data-theme='dark'] .sl-c-search input:focus {
+	border-color: #00ff88 !important;
+	color: #e0e0e0 !important;
+}
+
+/* Search keyboard shortcut indicator */
+:root[data-theme='dark'] .sl-c-search kbd {
+	background-color: #333333;
+	color: #e0e0e0 !important;
+	border-color: #333333;
+}
+
+/* Code inline */
+:root[data-theme='dark'] code {
+	background-color: #1a1a1a;
+	color: #00ff88;
+}
+
+/* Blockquote */
+:root[data-theme='dark'] blockquote {
+	border-color: #00ff88;
+	color: #b0b0b0;
+}

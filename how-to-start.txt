@@ -10,7 +10,8 @@
 
 
 
-
+For workflow to become successful, github pages needs to be enabled!
+Go to repo, settings, pages - enable pages for the repo if not done.
 
 
 
