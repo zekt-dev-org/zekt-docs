@@ -3,7 +3,7 @@ title: Zekt Onboarding
 description: Guide - onboard & become zekt member
 ---
 
-This guid illustrates how to onboard & become a valued Zekt member. It will outline the conceptual steps and logical path - from initial (sign-up for new users) process to being able to sing-in (existing users). The onboarding process - is where the Zekt will collect personal information, such as:
+This guide illustrates how to onboard & become a valued Zekt member. It will outline the conceptual steps and logical path - from initial (sign-up for new users) process to being able to sing-in (existing users). The onboarding process - is where the Zekt will collect personal information, such as:
 
 - 📇 Contact information: E-mail, phone details, name and address. We will save your personal information to our persistent backend - so that we can reference it & reach out to you in case of any problems - or when verifying support cases to topics related to Zekt services. Zekt will not share it customer information with third party companies. Upon leaving the Zekt - your personal information (as listed in here) will be removed instantely!
 
