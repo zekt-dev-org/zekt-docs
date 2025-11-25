@@ -11,6 +11,7 @@ The Zekt management console - is supporting and offers different sets of functio
 
 The Zekt management console - allows a provider to quickly onboard their "repositories" to Zekt. Once the repository/repositories have been onboarded, the provider would create a "service description" and associate it to the repistory (1-to-1 relationship between a single repository and service description). Finally - they would have to make an activce decision if they would like to publish their "service description" in the Zekt directory - thereby making it become "discoverable" to other consumers that are using Zekt.
 
+
 ## Management console - Consumer
 
 The Zekt management console - allows a consumer to quickly onboard their "repositories" to Zekt. Once the repository/repositories have been onboarded, the consumer can search for [service descriptions in the Zekt directory](../zekt-directory) from available providers.
