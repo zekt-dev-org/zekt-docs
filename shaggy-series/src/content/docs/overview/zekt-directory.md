@@ -7,9 +7,9 @@ Zekt Directory - is the marketplace, where a zekt-provider (of workflows) can "p
 
 ## Zekt Directory - conceptual
 
-As we have learnt, zekt-providers (omit events) & zekt-consumers (digest events). Well - the Zekt directory acts as the marketplace, where a provider can choose to (active decision / not enabled by default / zekt member decides / no extra cost) publish their workflow (the service) to a global audience of potential consumers!
+As we have learnt, zekt-providers (omit events + optional message payloads) & zekt-consumers (digest events and the corresponding messages). Well - the Zekt directory acts as the marketplace, where a provider can choose to (active decision / not enabled by default / zekt member decides / no extra cost) publish their workflow (the service) to a global audience of potential Zekt consumers!
 
-Once a customer - finds a service, to which they want to subscribe - they can request access to the service (e.g provider workflow) from the zekt management tool. Within the same tool, the zekt provider owning the service - will get alerted, that a request has been sent to them where they can then either approve -or deny the request. As soon, as the consumers request has been approved by the provider - zekt will start brokering the events coming from the provider to the approved consumer(s).
+Once a customer - finds a service, to which they want to subscribe - they can request access to the service (e.g provider workflow) from the zekt management tool. Within the same tool, the zekt provider owning the service - will get alerted, that a request has been sent to them where they can then either approve - or deny the request. As soon, as the consumers request has been approved by the provider - zekt will start brokering the events coming from the provider to the approved consumer(s).
 
 ###### NOTE: A provider does not have to publish their workflow to a global audience using Zekt directory while still being able to collaborate with other teams. 
 
@@ -56,3 +56,4 @@ Service description:                            Owner:
 ----------------------------------------------------------------
 "Forecast figures - analyze stock indications"  "the sales team"
 ```
+

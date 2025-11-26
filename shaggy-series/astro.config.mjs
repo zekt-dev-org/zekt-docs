@@ -22,6 +22,7 @@ export default defineConfig({
 						{ label: 'Directory', slug: 'overview/zekt-directory' },
 						{ label: 'Management', slug: 'overview/zekt-management' },
 						{ label: 'Apps', slug: 'overview/zekt-apps' },
+						{ label: 'Actions', slug: 'overview/zekt-actions' },
 					],
 				},
 				{
