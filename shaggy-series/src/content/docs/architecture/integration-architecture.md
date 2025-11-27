@@ -10,14 +10,14 @@ This document the main integrations that are vital to the zekt.dev solution offe
 As of now - we only support (intend to support) a single external identity provider (IDP) - in this case Github identities. This fact puts clearly points out a couple of things:
 
 1. Existing github identity required. A potential Zekt.dev customer, is required to have their own github identity. Since the zekt orchestration capability (SaaS offering) is dependent on tying a customer identity (github username / e-mail) to a Zekt SKU offering - a pre-existing github identity is required in order to progress.
-2. Permissions. In order for Zekt orchestration to accomplish its task of orchestrating (event + message) workflow between different entities (github organizations / repositories / workflows) - the customer not only needs an existing identity - they must also have the permission to install the [zekt apps](../overview/zekt-apps.md) and provide access to the different entities (github organizations / repositories / workflows) for where they want to enable the Zekt services.
+2. Permissions. In order for Zekt orchestration to accomplish its task of orchestrating (event + message) workflow between different entities (github organizations / repositories / workflows) - the customer not only needs an existing identity - they must also have the permission to install the [zekt apps](../overview/zekt-apps) and provide access to the different entities (github organizations / repositories / workflows) for where they want to enable the Zekt services.
 
 While Zekt.dev requires its customers to submit contact information - they are not used for anything else then billing / support - and so on. The integration to the core business value - the orchestrator, is still dependent on the github identity.
 Important in terms of identity to point out - is the Zekt OAuth (github) app. This app enables Zekt to obtain the "access_token" of the user that logged in. Once Zekt has the customers "access_token" - we can impersonate the user, for querying Github REST API's for different settings / properties that form & shape the overall solution of the Zekt orchestrator.
 
 ## - Infrastructure integration
 
-Single infrastructure provider - Azure as of now! We are using PaaS services to layer / package our SaaS offering. For greater details of principals around infrastructure & system design concerns, please visist [this article](../architecture/system-architecture.md)!
+Single infrastructure provider - Azure as of now! We are using PaaS services to layer / package our SaaS offering. For greater details of principals around infrastructure & system design concerns, please visist [this article](../architecture/system-architecture)!
 
 ## - De-coupled techniques
 
