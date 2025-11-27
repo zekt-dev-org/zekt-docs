@@ -37,8 +37,8 @@ export default defineConfig({
 					label: 'Zekt Architecture',
 					items: [
 						// Each item here is one entry in the navigation menu.
-						{ label: 'System Architecture', slug: 'Architecture/SystemArchitecture' },
-						{ label: 'Integration Architecture', slug: 'Architecture/IntegrationArchitecture' },
+						{ label: 'System Architecture', slug: 'architecture/SystemArchitecture' },
+						{ label: 'Integration Architecture', slug: 'architecture/IntegrationArchitecture' },
 					],
 				},
 				{
