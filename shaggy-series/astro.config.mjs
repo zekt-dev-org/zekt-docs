@@ -39,6 +39,7 @@ export default defineConfig({
 						// Each item here is one entry in the navigation menu.
 						{ label: 'System Architecture', slug: 'architecture/system-architecture' },
 						{ label: 'Integration Architecture', slug: 'architecture/integration-architecture' },
+						{ label: 'Data Architecture', slug: 'architecture/configuration-architecture' },
 					],
 				},
 				{
