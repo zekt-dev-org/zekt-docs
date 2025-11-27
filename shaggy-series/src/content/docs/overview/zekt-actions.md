@@ -14,7 +14,7 @@ Example #1: (two Zekt customers - both acting as consumers & providers)
 
 1. Requesting infrastructure customer, execute their workflow (order-new-infrastructure.yaml) - which make use of the Zekt (Github) action to send a custom JSON payload over to infrastructure deployment team (organization). The custom JSON payload could look as follows:
 
-```JSON
+```
 {
     "resourceType": "webServer",
     "tenantId": "z93dfd33-rf3343-5665656-54-33454343-5443543",
@@ -38,5 +38,5 @@ A separate step in requestors workflow, will invoke the Zekt (Github) action - p
 
 Go to the public repositories:
 
-- [zekt action](https://github.com/zekt-dev-org/zekt-action) - the code for the "zekt action"
+- [zekt action](https://github.com/zekt-dev-org/zekt-action) - the code repo for the "zekt action"
 - [zekt provider repo](https://github.com/zekt-dev-org/zekt-provider-example-repo) - is where we show case provider workflows (action)
