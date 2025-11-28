@@ -30,12 +30,12 @@ Zekt front-end / backend - support logging in as github accounts - providing sup
 
 - the sign-up process - is handled within the same logical path inside of the Zekt offering. Once you have authenticated through your Github identity, we will sense if you are an existing or new customer to Zekt. In case you are not a registered Zekt customer, we will guide you to the onboarding path, described previously - where you will have to submit personal contact information, your SKU choice, your persona alternative & billing information. Once you are cleared - ✅ - you will be routed to the launch pad where you can access the Zekt management tool.
 
-<div style="margin-top: 2rem; text-align: center;">
-  <a href="#" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #00ff88; text-decoration: none; font-size: 1.1rem;">
+<div style="margin-top: 2rem; text-align: left;">
+  <a href="#" style="display: inline-flex; align-items: left; gap: 0.5rem; color: #00ff88; text-decoration: none; font-size: 1.1rem;">
     <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
       <path d="M8 5v14l11-7z"/>
     </svg>
-    <span>Sign-up tutorial video</span>
+    <span>Watch the sign-up tutorial video</span>
   </a>
 </div>
 
@@ -44,11 +44,11 @@ Zekt front-end / backend - support logging in as github accounts - providing sup
 - the sign-in process - Zekt will automatically detect that you are an existing customer, thereby routing you to the management console launch pad - where you move on to perform your duties of setting up Zekt configuration!
 
 
-<div style="margin-top: 2rem; text-align: center;">
-  <a href="#" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #00ff88; text-decoration: none; font-size: 1.1rem;">
+<div style="margin-top: 2rem; text-align: left;">
+  <a href="#" style="display: inline-flex; align-items: left; gap: 0.5rem; color: #00ff88; text-decoration: none; font-size: 1.1rem;">
     <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
       <path d="M8 5v14l11-7z"/>
     </svg>
-    <span>Sign-in tutorial video</span>
+    <span>Watch the sign-in tutorial video</span>
   </a>
 </div>

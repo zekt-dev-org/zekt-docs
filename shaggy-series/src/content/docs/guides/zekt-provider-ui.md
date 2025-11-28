@@ -3,7 +3,13 @@ title: Zekt Provider - Management UI
 description: Guide - Provider UI, onboarding your repositories
 ---
 
-## Provider - management console, repositories
+## - Zekt Management console - overview
+
+This section is about getting an overview of the Zekt management console, where you as a customer can manage your repositories, interactions with other customers, check out health issues, tracking connections and so forth. The management console is your one-stop-shop for doing business within Zekt. Below is a video, that shows how to open the console from your browser, once you are registered and logged in.
+
+
+
+## Provider - managed repositories
 
 This guide will showcase the "provider repos" part of the Zekt management console UI as seen below. 
 ![Zekt Provider Repositories](../../../assets/zekt-provider-repo.png)
@@ -15,3 +21,13 @@ The first option (functionality) shown, is the "Zekt Repos" tab. This tab (B) - 
 As soon as you have perform a repository onboarding - the SKU counter will updated (D) - to show you how many repoistories can be onboarded prior to either "de-zektify" an existing repository, or to aquire a higher SKU, enabling you to enable Zekt for additional repoistories.
 
 ## Provider - management console, next view...
+
+
+
+
+
+
+
+
+
+
