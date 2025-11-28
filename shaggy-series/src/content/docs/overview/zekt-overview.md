@@ -22,6 +22,10 @@ Zekt and its orchestration capabilities, sits on top of Github. We extend functi
 
 We do this, by building on top of existing Github functionality (organizations / repositories / workflows / apps / identity) - with backing PaaS services to handle scaling concerns. As we are positioning Zekt as a SaaS offering - we will mainly work with "pay-as-you-go" cost models + base fee for activating your repositories with Zekt.
 
+## What is orchestration?
+
+To use layment words - the need to handle "what should happen", "when scenario X occurs" - in a progrmatic consistent manor! 
+
 ## Further reading
 
 - [zekt-dev-org](https://github.com/zekt-dev-org) - contains the public repositories we offer, example being the [zekt-docs](https://github.com/zekt-dev-org/zekt-docs) - this site! 

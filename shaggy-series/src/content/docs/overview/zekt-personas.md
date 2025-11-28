@@ -34,3 +34,5 @@ By far the most common persona - of Zekt services! This persona, which can by de
 In comparsion - this persona is bi-directional - allowing sending & recieving - creating a flexible pattern for many corporations and organization solving their business needs & handling complex processes, without entangelment!
 
 - To become both a provider & consumer in Zekt - the customer needs to consent to install the "zekt-orchestrator-app" which will provide Zekt with the required permissions to distribute and to ingest workflow events.
+
+Customers that are having both capabilities (provide & consume) - are in the majority of the implementations, using both events & messaging as it provides a richer toolbox for automation capabilities. Think of eventing as the "when", messaging address the "what" type of questions that normally arise from orchestration needs.
