@@ -7,14 +7,14 @@ This guide aims to describe the logical steps that a customer will have to perfo
 
 The logical sequence of enabling a provider capability in Zekt can be broken down to: 
 
-1. Provider persona - see details by clicking [here](../../docs/overview/zekt-personas.md).
-2. Enable provider repo - see details by clicking [here](../../docs/guides/handle-zekt-provider-repo.md).
+1. Provider persona - see details by clicking [here](../../../content/docs/overview/zekt-personas.md).
+2. Enable provider repo - see details by clicking [here](../../../content/docs/guides/handle-zekt-provider-repo.md).
 3. Whitelist workflows
 4. Create "service description" & "service alias name"
 5. List service in directory
 6. (handle connection requests)
 
-## - Conceptual overview - provider
+## - Conceptual overview
 
 - A provider will eventually, expose their service(s) through the directory - where consumers can discover their service(s) and request access to them which needs to be approved by the provider in order for Zekt to "connect them" and be able to orchestrate service(s) across the different github accounts (personal account or organizational accounts). To expose a service, a provider needs to be perform these logical steps / sequence:
 
