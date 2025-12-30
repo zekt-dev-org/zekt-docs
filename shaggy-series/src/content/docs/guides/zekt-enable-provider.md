@@ -5,10 +5,10 @@ description: How to enable a provider service
 
 This guide aims to describe the logical steps that a customer will have to perform in order to enable a provider service - thereby being able to serve consumers! The section will also outline the reasoning (and considerations that one should be aware of).
 
-The logical sequence of enabling a provider capability in Zekt can be broken down to:
+The logical sequence of enabling a provider capability in Zekt can be broken down to: 
 
-1. Provider persona - see details by clicking [here](../overview/zekt-personas.md).
-2. Enable provider repo - see details by clicking [here](../guides/handle-zekt-provider-repo.md).
+1. Provider persona - see details by clicking [here](../../docs/overview/zekt-personas.md).
+2. Enable provider repo - see details by clicking [here](../../docs/guides/handle-zekt-provider-repo.md).
 3. Whitelist workflows
 4. Create "service description" & "service alias name"
 5. List service in directory
