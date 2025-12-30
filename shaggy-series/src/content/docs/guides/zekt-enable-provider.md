@@ -28,6 +28,8 @@ Once you select the "Provider" navigation item - you will end up by default on t
 
 A key part of a Github repository - is the ability to have one, or several workflows (located in the ./github/workflows folder). As the aim of Zekt, is to present a service - it needs a mapping between a specific workflow in this folder - linking a chain - all the way up to the service.
 
+In depth document with screenshots and step-by-step guide - [click here](/zekt-docs/guides/handle-zekt-provider-repo/)!
+
 ### - Whitelisted workflows
 
 A github workflow can have one or many workflows in a repository. As such - you need to whitelist which workflow(s) you want to whitelist. You can enable one, two, or many in a single repository within Zekt.
@@ -35,6 +37,8 @@ A github workflow can have one or many workflows in a repository. As such - you 
 This design - is intended so that providers, can have multiple workflows in a single repo - but only a single workflow - which they want to expose to the consumers! The rest of the workflows - will not be able to expose events or messages across Zekt to recieving parties.
 
 On the other hand, a provider might want to expose multiple services, each service connected to a different whitelisted workflow in a single repository. This is flexible from a cost perspective - where Zekt charges you per repository enabled (base fee) + consumption fees. Being able to publish multiple services to consumers, from a smaller amount of repositories is a way to cut down on expenses.
+
+In depth document with screenshots and step-by-step guide - [click here](/zekt-docs/guides/handle-zekt-provider-workflows/)!
 
 ### - Create service description
 
