@@ -11,7 +11,7 @@ As we have learnt, zekt-providers (omit events + optional message payloads) & ze
 
 Once a customer - finds a service, to which they want to subscribe - they can request access to the service (e.g provider workflow) from the zekt management tool. Within the same tool, the zekt provider owning the service - will get alerted, that a request has been sent to them where they can then either approve - or deny the request. As soon, as the consumers request has been approved by the provider - zekt will start brokering the events coming from the provider to the approved consumer(s).
 
-###### NOTE: A provider does not have to publish their workflow to a global audience using Zekt directory while still being able to collaborate with other teams. 
+###### NOTE: In the future - a provider does not have to publish their workflow to a global audience using Zekt directory while still being able to collaborate with other teams. 
 
 ### Service description(s)
 
@@ -23,7 +23,7 @@ Service description:                            Owner:
 "New cool sneakers have arrived in the store"   "the sneaker dude"
 ```
 
-If you as a consumer, is super into new sneakers, this service offering might be something for you to request access to. Anyway - this address two concerns. Many times, the github username, is some strange user-name, and does not represent the company or organization, that wishes to offer the service to the public. As such, abstracting away the "github username" to the consumers is important. Likewise, just as important it would to be able to "present yourself in a correct manor" using your corporate name or similar. Below are a couple of more realistic scenarios:
+If you as a consumer, is super into new sneakers, this service offering might be something for you to request access to. Anyway - this address two concerns. Many times, the github username, is some strange user-name, and does not represent the company or organization, that wishes to offer the service to the public. As such, abstracting away the "github username" to the consumers is important (as much as possible - sometimes not possible). Likewise, just as important it would to be able to "present yourself in a correct manor" using your corporate name or similar. Below are a couple of more realistic scenarios:
 
 - Example  #1: Use the directory
 - Requirement: Both teams, are acting as zekt-providers & zekt-consumers

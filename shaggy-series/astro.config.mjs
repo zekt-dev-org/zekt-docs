@@ -31,6 +31,7 @@ export default defineConfig({
 						// Each item here is one entry in the navigation menu.
 						{ label: 'Sign-up & Sing-in', slug: 'guides/zekt-onboarding' },
 						{ label: 'Provider management UI', slug: 'guides/zekt-provider-ui' },
+						{ label: 'Provider enablement', slug: 'guides/zekt-enable-provider' },
 					],
 				},
 				{
