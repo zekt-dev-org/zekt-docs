@@ -15,3 +15,6 @@ This section shows the basic steps (and verification steps) to perform as a cust
 1. Select the repository, which you want to enable for Zekt services from the list of a available repositories. Toggle the switch button in the "Actions" column. Please note that repositories that are not enabled are having the status badge of "Disabled" prior to becoming "Enabled" once you are done with activating the repository. See supportive picture below:
 
 ![Toggle bar - enable repository](../../../assets/zekt-enable-toggle-bar.png)
+
+
+
