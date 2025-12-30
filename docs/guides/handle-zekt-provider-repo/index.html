@@ -75,6 +75,29 @@
 <div class="sl-heading-wrapper level-h3"><h3 id="--enable-zekt-repository-first-time-enablement-scenario">- Enable Zekt repository (first time enablement scenario)</h3><a class="sl-anchor-link" href="#--enable-zekt-repository-first-time-enablement-scenario"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “- Enable Zekt repository (first time enablement scenario)”</span></a></div>
 <p>This section shows the basic steps (and verification steps) to perform as a customer, when enabling a zekt provider repository. Follow sequence below:</p>
 <ol>
-<li>Select the repository, which you want to enable for Zekt services from the list of a available repositories. Toggle the switch button in the “Actions” column. Please note that repositories that are not enabled are having the status badge of “Disabled” prior to becoming “Enabled” once you are done with activating the repository. See supportive picture below:</li>
+<li>Select the repository - which you want to enable for Zekt services from the list of a available repositories. Toggle the switch button in the “Actions” column. Please note that repositories that are not enabled are having the status badge of “Disabled” prior to becoming “Enabled” once you are done with activating the repository. See supportive picture below:</li>
 </ol>
-<p><img alt="Toggle bar - enable repository" loading="lazy" decoding="async" fetchpriority="auto" width="1627" height="59" src="/zekt-docs/_astro/zekt-enable-toggle-bar.CCNCV64s_Z1SP5KX.webp" ></p> </div> <footer class="sl-flex astro-3yyafb3n"> <div class="meta sl-flex astro-3yyafb3n">   </div> <div class="pagination-links print:hidden astro-u2l5gyhi" dir="ltr">   </div>   </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
+<p><img alt="Toggle bar - enable repository" loading="lazy" decoding="async" fetchpriority="auto" width="1627" height="59" src="/zekt-docs/_astro/zekt-enable-toggle-bar.CCNCV64s_Z1SP5KX.webp" ></p>
+<ol start="2">
+<li>Once you toggle the switch to enable repository - a pop-up will appear, which informs you that you will need to approve and install the <a href="/zekt-docs/overview/zekt-apps/">“Zekt Orchestrator App”</a> on the target provider repository in order to have it enabled. Press “Continue to Github” button - to proceed. Pop-up modal shown below:</li>
+</ol>
+<p><img alt="Inform user - enable provider repository" loading="lazy" decoding="async" fetchpriority="auto" width="314" height="702" src="/zekt-docs/_astro/onboard-first-time-provider-repo-modal.BobaN3LW_26DSVw.webp" ></p>
+<p>Once you press the “Continue to Github” button - you will be redirected to Github to proceed with installing the “Zekt Orchestration App” for the target repository.</p>
+<ol start="3">
+<li>You have now been re-directed to Github - where you will need to select the “owning entity” of the repository. A Github repository can either be owned by a personal account or by a Github organization. Zekt supports both combinations. Choose the organization or the personal account - which is owning the repository that you wish to enable for Zekt as per below (remember - screenshoot may look different depending on how many github accounts / repositories / organizations you have access to using the Github identity you are using):</li>
+</ol>
+<p><img alt="Select Github owning entity of repository" loading="lazy" decoding="async" fetchpriority="auto" width="493" height="357" src="/zekt-docs/_astro/onboard-first-time-git-target.BtX2ReEJ_ZYKvO7.webp" ></p>
+<ol start="4">
+<li>In the next UI within Github - you will be offered to select the desired repository - which you initially selected to become enabled - and is where the “Zekt Orchestration App” will be installed. Dont install the Zekt Orchestration App on an organizational level, rather - per repository! Select the per repository option - find the target repository (dont choose the incorrect repository) - and then press the Save button once you are done! Screenshoot below:</li>
+</ol>
+<p><img alt="Select Github target repository for app install" loading="lazy" decoding="async" fetchpriority="auto" width="853" height="455" src="/zekt-docs/_astro/select-provider-repo-for-app-install.DkB3PUlV_Z1FEx2s.webp" ></p>
+<ol start="5">
+<li>You will be automatically re-directed to the Zekt processing pop-up (once you press Save in step #4 - above step). Pop-up for re-direction processing looks as follows:</li>
+</ol>
+<p><img alt="Processing Zekt provider repo enablement" loading="lazy" decoding="async" fetchpriority="auto" width="418" height="452" src="/zekt-docs/_astro/process-onboarding-provider-repo.DxVpMC4M_1daQP9.webp" ></p>
+<p>Press the button named “Complete Repository Setup” to continue onboarding!</p>
+<ol start="6">
+<li>Automatic re-direction to the Zekt management console is done - once the processing (enablement) is done which normally takes approx 20 seconds - a screenshot is shown below on the repository that was enabled!</li>
+</ol>
+<p><img alt="Enabled Zekt provider repoistory" loading="lazy" decoding="async" fetchpriority="auto" width="1640" height="60" src="/zekt-docs/_astro/provider-repo-enabled.Dkm5jUI1_Z1MGK3P.webp" ></p>
+<p>NOTE: Depending if the repository is owned by “personal github account” / “github organization” / “github verified organization” - you will have different trust levels associated with it, as shown by the “shield icons” and “color badges”. Further - the designated “owner” column, indicate if repository is “personal” or “org” controlled.</p> </div> <footer class="sl-flex astro-3yyafb3n"> <div class="meta sl-flex astro-3yyafb3n">   </div> <div class="pagination-links print:hidden astro-u2l5gyhi" dir="ltr">   </div>   </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
