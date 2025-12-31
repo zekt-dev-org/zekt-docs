@@ -34,6 +34,7 @@ This view tries to illustrate - how the "physical" connectivity is looking creat
 - Servicing 2 consumers (not consumer repos, but recievers / consumers) illustrated by orange bubbles. Click on them individually - and get details on the right hand side
 - Workflow(s) - are indicated between as the Zekt router and the consumer - which is not entirely true - but serves as a good example of understand how the workflows are logically conntected to individual consumer accounts.
 
+
 The logical view - is very much geared towards the provider persona. It tries to illustrate how the provider components are all connected from their perspective to the Zekt router capability. An example is shown below (same example as within the physical view):
 
 ![Zekt Brokering - Logical](../../../assets/zekt-brokering-logical.png)
@@ -45,8 +46,30 @@ From this picture we can determine the following:
 - The "orange bubbles" are the "service publisher alias name" - under which the provider published their service (towards consumers). 
 - The zekt directory (singular) is listed as the provider directory - and acts as the center for the published services. Finally - the directory is always connected to the Zekt routing capability.
 
+The consumer view - is obviously geared to visulizing the connections needed from a consumer perspective. In this view - you will see the providing "entity" (provider repos) that feeding your consumer repos with "events" through the zekt brokering mechanism. An example picture of same setup we have used to describe physical and logical but from a consumer perspective is shown below:
+
+![Zekt Brokering - Consumer](../../../assets/zekt-brokering-consumer.png)
 
 
+## - Zekt - My Connections (on-going / not finalized)
+
+This is another visualization effort (simplified) that is aiming to describe relationship between providing entities such (provider repos / workflows / webhooks / services) - mainly of interest to "provider personas" - but also address the concerns and needs of the "consumer personas" - with a dedicated view of how consuming repos are tied and connected to "providing entities".
+
+Event chains and event dependencies - can become complex over time - and at scale - where a 1-to-many scenarios become a reality - visualization & tracking setups are evermore important! You will find the "My Connections" tab - by opening the Zekt management console and in there is a tab named "My Connections".
+
+### - Provider view: Provider(My Services --> Consumers)
+
+Select the provider view. It will "list" each providing service you are publishing (if you are a provider persona / both). It then places consuming repositories below - pulsing arrows indicate in which direction events (message) are flowing within zekt between the logical components.
+
+![Zekt connections - provider](../../../assets/myconnection-provider.png)
+
+From this picture we can gather - we have a providing workflow named (zekt-provider-test.yml) that is providing services to 3 consumers (indicated by the right hand side number). Below you can see the "consumer" repos and their "owners". Please note - already from this example we can determine: zekt supports cross-org routing - personal repos/workflows can send to organizational repos / workflow and vice versa, github org repos can send to other github org repos as long as they are all zekt enabled. Further - repos dont have to be public (zekt handles private repos) in order to have events & messages to become routeable through zekt.
+
+### - Consumer view: Consumer(My Repos --> Services)
+
+Select the consumer view. It will "list" each consumer repo you are having enabled (assuming you are consumer persona or both). It then shows the providing repo / owner organizations that are feeding you consumer repos with events (as indicated by the direction of the pulsing arrows) as shown below:
+
+![Zekt connections - consumer](../../../assets/myconnection-consumer.png)
 
 
 

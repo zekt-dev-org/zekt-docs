@@ -52,6 +52,8 @@ A Service Description consists of the following properties:
 - service alias name: you present your service behind a cool name, that is seen by consumers
 - list in directory. To be able to abstract away the details of your service - you need to publish your service in the Zekt directory. The directory acts as the marketplace of orchestrations, within the Zekt solution.
 
+In depth document with screenshots and step-by-step guide - [click here](/zekt-docs/guides/handle-zekt-directory/)!
+
 ### - Zekt Directory
 
 Publishing your service to the Zekt Directory is optional. However, we cannot abstract away potential sensetive information unless you do. It will also become clunky and cumbersome to present your service to consumers, as the underlying contracts needed to handle interaction is complex.
