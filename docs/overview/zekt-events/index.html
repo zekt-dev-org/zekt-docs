@@ -1,0 +1,279 @@
+<!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-bguv2lll"> <head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Zekt - Events | Zekt Docs</title><link rel="canonical" href="https://zekt-dev-org.github.io/zekt-docs/overview/zekt-events/"/><link rel="sitemap" href="/zekt-docs/sitemap-index.xml"/><link rel="shortcut icon" href="/zekt-docs/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v5.16.0"/><meta name="generator" content="Starlight v0.36.2"/><meta property="og:title" content="Zekt - Events"/><meta property="og:type" content="article"/><meta property="og:url" content="https://zekt-dev-org.github.io/zekt-docs/overview/zekt-events/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Zekt overview of Events"/><meta property="og:site_name" content="Zekt Docs"/><meta name="twitter:card" content="summary_large_image"/><meta name="description" content="Zekt overview of Events"/><script>
+	window.StarlightThemeProvider = (() => {
+		const storedTheme =
+			typeof localStorage !== 'undefined' && localStorage.getItem('starlight-theme');
+		const theme =
+			storedTheme ||
+			(window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+		document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+		return {
+			updatePickers(theme = storedTheme || 'auto') {
+				document.querySelectorAll('starlight-theme-select').forEach((picker) => {
+					const select = picker.querySelector('select');
+					if (select) select.value = theme;
+					/** @type {HTMLTemplateElement | null} */
+					const tmpl = document.querySelector(`#theme-icons`);
+					const newIcon = tmpl && tmpl.content.querySelector('.' + theme);
+					if (newIcon) {
+						const oldIcon = picker.querySelector('svg.label-icon');
+						if (oldIcon) {
+							oldIcon.replaceChildren(...newIcon.cloneNode(true).childNodes);
+						}
+					}
+				});
+			},
+		};
+	})();
+</script><template id="theme-icons"><svg aria-hidden="true" class="light astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M5 12a1 1 0 0 0-1-1H3a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1Zm.64 5-.71.71a1 1 0 0 0 0 1.41 1 1 0 0 0 1.41 0l.71-.71A1 1 0 0 0 5.64 17ZM12 5a1 1 0 0 0 1-1V3a1 1 0 0 0-2 0v1a1 1 0 0 0 1 1Zm5.66 2.34a1 1 0 0 0 .7-.29l.71-.71a1 1 0 1 0-1.41-1.41l-.66.71a1 1 0 0 0 0 1.41 1 1 0 0 0 .66.29Zm-12-.29a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.71-.71a1.004 1.004 0 1 0-1.43 1.41l.73.71ZM21 11h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2Zm-2.64 6A1 1 0 0 0 17 18.36l.71.71a1 1 0 0 0 1.41 0 1 1 0 0 0 0-1.41l-.76-.66ZM12 6.5a5.5 5.5 0 1 0 5.5 5.5A5.51 5.51 0 0 0 12 6.5Zm0 9a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Zm0 3.5a1 1 0 0 0-1 1v1a1 1 0 0 0 2 0v-1a1 1 0 0 0-1-1Z"/></svg><svg aria-hidden="true" class="dark astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.64 13a1 1 0 0 0-1.05-.14 8.049 8.049 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36a10.14 10.14 0 1 0 14 11.69 1 1 0 0 0-.36-1.05Zm-9.5 6.69A8.14 8.14 0 0 1 7.08 5.22v.27a10.15 10.15 0 0 0 10.14 10.14 9.784 9.784 0 0 0 2.1-.22 8.11 8.11 0 0 1-7.18 4.32v-.04Z"/></svg><svg aria-hidden="true" class="auto astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg></template><link rel="stylesheet" href="/zekt-docs/_astro/print.DNXP8c50.css" media="print"><link rel="stylesheet" href="/zekt-docs/_astro/index.Ds8G8JK_.css"><script type="module" src="/zekt-docs/_astro/page.B1D-nYk3.js"></script></head> <body class="astro-bguv2lll"> <a href="#_top" class="astro-7q3lir66">Skip to content</a>  <div class="page sl-flex astro-vrdttmbt"> <header class="header astro-vrdttmbt"><div class="header astro-kmkmnagf"> <div class="title-wrapper sl-flex astro-kmkmnagf"> <a href="/zekt-docs/" class="site-title sl-flex astro-m46x6ez3">  <span class="astro-m46x6ez3" translate="no"> Zekt Docs </span> </a>  </div> <div class="sl-flex print:hidden astro-kmkmnagf"> <site-search class="astro-kmkmnagf astro-v37mnknz" data-translations="{&#34;placeholder&#34;:&#34;Search&#34;}"> <button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-v37mnknz"> <svg aria-hidden="true" class="astro-v37mnknz astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg> <span class="sl-hidden md:sl-block astro-v37mnknz" aria-hidden="true">Search</span> <kbd class="sl-hidden md:sl-flex astro-v37mnknz" style="display: none;"> <kbd class="astro-v37mnknz">Ctrl</kbd><kbd class="astro-v37mnknz">K</kbd> </kbd> </button> <dialog style="padding:0" aria-label="Search" class="astro-v37mnknz"> <div class="dialog-frame sl-flex astro-v37mnknz">  <button data-close-modal class="sl-flex md:sl-hidden astro-v37mnknz"> Cancel </button> <div class="search-container astro-v37mnknz"> <div id="starlight__search" class="astro-v37mnknz"></div> </div> </div> </dialog> </site-search>  <script>
+	(() => {
+		const openBtn = document.querySelector('button[data-open-modal]');
+		const shortcut = openBtn?.querySelector('kbd');
+		if (!openBtn || !(shortcut instanceof HTMLElement)) return;
+		const platformKey = shortcut.querySelector('kbd');
+		if (platformKey && /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform)) {
+			platformKey.textContent = '⌘';
+			openBtn.setAttribute('aria-keyshortcuts', 'Meta+K');
+		}
+		shortcut.style.display = '';
+	})();
+</script> <script type="module" src="/zekt-docs/_astro/Search.astro_astro_type_script_index_0_lang.BPTMxhJR.js"></script>   </div> <div class="sl-hidden md:sl-flex print:hidden right-group astro-kmkmnagf"> <div class="sl-flex social-icons astro-kmkmnagf"> <a href="https://github.com/zekt-dev-org" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script> <script type="module">const r="starlight-theme",o=e=>e==="auto"||e==="dark"||e==="light"?e:"auto",c=()=>o(typeof localStorage<"u"&&localStorage.getItem(r));function n(e){typeof localStorage<"u"&&localStorage.setItem(r,e==="light"||e==="dark"?e:"")}const l=()=>matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";function t(e){StarlightThemeProvider.updatePickers(e),document.documentElement.dataset.theme=e==="auto"?l():e,n(e)}matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{c()==="auto"&&t("auto")});class s extends HTMLElement{constructor(){super(),t(c()),this.querySelector("select")?.addEventListener("change",a=>{a.currentTarget instanceof HTMLSelectElement&&t(o(a.currentTarget.value))})}}customElements.define("starlight-theme-select",s);</script> <script type="module">class s extends HTMLElement{constructor(){super();const e=this.querySelector("select");e&&(e.addEventListener("change",t=>{t.currentTarget instanceof HTMLSelectElement&&(window.location.pathname=t.currentTarget.value)}),window.addEventListener("pageshow",t=>{if(!t.persisted)return;const n=e.querySelector("option[selected]")?.index;n!==e.selectedIndex&&(e.selectedIndex=n??0)}))}}customElements.define("starlight-lang-select",s);</script> </div> </div> </header> <nav class="sidebar print:hidden astro-vrdttmbt" aria-label="Main"> <starlight-menu-button class="print:hidden astro-jif73yzw"> <button aria-expanded="false" aria-label="Menu" aria-controls="starlight__sidebar" class="sl-flex md:sl-hidden astro-jif73yzw"> <svg aria-hidden="true" class="open-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M3 8h18a1 1 0 1 0 0-2H3a1 1 0 0 0 0 2Zm18 8H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Zm0-5H3a1 1 0 0 0 0 2h18a1 1 0 0 0 0-2Z"/></svg> <svg aria-hidden="true" class="close-menu astro-jif73yzw astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/></svg> </button> </starlight-menu-button> <script type="module">class s extends HTMLElement{constructor(){super(),this.btn=this.querySelector("button"),this.btn.addEventListener("click",()=>this.toggleExpanded());const t=this.closest("nav");t&&t.addEventListener("keyup",e=>this.closeOnEscape(e))}setExpanded(t){this.setAttribute("aria-expanded",String(t)),document.body.toggleAttribute("data-mobile-menu-expanded",t)}toggleExpanded(){this.setExpanded(this.getAttribute("aria-expanded")!=="true")}closeOnEscape(t){t.code==="Escape"&&(this.setExpanded(!1),this.btn.focus())}}customElements.define("starlight-menu-button",s);</script>   <div id="starlight__sidebar" class="sidebar-pane astro-vrdttmbt"> <div class="sidebar-content sl-flex astro-vrdttmbt"> <sl-sidebar-state-persist data-hash="16j3vb2" class="astro-kku4brbg"> <script aria-hidden="true">
+		(() => {
+			try {
+				if (!matchMedia('(min-width: 50em)').matches) return;
+				/** @type {HTMLElement | null} */
+				const target = document.querySelector('sl-sidebar-state-persist');
+				const state = JSON.parse(sessionStorage.getItem('sl-sidebar-state') || '0');
+				if (!target || !state || target.dataset.hash !== state.hash) return;
+				window._starlightScrollRestore = state.scroll;
+				customElements.define(
+					'sl-sidebar-restore',
+					class SidebarRestore extends HTMLElement {
+						connectedCallback() {
+							try {
+								const idx = parseInt(this.dataset.index || '');
+								const details = this.closest('details');
+								if (details && typeof state.open[idx] === 'boolean') details.open = state.open[idx];
+							} catch {}
+						}
+					}
+				);
+			} catch {}
+		})();
+	</script>  <ul class="top-level astro-3ii7xxms"> <li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Zekt Overview</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="0"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/zekt-docs/overview/zekt-overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Overview</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/zekt-docs/overview/zekt-personas/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Personas</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/zekt-docs/overview/zekt-directory/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Directory</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/zekt-docs/overview/zekt-management/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Management</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/zekt-docs/overview/zekt-apps/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Apps</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/zekt-docs/overview/zekt-actions/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Actions</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Zekt Guides</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="1"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/zekt-docs/guides/zekt-onboarding/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Sign-up &amp; Sing-in</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/zekt-docs/guides/zekt-enable-provider/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Provider enablement</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Zekt Architecture</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="2"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/zekt-docs/architecture/system-architecture/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">System Architecture</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/zekt-docs/architecture/integration-architecture/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Integration Architecture</span>  </a> </li><li class="astro-3ii7xxms"> <a href="/zekt-docs/architecture/configuration-architecture/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Data Architecture</span>  </a> </li> </ul>  </details> </li><li class="astro-3ii7xxms"> <details open class="astro-3ii7xxms"> <summary class="astro-3ii7xxms"> <span class="group-label astro-3ii7xxms"> <span class="large astro-3ii7xxms">Zekt Security</span>  </span> <svg aria-hidden="true" class="caret astro-3ii7xxms astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.25rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg> </summary> <sl-sidebar-restore data-index="3"></sl-sidebar-restore> <ul class="astro-3ii7xxms"> <li class="astro-3ii7xxms"> <a href="/zekt-docs/security/zekt-security-overview/" aria-current="false" class="astro-3ii7xxms"> <span class="astro-3ii7xxms">Security</span>  </a> </li> </ul>  </details> </li> </ul>   <script aria-hidden="true">
+		(() => {
+			const scroller = document.getElementById('starlight__sidebar');
+			if (!window._starlightScrollRestore || !scroller) return;
+			scroller.scrollTop = window._starlightScrollRestore;
+			delete window._starlightScrollRestore;
+		})();
+	</script> </sl-sidebar-state-persist>  <div class="md:sl-hidden"> <div class="mobile-preferences sl-flex astro-wu23bvmt"> <div class="social-icons astro-wu23bvmt"> <a href="https://github.com/zekt-dev-org" rel="me" class="sl-flex astro-wy4te6ga"><span class="sr-only astro-wy4te6ga">GitHub</span><svg aria-hidden="true" class="astro-wy4te6ga astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.57L9 21.07c-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.09-.73.09-.73 1.2.09 1.83 1.24 1.83 1.24 1.08 1.83 2.81 1.3 3.5 1 .1-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22l-.01 3.29c0 .31.2.69.82.57A12 12 0 0 0 12 .3Z"/></svg></a> </div> <starlight-theme-select>  <label style="--sl-select-width: 6.25em" class="astro-4yphtoen"> <span class="sr-only astro-4yphtoen">Select theme</span> <svg aria-hidden="true" class="icon label-icon astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21 14h-1V7a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v7H3a1 1 0 0 0-1 1v2a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-2a1 1 0 0 0-1-1ZM6 7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7H6V7Zm14 10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-1h16v1Z"/></svg> <select autocomplete="off" class="astro-4yphtoen"> <option value="dark" class="astro-4yphtoen">Dark</option><option value="light" class="astro-4yphtoen">Light</option><option value="auto" selected class="astro-4yphtoen">Auto</option> </select> <svg aria-hidden="true" class="icon caret astro-4yphtoen astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M17 9.17a1 1 0 0 0-1.41 0L12 12.71 8.46 9.17a1 1 0 1 0-1.41 1.42l4.24 4.24a1.002 1.002 0 0 0 1.42 0L17 10.59a1.002 1.002 0 0 0 0-1.42Z"/></svg> </label>  </starlight-theme-select>  <script>
+	StarlightThemeProvider.updatePickers();
+</script>   </div>  </div> </div> </div> </nav> <div class="main-frame astro-vrdttmbt">  <script type="module">const a=document.getElementById("starlight__sidebar"),n=a?.querySelector("sl-sidebar-state-persist"),o="sl-sidebar-state",i=()=>{let t=[];const e=n?.dataset.hash||"";try{const s=sessionStorage.getItem(o),r=JSON.parse(s||"{}");Array.isArray(r.open)&&r.hash===e&&(t=r.open)}catch{}return{hash:e,open:t,scroll:a?.scrollTop||0}},c=t=>{try{sessionStorage.setItem(o,JSON.stringify(t))}catch{}},d=()=>c(i()),l=(t,e)=>{const s=i();s.open[e]=t,c(s)};n?.addEventListener("click",t=>{if(!(t.target instanceof Element))return;const e=t.target.closest("summary")?.closest("details");if(!e)return;const s=e.querySelector("sl-sidebar-restore"),r=parseInt(s?.dataset.index||"");isNaN(r)||l(!e.open,r)});addEventListener("visibilitychange",()=>{document.visibilityState==="hidden"&&d()});addEventListener("pageHide",d);</script> <div class="lg:sl-flex astro-67yu43on"> <aside class="right-sidebar-container print:hidden astro-67yu43on"> <div class="right-sidebar astro-67yu43on"> <div class="lg:sl-hidden astro-pb3aqygn"><mobile-starlight-toc data-min-h="2" data-max-h="3" class="astro-doynk5tl"><nav aria-labelledby="starlight__on-this-page--mobile" class="astro-doynk5tl"><details id="starlight__mobile-toc" class="astro-doynk5tl"><summary id="starlight__on-this-page--mobile" class="sl-flex astro-doynk5tl"><span class="toggle sl-flex astro-doynk5tl">On this page<svg aria-hidden="true" class="caret astro-doynk5tl astro-c6vsoqas" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1rem;"><path d="m14.83 11.29-4.24-4.24a1 1 0 1 0-1.42 1.41L12.71 12l-3.54 3.54a1 1 0 0 0 0 1.41 1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.24-4.24a1.002 1.002 0 0 0 0-1.42Z"/></svg></span><span class="display-current astro-doynk5tl"></span></summary><div class="dropdown astro-doynk5tl"><ul class="isMobile astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#--durable-delivery---optional-functionality" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">- Durable Delivery - optional functionality</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#key-benefits" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Key Benefits</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#key-drawbacks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Key drawbacks</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#--where-do-i-enable-durable-delivery-as-a-consumer" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">- Where do I enable “durable delivery” as a consumer?</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#--how-do-i-track-the-status-of-an-event-sent---as-a-provider" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">- How do I track the status of an event sent - as a provider?</span> </a>  </li> </ul> </div></details></nav></mobile-starlight-toc><script type="module" src="/zekt-docs/_astro/MobileTableOfContents.astro_astro_type_script_index_0_lang.C181hMzK.js"></script></div><div class="right-sidebar-panel sl-hidden lg:sl-block astro-pb3aqygn"><div class="sl-container astro-pb3aqygn"><starlight-toc data-min-h="2" data-max-h="3"><nav aria-labelledby="starlight__on-this-page"><h2 id="starlight__on-this-page">On this page</h2><ul class="astro-g2bywc46" style="--depth: 0;"> <li class="astro-g2bywc46" style="--depth: 0;"> <a href="#_top" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Overview</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#--durable-delivery---optional-functionality" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">- Durable Delivery - optional functionality</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#key-benefits" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Key Benefits</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#key-drawbacks" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">Key drawbacks</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#--where-do-i-enable-durable-delivery-as-a-consumer" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">- Where do I enable “durable delivery” as a consumer?</span> </a>  </li><li class="astro-g2bywc46" style="--depth: 0;"> <a href="#--how-do-i-track-the-status-of-an-event-sent---as-a-provider" class="astro-g2bywc46" style="--depth: 0;"> <span class="astro-g2bywc46" style="--depth: 0;">- How do I track the status of an event sent - as a provider?</span> </a>  </li> </ul> </nav></starlight-toc><script type="module" src="/zekt-docs/_astro/TableOfContents.astro_astro_type_script_index_0_lang.CKWWgpjV.js"></script></div></div> </div> </aside> <div class="main-pane astro-67yu43on">  <main data-pagefind-body class="astro-bguv2lll" lang="en" dir="ltr">    <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <h1 id="_top" class="astro-j6tvhyss">Zekt - Events</h1>  </div> </div>  <div class="content-panel astro-7nkwcw3z"> <div class="sl-container astro-7nkwcw3z"> <div class="sl-markdown-content"> <p>Zekt is at its core an event &#x26; messaging services - acting as router for “providers &#x26; consumers” who wish to piggy back of their services - by enabling to trigger on a certain “event” and then being able to get “rich meta-data” (a.k.a messages) provided to them from different entities. As such - events is a core functionality to understand. Please note - that zekt does not “introduce” any events on its own, it just uses the event capabilities already built into github and make use this functionality in creative ways.</p>
+<p>The capability of “sending events” from a github account to zekt - is by the use of webhooks! The <a href="/zekt-docs/overview/zekt-apps/">Zekt Orchestration App</a> - which the zekt customer must install in order to instrument zekt to perform its intended duties, allows zekt to both gather workflow meta-data (workflow_run). Further - upon enabling a provider repository in zekt - we place our “zekt webhook” in the providers repository. This way - when a workflow is finished (successfully/unsuccesfully) - it will trigger the webhook - which will POST the meta-data about the workflow (not the workflow content) to the zekt backend services. A key part of this meta-data, is the unique github workflow run_id - which is used as the correlation id of the workflow run instance. The workflow run_id is also used by the <a href="/zekt-docs/overview/zekt-actions/">zekt-action</a> when POST optional messages to the zekt backend API’s. Logically - one can describe this as shown in the picture below:</p>
+<p><img alt="Zekt Service part 2" loading="lazy" decoding="async" fetchpriority="auto" width="606" height="415" src="/zekt-docs/_astro/event-flow-concept.c-_fs-s4_ZnueLf.webp" ></p>
+<ol>
+<li>Providers repository. The provider has enabled on of their repos for zekt services. This requires the provider to install and associate the repository with the Zekt Orchestration App - which in turn, provides zekt with the permissions needed. It also places a zekt webhook within the enabled repository.</li>
+<li>Providers whitelisted workflow. For more details on “whitelisting” workflows in Zekt - please click <a href="o/zekt-docs/guides/handle-zekt-provider-workflows/">here</a>. Provider has one (or several workflows) workflow in their enabled repository. When the workflow is invoked (running) it is automatically provided a unique run_id by github underlying services. This unique ID - is serving as the correlation id - used by zekt services - to correlate “events” and “messages” (by aggregating them) sent by provider to zekt services.</li>
+<li>zekt-action (message) is optional. zekt-action is implemented as an optional (github action) component - that can be placed in a separate step (within a job) of the workflow (#2 in this step-by-step description). zekt-action requires basically 3 things:</li>
+</ol>
+<ul>
+<li>event type (arbitrary name)</li>
+<li>payload (message - max 512 KB)</li>
+</ul>
+<p>an example of a zekt-action invoccation (from a workflow) is found below</p>
+<div class="expressive-code"><link rel="stylesheet" href="/zekt-docs/_astro/ec.v4551.css"><script type="module" src="/zekt-docs/_astro/ec.p1z7b.js"></script><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="yaml"><code><div class="ec-line"><div class="code"><span class="indent"><span style="--0:#D6DEEB;--1:#403F53">      </span></span><span style="--0:#D6DEEB;--1:#403F53">- </span><span style="--0:#7FDBCA;--1:#111111">name</span><span style="--0:#D6DEEB;--1:#403F53">: </span><span style="--0:#ECC48D;--1:#3B61B0">Send Event to Zekt</span></div></div><div class="ec-line"><div class="code"><span class="indent">        </span><span style="--0:#7FDBCA;--1:#111111">id</span><span style="--0:#D6DEEB;--1:#403F53">: </span><span style="--0:#ECC48D;--1:#3B61B0">zekt</span></div></div><div class="ec-line"><div class="code"><span class="indent">        </span><span style="--0:#7FDBCA;--1:#111111">uses</span><span style="--0:#D6DEEB;--1:#403F53">: </span><span style="--0:#ECC48D;--1:#3B61B0">zekt-dev-org/zekt-action@vX.Y.Z</span><span style="--0:#D6DEEB;--1:#403F53">                  </span><span style="--0:#919F9F;--1:#5F636F">#&#x3C;-- check zekt-action repo for latest version</span></div></div><div class="ec-line"><div class="code"><span class="indent">        </span><span style="--0:#7FDBCA;--1:#111111">with</span><span style="--0:#D6DEEB;--1:#403F53">:</span></div></div><div class="ec-line"><div class="code"><span class="indent">          </span><span style="--0:#7FDBCA;--1:#111111">event-type</span><span style="--0:#D6DEEB;--1:#403F53">: </span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#ECC48D;--1:#984E4D">custom-provider-event</span><span style="--0:#D9F5DD;--1:#111111">'</span><span style="--0:#D6DEEB;--1:#403F53">                  </span><span style="--0:#919F9F;--1:#5F636F">#&#x3C;-- arbitrary event-type, flexible</span></div></div><div class="ec-line"><div class="code"><span class="indent">          </span><span style="--0:#7FDBCA;--1:#111111">payload</span><span style="--0:#D6DEEB;--1:#403F53">: </span><span style="--0:#ECC48D;--1:#3B61B0">${{ steps.build-payload.outputs.payload }}</span><span style="--0:#D6DEEB;--1:#403F53">  </span><span style="--0:#919F9F;--1:#5F636F">#&#x3C;-- arbitrary payload, flexible</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="      - name: Send Event to Zekt        id: zekt        uses: zekt-dev-org/zekt-action@vX.Y.Z                  #<-- check zekt-action repo for latest version        with:          event-type: &#x27;custom-provider-event&#x27;                  #<-- arbitrary event-type, flexible          payload: ${{ steps.build-payload.outputs.payload }}  #<-- arbitrary payload, flexible"><div></div></button></div></figure></div>
+<p>As the run_id of the workflow, is available from within the workflow when it is being executed - the “message” that is generated when calling the zekt-action - will with a high probability be “arriving before” the event is arriving at the zekt backend. To be able to stitch together the right message payload, with the correct event - we use the unique run_id as the correlation property. For now - assume the message (delivered through zekt-action) is posted to the zekt backend API’s and persisted.
+4. Once the provider workflow has been executed - it might that finished as intended (successfully) or it failed - independently - the zekt webhook is triggered and sends meta-data about the workflow that was executed to the zekt backend API’s. Again - the default github meta-data about a workflow instance execution - contains the unique run_id which is part of the payloaded that is deposited to zekt API’s.
+5. As zekt backend services - at this time - have an event (with unique run_id) that has arrived - it will look in the persisted layer - to check if there is a corresponding message (from zekt-action) that is to be aggregated with the event using the run_id as the correlation. If it finds a message (as it does in this example) - it will aggregate the message and the event into one payload - check the zekt policy engine (logic) - to determine if the workflow is whitelisted (if not it will be blocked and charged anyway), which consumers to distribute the payload to and on.
+6. In this example - the consumer is now getting the “event &#x26; message” in one payload (JSON) - send as a repository dispatch event to their repository. From this point on - it is the consumers responsbility to make sure they are having a workflow, that triggers on the ‘custom-provider-event’ type in this example.</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="--durable-delivery---optional-functionality">- Durable Delivery - optional functionality</h2><a class="sl-anchor-link" href="#--durable-delivery---optional-functionality"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “- Durable Delivery - optional functionality”</span></a></div>
+<p>By default - zekt approach to delivering events (messages) is fire-and-forget. Meaning - as soon as an event and message is distributed to the designated consumer, it is a one-time effort &#x26; attempt of delivering that event. If the event is deposited to the github API’s successfully - zekt will not attempt or be able to re-send that “payload” once it has been flushed out of the persistency layer. While this works in most cases for most consumer workloads - sometimes, consumers dont want to “miss a single event” that is ingressing to them (as it is business critical information) - and is desiring to have a more resilient and durable capability - where several attempts are done to deliver the event payload &#x26; get confirmation on delivery (track). This is where zekt’s “durable delivery” comes into play described below:</p>
+<ul>
+<li>Purpose: Guarantees event delivery to consumer webhooks with automatic retries and state tracking</li>
+<li>Persisted: Uses event-deliveries persitency layer (correlates using correlationId property)</li>
+<li>Persisting States: Dispatched → Confirmed → Completed (or Failed)</li>
+</ul>
+<ol>
+<li>Initial Dispatch (Provider Workflow Completes)</li>
+</ol>
+<p>Trigger: Provider workflow completes and calls Zekt webhook</p>
+<ul>
+<li>Function: ProcessWorkflowWebhookFunction</li>
+<li>Process: Receives GitHub webhook (workflow_run completed event)
+<ul>
+<li>Validates signature and payload</li>
+<li>Queries provider-consumer-mappings to find subscribed consumers</li>
+<li>For each consumer workflow:
+<ul>
+<li>Creates event-delivery record with status Dispatched</li>
+<li>Stores correlation ID, provider/consumer metadata</li>
+<li>Archives payload to archived-payloads container (Time Travel feature)</li>
+<li>Dispatches repository_dispatch event to consumer via GitHub API</li>
+<li>Saves delivery record with GitHub response</li>
+</ul>
+</li>
+<li>Updates usage metrics (API calls, webhook deliveries)</li>
+</ul>
+</li>
+</ul>
+<p>Key Fields:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">DeliveryStatus = DeliveryStatus.Dispatched</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">DispatchedAt = DateTime.UtcNow</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">CorrelationId = "correlation-id-from-provider"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">DeliveryId = "delivery-{guid}"</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="DeliveryStatus = DeliveryStatus.DispatchedDispatchedAt = DateTime.UtcNowCorrelationId = &#x22;correlation-id-from-provider&#x22;DeliveryId = &#x22;delivery-{guid}&#x22;"><div></div></button></div></figure></div>
+<ol start="2">
+<li>Confirmation (Consumer Workflow Starts)</li>
+</ol>
+<p>Trigger: Consumer workflow starts and calls confirmation endpoint</p>
+<ul>
+<li>Function: ConfirmEventDeliveryFunction</li>
+<li>Endpoint: POST /api/event-delivery/confirm</li>
+<li>Consumer Workflow Action: Calls this endpoint in first step</li>
+<li>Process:
+<ul>
+<li>Receives correlationId from consumer workflow</li>
+<li>Queries event-deliveries by correlation ID</li>
+<li>Updates delivery record:
+<ul>
+<li>Status: Dispatched → Confirmed</li>
+<li>Sets confirmedAt timestamp</li>
+<li>Increments confirmation attempt counter</li>
+</ul>
+</li>
+<li>Returns confirmation details to consumer</li>
+</ul>
+</li>
+</ul>
+<p>Key Fields:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">DeliveryStatus = DeliveryStatus.Confirmed</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">ConfirmedAt = DateTime.UtcNow</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="DeliveryStatus = DeliveryStatus.ConfirmedConfirmedAt = DateTime.UtcNow"><div></div></button></div></figure></div>
+<ol start="3">
+<li>Completion (Consumer Workflow Finishes)</li>
+</ol>
+<p>Trigger: Consumer workflow completes successfully or fails</p>
+<ul>
+<li>Function: CompleteEventDeliveryFunction</li>
+<li>Endpoint: POST /api/event-delivery/complete</li>
+<li>Consumer Workflow Action: Calls this endpoint in final step</li>
+<li>Process:
+<ul>
+<li>Receives correlationId + success flag from consumer</li>
+<li>Queries event-deliveries by correlation ID</li>
+<li>Updates delivery record:
+<ul>
+<li>Status: Confirmed → Completed (if success) or Failed</li>
+<li>Sets completedAt timestamp</li>
+<li>Stores consumer workflow conclusion</li>
+<li>Marks as finalized</li>
+</ul>
+</li>
+<li>Updates usage metrics</li>
+</ul>
+</li>
+</ul>
+<p>Key Fields:</p>
+<div class="expressive-code"><figure class="frame not-content"><figcaption class="header"></figcaption><pre data-language="plaintext"><code><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">DeliveryStatus = DeliveryStatus.Completed // or Failed</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">CompletedAt = DateTime.UtcNow</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">ConsumerWorkflowConclusion = "success" // or "failure"</span></div></div><div class="ec-line"><div class="code"><span style="--0:#d6deeb;--1:#403f53">IsFinalized = true</span></div></div></code></pre><div class="copy"><button title="Copy to clipboard" data-copied="Copied!" data-code="DeliveryStatus = DeliveryStatus.Completed // or FailedCompletedAt = DateTime.UtcNowConsumerWorkflowConclusion = &#x22;success&#x22; // or &#x22;failure&#x22;IsFinalized = true"><div></div></button></div></figure></div>
+<ol start="4">
+<li>Health &#x26; Statistics Calculation</li>
+</ol>
+<p>Function: ConnectionsService - LoadQuickStatsAsync()</p>
+<ul>
+<li>Process:
+<ul>
+<li>Queries event-deliveries for last 24 hours</li>
+<li>Counts total events per connection</li>
+<li>Calculates success rate (Completed + Confirmed) / Total</li>
+<li>Checks for recent activity (events within last 7 days)</li>
+<li>Determines health status:
+<ul>
+<li>Healthy: ≥98% success + recent activity (or no events yet)</li>
+<li>Warning: 90-98% success OR no recent activity</li>
+<li>Critical: &#x3C;90% success</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Used By: “My Connections” UI, webhook health checks, diagnostics</p>
+<ol start="5">
+<li>Replay/Time Travel Feature (Add-on feature within Analytics package)</li>
+</ol>
+<p>Function: ReplayArchivedEventFunction</p>
+<ul>
+<li>Endpoint: POST /api/replay/{deliveryId}</li>
+<li>Process:
+<ul>
+<li>Retrieves original delivery record by ID</li>
+<li>Fetches archived payload from archived-payloads</li>
+<li>Creates new delivery record (new delivery ID)</li>
+<li>Re-dispatches to consumer via GitHub API</li>
+<li>Marks original as replayed, stores new delivery ID</li>
+</ul>
+</li>
+</ul>
+<p>Key Feature: Non-destructive replay using archived payloads</p>
+<ol start="6">
+<li>Diagnostics &#x26; Troubleshooting</li>
+</ol>
+<p>Function: ConnectionsService - GetConnectionDiagnosticsAsync()</p>
+<ul>
+<li>Endpoint: GET /api/connections/{id}/diagnostics</li>
+<li>Process:
+<ul>
+<li>Queries recent failed deliveries (last 30 days)</li>
+<li>Groups errors by category:
+<ul>
+<li>Service Unavailable (503)</li>
+<li>Timeouts</li>
+<li>Auth failures (401/403)</li>
+<li>Rate limiting (429)</li>
+<li>DNS/Network errors</li>
+</ul>
+</li>
+<li>Fetches last 10 failures with full error messages</li>
+<li>Generates actionable recommendations based on error patterns</li>
+<li>Calculates webhook health (success rate for specific connection)</li>
+</ul>
+</li>
+</ul>
+<p>Used By: Diagnostics modal in “My Connections” UI</p>
+<ol start="7">
+<li>Data Retention</li>
+</ol>
+<p>event-deliveries: 396 days (13 months) TTL - auto-cleanup
+archived-payloads: 90 days TTL - for Time Travel replay
+Finalized deliveries: Marked with isFinalized = true flag</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="key-benefits">Key Benefits</h2><a class="sl-anchor-link" href="#key-benefits"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Key Benefits”</span></a></div>
+<p>✅ Guaranteed Delivery Tracking: Know exactly if events reached consumers
+✅ Three-Phase Lifecycle: Dispatch → Confirm → Complete with timestamps
+✅ Health Monitoring: Automatic calculation of success rates and trends
+✅ Failure Diagnostics: Detailed error categorization and recommendations
+✅ Time Travel/Replay: Re-send historical events from archived payloads
+✅ Non-Blocking: Consumer workflows control confirmation/completion timing
+✅ Audit Trail: Full lifecycle history with correlation IDs</p>
+<div class="sl-heading-wrapper level-h2"><h2 id="key-drawbacks">Key drawbacks</h2><a class="sl-anchor-link" href="#key-drawbacks"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “Key drawbacks”</span></a></div>
+<p>Durable delivery ensures that you can have several retries to of a single event and persist it beyond one-time delivery. However - this requires additional compute / storage &#x26; transfer efforts and as such is more costly compared to one-time delivery. In general, Zekt recommends customers to use non-durable delivery (default) event delivery unless the workload matches one of the following criterias:</p>
+<ul>
+<li>Cost “of loosing an event” is greater then processing cost required of enabling durable delivery per event (business critical content in event &#x26; messages)</li>
+<li>Regulated environments and workloads - there are scenarios where it is regulated that events (+ messages) must be able to retains / retried for a certain time period / amount of retries.</li>
+</ul>
+<div class="sl-heading-wrapper level-h2"><h2 id="--where-do-i-enable-durable-delivery-as-a-consumer">- Where do I enable “durable delivery” as a consumer?</h2><a class="sl-anchor-link" href="#--where-do-i-enable-durable-delivery-as-a-consumer"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “- Where do I enable “durable delivery” as a consumer?”</span></a></div>
+<p>Durable delivery is a consumer feature - where the consumer decided (opt-in) to enable durable delivery for a certain workload on their end. By enabling durable delivery - the customer accepts that additional cost that the functionality will introduce towards their montly billing (which is trackable as function runtime) account. Enabling “durable delivery” in zekt - is a two-step action outlined below:</p>
+<ol>
+<li>Open the zekt management console interface. Click on the navigation item “Consumer”. Choose the tab “Zekt Repos”. Select the enabled “zekt consumer repo” that you wish to enable for “durable delivery”. Toggle the switch in the “COMPLETION” column to on. In the below screenshot, it has not been activated yet.</li>
+</ol>
+<p><img alt="enable completition" loading="lazy" decoding="async" fetchpriority="auto" width="1643" height="62" src="/zekt-docs/_astro/durable-delivery-1.Bco-t0Jy_Z1JPGFf.webp" ></p>
+<ol start="2">
+<li>A pop-up modal will appear, informing you that zekt will place a webhook in the consumer repository (you selected) and that actions it perform will be tracked towards your Github API quota. Accept if you want to proceed, by selecting the “Enable Tracking” button.</li>
+</ol>
+<p><img alt="accept tracking" loading="lazy" decoding="async" fetchpriority="auto" width="533" height="552" src="/zekt-docs/_astro/durable-delivery-modal.BXJx0yAG_2mATlU.webp" ></p>
+<ol start="3">
+<li>The modal will redirect you to the “Zekt Repos” view when the webhook has been added to your repository (that you selected). The UI is now indicating that the repository is enabled for “event completition tracking” as in below picture:</li>
+</ol>
+<p><img alt="enabled tracking" loading="lazy" decoding="async" fetchpriority="auto" width="1633" height="61" src="/zekt-docs/_astro/durable-delivery-2.DTdk1lPl_Z1qubms.webp" ></p>
+<ol start="4">
+<li>Second logical step - in order to enable durable delivery - is to navigate to the tab named “Zekt Subscriptions” (in the Consumers navigation item view). This view lists the providers “service description” that you are subscribing events (and messages) from. Select the “service” that is matching the consumer repository that you enabled in step #1 for completition (easiest by checking the UI property: —> Delivers to: property in orange). Below it there is a “Durable Delivery” toggle bar that needs to be enabled as in below picture:</li>
+</ol>
+<p><img alt="enable durable" loading="lazy" decoding="async" fetchpriority="auto" width="1653" height="148" src="/zekt-docs/_astro/durable-delivery-3.C96nw89K_Zger9K.webp" ></p>
+<div class="sl-heading-wrapper level-h2"><h2 id="--how-do-i-track-the-status-of-an-event-sent---as-a-provider">- How do I track the status of an event sent - as a provider?</h2><a class="sl-anchor-link" href="#--how-do-i-track-the-status-of-an-event-sent---as-a-provider"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentcolor" d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 0 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 1 0-1.42-1.42Zm8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 0 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 1 0 1.42 1.42l3.88-3.89a4.49 4.49 0 0 0 0-6.33ZM8.83 15.17a1 1 0 0 0 1.1.22 1 1 0 0 0 .32-.22l4.92-4.92a1 1 0 0 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42Z"></path></svg></span><span class="sr-only">Section titled “- How do I track the status of an event sent - as a provider?”</span></a></div>
+<p>As a provider - you would like to know - if a consumer (of your published service) is using durable delivery - and would want to track event deliveries to them! You can do so by opening the Zekt management console, navigation item “Provider” and then looking in the tab: “Delivery Status”</p>
+<p><img alt="event tracking" loading="lazy" decoding="async" fetchpriority="auto" width="1509" height="493" src="/zekt-docs/_astro/event-deliveries-tracker.BKFGKBbK_1UVzX5.webp" ></p>
+<p>From this screenshoot we can see that one consumer has “completition tracking” enabled - by the “Status” column badge (Completed) - and the meta-data on the columns: “Confirmed” and “Completed”. It also shows a column, at what retry it became successfully completed - first try (0 retries) in this case.</p> </div> <footer class="sl-flex astro-3yyafb3n"> <div class="meta sl-flex astro-3yyafb3n">   </div> <div class="pagination-links print:hidden astro-u2l5gyhi" dir="ltr">   </div>   </footer>  </div> </div>   </main> </div> </div>  </div> </div>  </body></html>
