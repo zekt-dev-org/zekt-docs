@@ -23,6 +23,7 @@ export default defineConfig({
 						{ label: 'Management', slug: 'overview/zekt-management' },
 						{ label: 'Apps', slug: 'overview/zekt-apps' },
 						{ label: 'Actions', slug: 'overview/zekt-actions' },
+						{ label: 'Events', slug: 'overview/zekt-events' },
 					],
 				},
 				{
