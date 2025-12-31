@@ -20,7 +20,7 @@ In this case - we want to enable the workflow (whitelist) that is named: zekt-pr
 
 ![Zekt Enabled Workflow](../../../assets/zekt-enabled-workflow.png)
 
-3. Optionally - create the service from this UI - or have it done in the "Zekt Service Descriptions" tab. For greater details on how to create a service description - [click here]()!
+3. Optionally - create the service from this UI - or have it done in the "Zekt Service Descriptions" tab. For greater details on how to create a service description - [click here](/zekt-docs/guides/handle-zekt-provider-services/)!
 
 
 ## - None whitelisted workflows - How to track & handle them
