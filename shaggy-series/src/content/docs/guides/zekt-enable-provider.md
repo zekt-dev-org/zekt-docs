@@ -9,8 +9,8 @@ The logical sequence of enabling a provider capability in Zekt can be broken dow
 
 1. Provider persona - see details by clicking [here](/zekt-docs/overview/zekt-personas/).      
 2. Enable provider repo - see details by clicking [here](/zekt-docs/guides/handle-zekt-provider-repo).
-3. Whitelist workflows
-4. Create "service description" & "service alias name"
+3. Whitelist workflows - see details by clicking [here](/zekt-docs/guides/handle-zekt-provider-workflows/).
+4. Create "service description" & "service alias name" - see details by clicking [here](/zekt-docs/guides/handle-zekt-directory/)
 5. List service in directory
 6. (handle connection requests)
 
