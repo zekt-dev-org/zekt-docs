@@ -9,7 +9,7 @@ The aim is to answer the wast majority of concerns & to provide concrete example
 
 ## Zekt - business intent
 
-- Zekt primary nieche is to allow different github organizations to be able to collaborate across organizational boundaries otherwise native to github. This positions Zekt, to become a true workflow orchestration SaaS offering as customers of Zekt, can both act/re-act on events (workflow execution) - and associated messaging capabilities offered within Zekt, thereby supporting messaging as well as eventing.
+- Zekt primary nieche is to allow different github organizations to collaborate across organizational boundaries more effortless otherwise native to github. This positions Zekt, to become a true workflow orchestration SaaS offering on top of GitHub. Customers of Zekt, can both act/re-act on events (workflow execution) - and associated messaging capabilities offered within Zekt, thereby supporting messaging as well as eventing.
 - Zekt aims to solve common needs of alerting different teams (as long as they are using github + zekt) of status / outcome of workflows that has been executed, and then allowing neighbouring teams (within the same github organization) or external teams (within different github organization) to re-act to them as well! In the easiest possible manor... 
 - Zekt aims to orchestrate workflows - and distribute those events (and arbitrary message payloads) to other teams - so that they can programatically respond to the events - thereby creating a fabric of how teams can design their workflows to enable collaboration across organizational boundaries & solving business needs.
 - Zekt does not aim to expand it's capabilities to other devops platforms, except Github. 
