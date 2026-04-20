@@ -18,19 +18,25 @@ export default defineConfig({
 					items: [
 						// Each item here is one entry in the navigation menu.
 						{ label: 'Overview', slug: 'overview/zekt-overview' },
+						    // Subcategory:
+							{ label: 'Why do I need Zekt?', items: [	
+								{ label: 'Business justification', slug: 'overview/business-justification' },
+								{ label: 'Technical example(s)', slug: 'overview/technical-examples' },
+								],
+							},
 						{ label: 'Personas', slug: 'overview/zekt-personas' },
 						{ label: 'Directory', slug: 'overview/zekt-directory' },
 						{ label: 'Management', slug: 'overview/zekt-management' },
 						{ label: 'Apps', slug: 'overview/zekt-apps' },
 						{ label: 'Actions', slug: 'overview/zekt-actions' },
-						{ label: 'Events', slug: 'overview/zekt-events' },
+						{ label: 'Events & Messaging', slug: 'overview/zekt-events' },
 					],
 				},
 				{
 					label: 'Zekt Guides',
 					items: [
 						// Each item here is one entry in the navigation menu.
-						{ label: 'Sign-up & Sing-in', slug: 'guides/zekt-onboarding' },
+						{ label: 'Sign-up & Sign-in', slug: 'guides/zekt-onboarding' },
 						{ label: 'Provider enablement', slug: 'guides/zekt-enable-provider' },
 					],
 				},
