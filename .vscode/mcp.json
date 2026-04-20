@@ -1,0 +1,11 @@
+{
+  "servers": {
+    "zekt": {
+      "type": "http",
+      "url": "https://fxdevzektapp.azurewebsites.net/api/mcp",
+      "headers": {
+        "Authorization": "Bearer zekt_888b115506fb47cbd2b7a06f95084c71ddd7194b788f9f12"
+      }
+    }
+  }
+}
