@@ -9,7 +9,21 @@ This guide illustrates how to onboard & become a valued Zekt member. It will out
 
 Zekt support both "individuals" & "corporations" - we just want the customer to inform us, what they are identifying as for future user-cases. Technically - there is no difference between the types from a Zekt or Github perspecticve when interacting with the "owning entity" of the repositories that we interact with from a Zekt perspective.
 
-- ⚙️ SKU & Persona options: Zekt cost model is easy. Its 10 USD/repository as a base fee, and the consumption model on top of that. Meaning, for 10 USD / repo - you enable your repository for zekt usage, any usage (compute processing, persistency or transfer) that you inflict - will be charged on top at a monthly basis. At onboarding - you also have to "choose" - which [persona](../overview/zekt-personas) - you want the account to simulate!
+- ⚙️ Cost & fee options: Zekt cost model is easy! There are 3 types of costs in Zekt:
+
+Static costs:
+
+1. Zekt Core. This is the base Zekt service, 10 USD / repo / month (+ usage costs). Minimum, you need a single repository enabled in Zekt for any business value (configured either as provider or consumer).
+2. Zekt Add-On services:
+
+A. Zekt Analytics: Optional / free to choose. You can optionally enable one or several repositories for Zekt Analytics at 3 USD / repo / month (+ usage costs). Primary reason for Analytics would be "Time Travel" and "Webhook Replay" capabilities - which are included in this add-on. An Analytics enabled repository would then be 13 USD (Core + Analytics) / repo / month (+usage costs).
+B. Zekt Shield: Optional / free to choose. You can optionally enable one or several repositories for Zekt Shield at 4 USD / repo / month (+ usage costs). Primary reason for Shield is protection of message payloads being encrypted not only while in transit, but also from Zekt itself - only available between the provider & consumer. Shield also includes Redaction Guard. A Shield enabled repository would then be 14 USD (Core + Shield) / repo / month (+ usage costs).
+C. Zekt Chainlink: Optional / free to choose. You can optionally enable one or several respositories for Zekt Chainlink at 22 USD / repo / month (+ usage costs). Primary reason for Chainlink from a value proposition - is that you as a customer can form / shape / make use of Zekt - to shape long chains of events (automation) to address complex business processes across traditional Github boundaries in an easier way. A Chainlinked repository can act as both Provider & Consumer at the same time - enabling them to both recieve and send events & messages, forming closed loops if so desired!
+
+Dynamic costs:
+
+3. Usage cost. Above offerings are static costs; per repo / month! Usage costs is basically the attributed cost of processing the events, the message payloads and routing them to their destination endpoints! For customers only using Zekt to a small extent, the cost will obviously be much smaller. For customers, that build their pipeline logic to be shared with high volume & frequency - the associated dynamic cost will be much higher! Zekt attributes costs of "usage" to the customer. Provider attributed costs are assigned to the provider and likewise to consumers for their dispatching & processing!
+
 
 - 💵 Subscription fee / monthly cost. As part of the onboarding (becoming a Zekt member) - you will have to provide the payment information which will be handled by [our payment provider](https://stripe.com/) intergration. Zekt.dev do not store any transactional information or references to payment methods in our backend. We only track "which zekt member consume how much" - and send information to payment provider at a monthly basis. For detailed requirements & technical aspects of the payment provider (Stripe) - read their technical specification on how your credit card information is handled.
 
