@@ -27,6 +27,15 @@ an example of a zekt-action invoccation (from a workflow) is found below
           payload: ${{ steps.build-payload.outputs.payload }}  #<-- arbitrary payload, flexible
 ```
 As the run_id of the workflow, is available from within the workflow when it is being executed - the "message" that is generated when calling the zekt-action - will with a high probability be "arriving before" the event is arriving at the zekt backend. To be able to stitch together the right message payload, with the correct event - we use the unique run_id as the correlation property. For now - assume the message (delivered through zekt-action) is posted to the zekt backend API's and persisted.
+
+NOTE: An event that is sent to consumers (without any optional message attached through zekt-action) will ALWAYS have the event_type of 'zekt-workflow-completed'! This is hardcoded, and cannot be changed! For optional event_type(s) - make use of the zekt-action message functionality.
+
+```yaml
+on:
+  repository_dispatch:
+    types: [zekt-workflow-completed]
+```
+
 4. Once the provider workflow has been executed - it might that finished as intended (successfully) or it failed - independently - the zekt webhook is triggered and sends meta-data about the workflow that was executed to the zekt backend API's. Again - the default github meta-data about a workflow instance execution - contains the unique run_id which is part of the payloaded that is deposited to zekt API's. 
 5. As zekt backend services - at this time - have an event (with unique run_id) that has arrived - it will look in the persisted layer - to check if there is a corresponding message (from zekt-action) that is to be aggregated with the event using the run_id as the correlation. If it finds a message (as it does in this example) - it will aggregate the message and the event into one payload - check the zekt policy engine (logic) - to determine if the workflow is whitelisted (if not it will be blocked and charged anyway), which consumers to distribute the payload to and on.
 6. In this example - the consumer is now getting the "event & message" in one payload (JSON) - send as a repository dispatch event to their repository. From this point on - it is the consumers responsbility to make sure they are having a workflow, that triggers on the 'custom-provider-event' type in this example.

@@ -6,7 +6,7 @@ description: Zekt - technical scenarios, where Zekt solved the problem
 
 ## Scenario 1: Notifying retailers about new products
 
-A company in the retail industry (e.g. footwear) continuously updates its product catalog through an internal pipeline.
+A company in the retail industry (e.g. footwear - example can be found [here](https://github.com/zekt-dev-org/zekt-provider-example-repo/blob/main/.github/workflows/zekt-provide-sneaker-updates.yml)) continuously updates its product catalog through an internal pipeline.
 
 When new products are introduced (e.g. upcoming seasonal releases), the company needs to **notify retailers and resellers as quickly as possible** so they can:
 
@@ -192,3 +192,111 @@ Failures can be replayed:
 
 
 
+# 🧪 Scenario 3: Automating a cross-organization business process
+
+## Context
+
+Multiple companies need to coordinate a shared business process across their systems.
+
+Examples include:
+- supply chain coordination  
+- compliance and approval workflows  
+- multi-party onboarding processes  
+
+Each step in the process is owned by a different team or organization.
+
+---
+
+## ❌ The traditional approach
+
+To connect these steps, organizations typically rely on:
+
+- Manual coordination (email, Slack, tickets)  
+- Custom webhook integrations  
+- Scripts automating isolated parts of the process  
+
+This leads to several challenges:
+
+- **Delayed execution**  
+  Processes depend on humans noticing and acting  
+
+- **Inconsistent quality**  
+  Steps may fail, be skipped, or executed out of order  
+
+- **Fragmented workflows**  
+  Each part of the process lives in a separate system  
+
+- **Integration overhead**  
+  Custom integrations must be built and maintained  
+
+- **Limited traceability**  
+  Difficult to track the full process across organizations  
+
+---
+
+## 💡 With Zekt
+
+Instead of stitching systems together manually, companies use Zekt to **orchestrate the process as a chain of events across workflows**.
+
+GitHub Actions acts as the execution engine.  
+Zekt acts as the **cross-organization routing and orchestration layer**.
+
+### How it works
+
+1. A workflow emits an event when a step in the process is completed  
+2. Zekt routes the event to the next responsible team or organization  
+3. A downstream workflow is automatically triggered  
+
+Each step can:
+- process the event  
+- emit a new event  
+- continue the chain  
+
+This creates a **fully automated, event-driven process spanning multiple organizations**.
+
+---
+
+## 🚀 Why this is better
+
+### ⚡ Continuous execution
+Processes move forward automatically — no manual coordination required  
+
+---
+
+### 🔗 End-to-end orchestration
+All steps are connected into a single, coherent flow — even across organizations  
+
+---
+
+### 🔐 Secure collaboration
+No need to share repository access or credentials between organizations  
+
+---
+
+### 📊 Full process visibility
+Every step is tracked:
+- what happened  
+- when it happened  
+- which workflow executed  
+
+---
+
+### ⏪ Replay and recovery
+Individual steps or entire flows can be replayed:
+- to recover from failures  
+- to test changes  
+- to validate process behavior  
+
+---
+
+### 🧱 Reduced integration complexity
+No need for:
+- custom APIs  
+- webhook infrastructure  
+- glue code between systems  
+
+---
+
+## 🧠 Key takeaway
+
+> Zekt transforms fragmented, manual processes into fully automated, event-driven workflows — enabling reliable orchestration across teams and organizations using GitHub Actions as the execution layer.
