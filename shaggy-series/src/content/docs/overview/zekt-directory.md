@@ -11,7 +11,10 @@ As we have learnt, zekt-providers (omit events + optional message payloads) & ze
 
 Once a customer - finds a service, to which they want to subscribe - they can request access to the service (e.g provider workflow) from the zekt management tool. Within the same tool, the zekt provider owning the service - will get alerted, that a request has been sent to them where they can then either approve - or deny the request. As soon, as the consumers request has been approved by the provider - zekt will start brokering the events coming from the provider to the approved consumer(s).
 
-###### NOTE: In the future - a provider does not have to publish their workflow to a global audience using Zekt directory while still being able to collaborate with other teams. 
+###### NOTE: A Zekt service (Provider or Consumer service) can be either exposed & scoped to: 
+
+- 'organization' - meaning the same Github organization that the service is residing within - repository wise. It is common, that Zekt customer only want their service to be visible to customers within their own Github organization!
+- 'public' - meaning the Zekt Service will become visible & disoverable to any Zekt customer, through the Zekt Directory! This is common for service providers that are residing across different organizational tenants.
 
 ### Service description(s)
 
@@ -57,3 +60,10 @@ Service description:                            Owner:
 "Forecast figures - analyze stock indications"  "the sales team"
 ```
 
+### Service event_type:
+
+The property event_type is important to highlight! This is the specific event "name" that is sent to subscribers / recievers - and what they are re-acting to on their end! Again - you cannot have separate workflows, both re-acting to the same event_type within the same repository in Github - as the underlying mechanism for dispatching, is the native Github 'repository_dispatching" mechanism.
+
+### Service slug:
+
+The property service_slug is important to highlight! This is non-changeable service definition string. As Zekt tries to protect its customers from becoming overexposed through Zekt to their subscribers - Zekt needs a way, of uniqely identifying a single Zekt Service, to the servicing Github organization / repository - without exposing that to the requestors! As such - the service_slug property, is the unique identifier - which Zekt uses to route between service providers and subscribers!
