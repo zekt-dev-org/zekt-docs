@@ -9,6 +9,8 @@ description: Guide - Handle your provider services
 
 NOTE: Always stay vigilant against WHO you are consming services from or to whom you are providing services to! Zekt does not provide accountability for services offered from various providers - rather, we provide the consumers to provide testimonials and report abuse to provide a sense of "quality" and "bad behaviour" control to zekt. Zekt has basic "trust badges" to compliment abuse reporting and testimonials but all together - it is your responssibility to decide - who's services your consume, which information you send as messages - to whom! As such - we recommend that you know your providers / consumers - and zekt just acts as the broker of the services you provide.
 
+Provider services can be described as "push services", where the provider pushes an event towards their subscribers. For consumer services concept - refer to this article!
+
 In this section - we will outline - how to create a "service description" & finally publish it in the zekt directory as a step-by-step. We will build further on the whitelisted workflow we used to examplify the whitelisting capability with. See below guide on creating a service:
 
 Go to the zekt management console. Choose navigation item Provider, the tab "Zekt Service Descriptions". Once in here, you can either select an existing service and modify it or create a new one. In this case - we are going to create a new service. Select the button "Create New". See below (in our case):
