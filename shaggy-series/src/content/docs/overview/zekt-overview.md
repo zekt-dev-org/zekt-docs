@@ -14,7 +14,7 @@ The aim is to answer the wast majority of concerns & to provide concrete example
 - Zekt aims to orchestrate workflows - and distribute those events (and arbitrary message payloads) to other teams - so that they can programatically respond to the events - thereby creating a fabric of how teams can design their workflows to enable collaboration across organizational boundaries & solving business needs.
 - Zekt does not aim to expand it's capabilities to other devops platforms, except Github. 
 - Zekt has intentionally put caps on payload sizes for arbitrary JSON. For large / heavy - messaging solutions, dont use Zekt. This is common misconception & there are many solutions much more suited to address these needs! Example - Zekt will not distribute JSON payloads above 512 KB + [workflow meta-data](https://docs.github.com/en/webhooks/webhook-events-and-payloads) - generated automatically by github when a workflow is executed / finalized. 
-- With the introduction of the Zekt directory - where providers can publish their "services" to "consumers" - Zekt directory becomes a potential orchestration marketplace for github workflows - between different github organizations! Publish your thought through workflow (a.k.a service) - to be consumed by your own customers, brokered by Zekt!
+- With the introduction of the Zekt directory - where providers can publish their Zekt Services to their consumers - Zekt Directory becomes a potential orchestration marketplace for github workflows - between different GitHub organizations! Publish your thought through workflow (a.k.a service) - to be consumed by your own customers, brokered by Zekt!
 
 ## Zekt - technical intent
 
@@ -24,7 +24,7 @@ We do this, by building on top of existing Github functionality (organizations /
 
 ## What is orchestration?
 
-To use layment words - the need to handle "what should happen", "when scenario X occurs" - in a progrmatic consistent manor! This positions using workflows as building blocks for processes that incorporates common developer tasks, but also to allow collaborating to other none "traditional" developer oriented tasks - as part of a process if so desired.
+To use layment words - the need to handle "what should happen", "when scenario X occurs" - in a progrmatic consistent manor! This positions using Github workflows as the foundational building blocks for processes that incorporates common developer tasks, but also to allow collaborating to other none "traditional" developer oriented tasks - as part of a process if so desired.
 
 ## Further reading
 

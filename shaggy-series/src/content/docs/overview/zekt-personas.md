@@ -12,7 +12,7 @@ A provider persona can be characterized and summarized with the following statem
 - A provider persona "share their workflow status/outcome" to others + optionally can send arbitrary JSON payloads (max 512 KB size) that will reach their designated address
 - A provider persona "has a need / desire" for others to become aware of it / re-act on their status/outcome event (and or arbitrary JSON payload)
 - A provider persona "is a uni-directional persona" - they distribute events and messages to others
-- A customer of Zekt - should pick "provider persona" - when onboarded - if they are sure that they "only need to inform others" and that they "dont have a need to get informed" by others
+- A customer of Zekt - should pick "provider persona" - when onboarded - if they are sure that they "only need to inform others" and that they "dont have a need to get informed" by others - or if they are certain that they will only request servicing of a "consumer service"
 - To become a provider in Zekt - the provider needs to consent to install the "zekt-orchestration-app" which will provide Zekt with the required permissions (on selected repositories) to fetch workflow run information.
 
 Most providers - are exactly that, providers of services... they want to offer some service, that can be consumed by their customers!
@@ -35,6 +35,14 @@ In comparsion - this persona is bi-directional - allowing sending & recieving - 
 
 - To become both a provider & consumer in Zekt - the customer needs to consent to install the "zekt-orchestrator-app" which will provide Zekt with the required permissions to distribute and to ingest workflow events.
 
-Customers that are having both capabilities (provide & consume) - are in the majority of the implementations, using both events & messaging as it provides a richer toolbox for automation capabilities. Think of eventing as the "when", messaging address the "what" type of questions that normally arise from orchestration needs. At Zekt - while we normally recommend customers to enable themselves as "both" (due to not limiting themselves unless there are legit reasons) - we strongly recommend not to have a single repository being both "consumer repo" and "provider repo" at the same time. Rather, try to separate provider repos & consumer repos - this provide clarity, intent and ease of administration.
+Customers that are having both capabilities (provide & consume) - are in the majority of the implementations, using both events & messaging as it provides a richer toolbox for automation capabilities. Think of eventing as the "when", messaging address the "what" type of questions that normally arise from orchestration needs. At Zekt - while we normally recommend customers to enable themselves as "both" (due to not limiting themselves unless there are legit reasons). With Zekt Core offering (default Zekt offering) - any given repository that is enabled within Zekt, can ONLY be "consumer" or "provider" - not both!
 
 NOTE: While you initially sign up as one of the mentioned personas, there is a possibility to upgrde (free of charge) you personas to "both" from within the zekt management UI. However, we do not allow, downgrade - meaning a consumer or provider, can always become "both" - but a "both" persona cannot downgrade to become consumer or provider only.
+
+## Zekt Chainlink: Not a persona - its a repository thing
+
+As stated above - any given repository activated in Zekt, can only be a "provider repository" or a "consumer repository" due to the persona nature. However - this is a limiatation that is addressed with the premium add-on feature named Zekt Chainlink. Chainlink - allows a single repository to act as both a provider repository and a consumer repository at the same time!
+
+Chainlink - should be used in scenarios - where a single repository need to send triggers to other repositories (inside or outside of same Github organization) while at the same time having to respond to incoming status alerts and events! The most common scenario - are when articulating a business process, that initiates in a single location (repository) - alert downstream partners or suppliers (inside or outside Github organization) and once the whole "business process" has been accomplished - the originating repository is alerted that "event X - ID Y" has now been successfully handled as an example - thereby becoming a "closed loop".
+
+- Chainlink is not a person feature, it is a repository feature and should be handled as that! However, a  Zekt customer cannot enable Zekt Chainlink unless that customer account has "isBoth" (both Provider and Consumer persona set) configured! For more details on Zekt Chainlink, click [here]!(https://www.zekt.dev/zekt-chainlink.html)

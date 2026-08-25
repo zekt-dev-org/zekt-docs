@@ -3,7 +3,6 @@ title: Zekt - Business justification
 description: Zekt - Why do I need Zekt?
 ---
 
-# 🧭 Why do I need Zekt?
 
 ## The problem Zekt solves
 
@@ -25,6 +24,7 @@ To work around this, teams typically:
 - Mirror repositories or duplicate pipelines
 - Build custom webhook infrastructure
 - Rely on manual coordination or support processes
+- Cross-organizational & cross-repository orchestrations become problematic
 
 ---
 
@@ -72,9 +72,9 @@ Zekt uses an **event-driven provider/consumer model**.
 ## ⚙️ How it works (simplified)
 
 ```text
-1. A provider workflow emits an event
-2. Zekt securely routes the event (optionally a arbitrary JSON message payload)
-3. A consumer workflow executes in another organization
+1. A Zekt Service can either emit (Provider Service) an event or ingest input payloads (Consumer Service)
+2. Zekt securely routes the event (optionally a arbitrary JSON message payload) to its destination
+3. A consumer workflow either triggers on the providers event or the consumer service, acts upon the meta-data provided to them
 
 
 <!-- ![Zekt App Logo](../../../assets/zekt-oauth-login.png) -->

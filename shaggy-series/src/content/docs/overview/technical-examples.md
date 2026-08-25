@@ -4,9 +4,12 @@ description: Zekt - technical scenarios, where Zekt solved the problem
 ---
 
 
-## Scenario 1: Notifying retailers about new products
+## Scenario 1: Provider notifying retailers about new products
 
-A company in the retail industry (e.g. footwear - example can be found [here](https://github.com/zekt-dev-org/zekt-provider-example-repo/blob/main/.github/workflows/zekt-provide-sneaker-updates.yml)) continuously updates its product catalog through an internal pipeline.
+A company in the sneaker manufacturing business (e.g Zekt Sneakers) want to make their retails aware when ever a new sneaker model is being launched shortly! This would allow the consumers of this service, to re-act on the information sent by the service, to further automate their ordering / supply-chain and so on.
+
+For the Zekt Sneakers registry entry, click [here]!(https://www.zekt.dev/zekt-registry.html)
+For the Zekt Sneakers workflow service, click [here]!(https://github.com/zekt-dev-org/zekt-provider-example-repo/blob/main/.github/workflows/zekt-provide-sneaker-updates.yml)
 
 When new products are introduced (e.g. upcoming seasonal releases), the company needs to **notify retailers and resellers as quickly as possible** so they can:
 
@@ -44,9 +47,9 @@ Instead of exposing product data via APIs, the company uses Zekt to **publish pr
 
 ### How it works
 
-1. The product pipeline emits an event when new products are added  
-2. Zekt routes the event to approved retailers  
-3. Each retailer triggers their own workflow upon receiving the event  
+1. The product pipeline emits an event through the Zekt Service - when new products are added and send meta-data as part of their Zekt action (Github action) payload.
+2. Zekt routes the event to approved retailers  (handled by the Zekt Service owner)
+3. Each retailer triggers their own workflow upon receiving the event, as the event name / payload can be known to them through Zekt Directory / Registry
 
 Retailers can then:
 - ingest product data  
@@ -80,14 +83,14 @@ Zekt provides:
 - durable event delivery  
 - replay capabilities (“time travel”)  
 - consistent event handling  
+- Zekt Registry - where service owners can present the JSON schema the service is expecting / sending
+- Zekt Directory - marketplace, easen the discovery process of the services offered within Zekt
 
 ---
 
 ### 🔌 Simpler integrations
 Retailers only need to:
 - subscribe to the event  
-
-
 - define a workflow  
 
 No custom API integration required  
@@ -96,12 +99,12 @@ No custom API integration required
 
 ## 🧠 Key takeaway
 
-> Instead of exposing data through APIs, Zekt allows you to expose **events directly from your pipelines** — enabling faster, simpler, and more secure integrations with external partners.
+> Instead of exposing data through APIs, Zekt allows you to expose **events directly from your pipelines** — enabling faster, simpler, and more secure integrations with external partners as long as they are using Github & Zekt.
 
 
 
 
-# 🧪 Scenario 2: Security scan failed — alert audit team for review
+## 🧪 Scenario 2: Security scan failed — alert audit team for review
 
 ## Context
 
@@ -192,7 +195,7 @@ Failures can be replayed:
 
 
 
-# 🧪 Scenario 3: Automating a cross-organization business process
+## 🧪 Scenario 3: Automating a cross-organization business process
 
 ## Context
 
