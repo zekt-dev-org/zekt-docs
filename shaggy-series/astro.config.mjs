@@ -38,6 +38,7 @@ export default defineConfig({
 						// Each item here is one entry in the navigation menu.
 						{ label: 'Sign-up & Sign-in', slug: 'guides/zekt-onboarding' },
 						{ label: 'Provider enablement', slug: 'guides/zekt-enable-provider' },
+						{ label: 'Consumer enablement', slug: 'guides/zekt-enable-consumer' },
 					],
 				},
 				{

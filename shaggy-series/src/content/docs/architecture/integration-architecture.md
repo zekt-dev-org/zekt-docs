@@ -27,3 +27,4 @@ We want / aim to always store messages / events - in an intermediate persistent 
 
 Having intermediate persistent layer would cater for greater "replay" capabilities / "ensure delivery" / "retry functionality" - and it would not "force" solution into becoming so dependent on "hot compute" directly (by increase de-coupling from persistency and processing layers).
 
+Zekt is working towards enabling MCP layering on top of the NLWeb enabled REST API's - that way, REST API become instrumented for MCP interaction / agent AI concepts! First MCP integration is handled through the beta VS CODE extenssion being built-out for Zekt Orchestration services.
