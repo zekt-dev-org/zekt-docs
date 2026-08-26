@@ -79,3 +79,7 @@ The property event_type is important to highlight! This is the specific event "n
 ### Service slug:
 
 The property service_slug is important to highlight! This is non-changeable service definition string. As Zekt tries to protect its customers from becoming overexposed through Zekt to their subscribers - Zekt needs a way, of uniqely identifying a single Zekt Service, to the servicing Github organization / repository - without exposing that to the requestors! As such - the service_slug property, is the unique identifier - which Zekt uses to route between service providers and subscribers!
+
+### Service contracts:
+
+A Zekt service (provider or consumer services) will have an associated service contract - which maps the underlying service, to its subscribers! The contract definition, supports 1-to-1 mapping but also 1-to-many mappings! Meaning a single service can be exposed once, subscribed to by many - cross repository & organization. Access handling to the service is handled by the involved parties through the Zekt web management console. A subscriber will find the service through the Directory. The request access to it - which pops up as an alert on the service owner side! The owner then approved or denies the request! Auto-apply rules are available if so desired. All access requests / approvals / denials - including auto-approve rules are tracked and audited - visible in the navigation item 'Audit Trail'.
