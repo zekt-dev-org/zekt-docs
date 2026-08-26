@@ -7,9 +7,21 @@ Zekt Directory - is the marketplace, where a zekt-provider (of workflows) can "p
 
 ## Zekt Directory - conceptual
 
-As we have learnt, zekt-providers (omit events + optional message payloads) & zekt-consumers (digest events and the corresponding messages). Well - the Zekt directory acts as the marketplace, where a provider can choose to (active decision / not enabled by default / zekt member decides / no extra cost) publish their workflow (the service) to a global audience of potential Zekt consumers!
+As we have learnt, Zekt providers (omit events + optional message payloads) & Zekt consumers (digest events and the corresponding messages). Well - the Zekt directory acts as the marketplace, where a provider can choose to (active decision / not enabled by default / zekt member decides / no extra cost) publish their workflow (the service) to a global audience of potential Zekt consumers!
 
-Once a customer - finds a service, to which they want to subscribe - they can request access to the service (e.g provider workflow) from the zekt management tool. Within the same tool, the zekt provider owning the service - will get alerted, that a request has been sent to them where they can then either approve - or deny the request. As soon, as the consumers request has been approved by the provider - zekt will start brokering the events coming from the provider to the approved consumer(s).
+Once a customer - finds a service, to which they want to subscribe - they can request access to the service (e.g provider workflow) from the zekt management tool. Within the same tool, the zekt provider owning the service - will get alerted, that a request has been sent to them where they can then either approve - or deny the request. As soon, as the consumers request has been approved by the provider - zekt will start brokering the events coming from the provider to the approved consumer(s). Each service published in the Zekt Directory (decision for the customer) is shown as service badge - which can be expanded for more details, as shown below:
+
+![Zekt Services](../../../assets/zekt-services.png)
+
+From this picture we can see:
+
+- service description - explain the purpose of the service
+- service tags - make them easier to find through tagging the service
+- service provider - the name of your company / brand
+- service trust level - based on Github scoring
+- service visibility / exposure - public or organizational
+- service event_type - the event_type the service is emitting
+- service schema - the optional Zekt Registry Schema - which defines the JSON schema the service is emitting / acting on
 
 ###### NOTE: A Zekt service (Provider or Consumer service) can be either exposed & scoped to: 
 
