@@ -26,6 +26,13 @@ We do this, by building on top of existing Github functionality (organizations /
 
 To use layment words - the need to handle "what should happen", "when scenario X occurs" - in a progrmatic consistent manor! This positions using Github workflows as the foundational building blocks for processes that incorporates common developer tasks, but also to allow collaborating to other none "traditional" developer oriented tasks - as part of a process if so desired.
 
+While Zekt handles single event dispatching to one or multiple subscribers, Zekt also offers true Github workflow orchestration capabilities where a customer can:
+
+- execute workflow - that effectively call multiple Zekt Services, in an order that matches their need in one go / sequence through Zekt Action (Github Action) - each with their own payload / in-parameters.
+- Zekt Action relay the orchestration payload to its backend! Zekt backend - then stages the different "steps" in the "orchestration chain" - and then execute them syncronously - one by one.
+- as long as each step in the chain is concluding and finalizes as intended, the state machine engine will proceed executing the requested workload. If a step fails (workflow failure) within Github - the chain will break, and the subsequent step is skipped. The service(s) called in the chain - all have the option to add meta-data to the output objects of the Zekt Action. This way - the requesting workflow will be able to get back meaningful information that can be used to further automate their intent. 
+- once done processing all steps in the orchestration chain - requestor will be alerted and recieve potential output object meta-data for further processing (if so desired). For detailed information on how output objects can be obtained on the requesting workflow side - clikc [here] (https://zekt-dev-org.github.io/zekt-docs/overview/zekt-actions/#zekt-action-outputs--meta-data)
+
 ## Further reading
 
 - [zekt-dev-org](https://github.com/zekt-dev-org) - contains the public repositories we offer, example being the [zekt-docs](https://github.com/zekt-dev-org/zekt-docs) - this site! 
