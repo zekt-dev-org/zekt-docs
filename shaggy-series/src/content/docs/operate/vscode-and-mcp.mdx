@@ -5,17 +5,16 @@ description: Manage Zekt outside the web console — create scoped API tokens fo
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-The web console at [www.zekt.dev](https://www.zekt.dev) is the main way to manage Zekt, and every
-feature shows up there first. You can also work with Zekt from outside the console:
+You manage Zekt in the web console at [www.zekt.dev](https://www.zekt.dev). You can also work with
+it from outside the console:
 
-- **VS Code extension**: common tasks from your editor. Find it on the
+- **MCP**: connect MCP clients to Zekt through the Model Context Protocol.
+- **VS Code extension**: available on the
   [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp).
-  It covers only part of what the console does.
-- **MCP**: connect AI assistants and your own tooling to Zekt through the Model Context Protocol.
-  The VS Code extension is built on it.
-- **Automation**: start orchestrations and replays from scripts.
+  It sets up an MCP connection to Zekt for you.
+- **Programmatic use**: start orchestrations and replays from your own tooling.
 
-All three sign in with an **API token**.
+All of them sign in with an **API token**.
 
 ## API tokens
 
@@ -78,4 +77,5 @@ A Shepherd account can create and revoke tokens on behalf of an accepted Discipl
 
 ## Usage and cost
 
-Actions you take through the extension, MCP or the API count as normal usage on your account.
+MCP calls are billed as usage. See [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html),
+and track them under **Management → Billing → Current Usage**.

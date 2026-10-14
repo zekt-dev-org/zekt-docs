@@ -47,8 +47,7 @@ When a run of a whitelisted workflow completes, Zekt delivers an event to every 
 ## Consumer repository
 
 A repository enabled as a **consumer** receives events. Zekt delivers each one as a GitHub
-`repository_dispatch` event, so all the consumer needs is a workflow that listens for it. There are
-no tokens to manage and nothing to host.
+`repository_dispatch` event, which a workflow in the consumer repository listens for.
 
 <Aside type="note" title="Plan for duplicates">
 	Zekt delivers at least once, so a receiving workflow may occasionally get the same event twice.

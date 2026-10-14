@@ -11,7 +11,9 @@ Public schemas also appear in the [Zekt Registry](https://www.zekt.dev/zekt-regi
 
 ## Versions and compatibility
 
-Schemas follow semantic versioning: `major.minor.patch`.
+Schemas use semantic versions: `major.minor.patch`. Prerelease versions such as `1.2.0-beta.1`
+also exist, but only a stable version (one without a prerelease suffix) can be a service's current
+version.
 
 - A change that would break existing subscribers needs a new **major** version. Zekt refuses to
   publish a breaking change under the same major version.

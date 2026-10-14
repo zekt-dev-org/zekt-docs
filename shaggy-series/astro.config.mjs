@@ -6,8 +6,8 @@ import starlight from '@astrojs/starlight';
 // so keep them working. Keys are relative to `base`; targets include it.
 const redirects = {
 	'/overview/zekt-overview': '/zekt-docs/getting-started/what-is-zekt/',
-	'/overview/business-justification': '/zekt-docs/getting-started/use-cases/',
-	'/overview/technical-examples': '/zekt-docs/getting-started/use-cases/',
+	'/overview/business-justification': '/zekt-docs/getting-started/what-is-zekt/',
+	'/overview/technical-examples': '/zekt-docs/getting-started/what-is-zekt/',
 	'/overview/zekt-personas': '/zekt-docs/getting-started/concepts/',
 	'/overview/zekt-directory': '/zekt-docs/provider/publish-to-directory/',
 	'/overview/zekt-management': '/zekt-docs/getting-started/concepts/',
@@ -51,7 +51,6 @@ export default defineConfig({
 						{ label: 'Quickstart', slug: 'getting-started/quickstart' },
 						{ label: 'Core concepts', slug: 'getting-started/concepts' },
 						{ label: 'Sign up and sign in', slug: 'getting-started/sign-up' },
-						{ label: 'Use cases', slug: 'getting-started/use-cases' },
 					],
 				},
 				{
