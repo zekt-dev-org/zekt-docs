@@ -39,6 +39,27 @@ Zekt uses the App to:
 
 Zekt never stores App installation tokens. It creates a short-lived one whenever it needs to send.
 
+### Permissions
+
+On GitHub, the App is named **zekt-orchestrator-app** (owner `zekt-dev-org`). Its install screen asks
+for these permissions:
+
+| Permission | Access | What Zekt uses it for |
+| --- | --- | --- |
+| Repository: **Contents** | Read & write | Read: listing the workflow files in `.github/workflows`. Write: GitHub requires it to send `repository_dispatch` to a consumer repository. |
+| Repository: **Webhooks** | Read & write | Creating, rotating and removing the webhook Zekt adds to enabled repositories. |
+| Repository: **Checks** | Read | Reading why a run failed. |
+| Repository: **Metadata** | Read | Required by GitHub for every App. |
+| Organization: **Members** | Read | Noticing when someone is removed from an organization (see [Members](/zekt-docs/operate/members/#when-someone-leaves-a-github-organization)). |
+
+<Aside type="note" title="Full list coming">
+	GitHub's install screen also lists two further repository permissions. This table will be
+	completed once their purpose is confirmed.
+</Aside>
+
+The App receives these GitHub events: **Organization**, **Repository**, **Workflow job** and
+**Workflow run**.
+
 ### How to install it
 
 - Install it on the GitHub account that **owns** the repository: your personal account or the
