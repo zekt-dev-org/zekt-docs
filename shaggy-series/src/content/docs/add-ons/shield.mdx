@@ -21,11 +21,17 @@ Doctrine. Shield is shown to accounts that pay their own bill, not to Disciple a
 
 <Steps>
 
-1. Generate an RSA key pair on your own machine, for example with `openssl genrsa 4096`. Use
-   4096 bits (recommended) or at least 2048.
-2. Go to **Shield → Consumer Keys** and upload **only the public key**, in PEM format. One key covers
-   all of your account's subscriptions. If you paste a private key, it's rejected.
-3. Store the private key as a GitHub Actions secret in your consumer repository. It never leaves you.
+1. Generate an RSA key pair on your own machine. Use 4096 bits (recommended) or at least 2048:
+
+   ```bash
+   openssl genrsa -out zekt-shield.pem 4096
+   openssl rsa -in zekt-shield.pem -pubout -out zekt-shield.pub.pem
+   ```
+
+2. Go to **Shield → Consumer Keys** and upload **only the public key** (`zekt-shield.pub.pem`). One
+   key covers all of your account's subscriptions. If you paste a private key, it's rejected.
+3. Store the **private key** (`zekt-shield.pem`) as a GitHub Actions secret in your consumer
+   repository, for example `ZEKT_SHIELD_PRIVATE_KEY`. It never goes to Zekt.
 
 </Steps>
 
@@ -54,8 +60,73 @@ a key is free.
 
 The consumer decrypts in its own workflow, with its private key.
 
-<Aside type="caution" title="Decryption guide coming">
-	A step-by-step guide to the encrypted payload's format and decrypting it will be added here.
+#### How the payload is encrypted
+
+The provider's workflow uses hybrid encryption. The payload is encrypted once with **AES-256-GCM**,
+using a random key and a 12-byte IV. That key is then wrapped for each subscriber with their RSA
+public key (**RSA-OAEP, SHA-256**).
+
+- If no subscriber has uploaded a public key, the provider's step **fails**. Nothing is ever sent
+  unencrypted by mistake.
+- If wrapping fails for any subscriber, the step fails and names that subscriber.
+- There's no size limit beyond the normal [1 MB request limit](/zekt-docs/reference/limits/).
+
+#### What you receive
+
+`client_payload.zekt.payload` is an envelope:
+
+```json
+{
+  "type": "zekt-shield-envelope",
+  "iv": "<base64>",
+  "authTag": "<base64>",
+  "ciphertext": "<base64>",
+  "recipients": { "<Zekt account ID>": "<base64 wrapped key>" }
+}
+```
+
+Your entry in `recipients` is keyed by your Zekt account ID, which starts with `cust-`.
+
+#### Decrypt in your workflow
+
+This step uses only Node's built-in `crypto`, with no extra packages. It writes the decrypted payload
+to a file for later steps to read:
+
+```yaml
+      - name: Decrypt Zekt Shield payload
+        env:
+          ENVELOPE: ${{ toJSON(github.event.client_payload.zekt.payload) }}
+          ZEKT_ACCOUNT_ID: cust-000123        # your Zekt account ID
+          ZEKT_SHIELD_PRIVATE_KEY: ${{ secrets.ZEKT_SHIELD_PRIVATE_KEY }}
+        run: |
+          node -e '
+            const c = require("crypto");
+            const e = JSON.parse(process.env.ENVELOPE);
+            if (e.type !== "zekt-shield-envelope") throw new Error("Not a Shield envelope");
+            const wrapped = e.recipients[process.env.ZEKT_ACCOUNT_ID];
+            if (!wrapped) throw new Error("This envelope has no key for this account");
+            const key = c.privateDecrypt(
+              { key: process.env.ZEKT_SHIELD_PRIVATE_KEY, padding: c.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: "sha256" },
+              Buffer.from(wrapped, "base64"));
+            const d = c.createDecipheriv("aes-256-gcm", key, Buffer.from(e.iv, "base64"));
+            d.setAuthTag(Buffer.from(e.authTag, "base64"));
+            const plain = Buffer.concat([d.update(Buffer.from(e.ciphertext, "base64")), d.final()]);
+            require("fs").writeFileSync(process.env.RUNNER_TEMP + "/zekt-payload.json", plain);
+          '
+      - run: jq . "$RUNNER_TEMP/zekt-payload.json"
+```
+
+A tampered ciphertext fails decryption.
+
+<Aside type="caution" title="Keep it out of the logs">
+	Never echo the decrypted payload or the private key into workflow logs. Read the decrypted file in
+	later steps instead.
+</Aside>
+
+<Aside type="note" title="Changed in zekt-action 3.1.0">
+	Provider workflows using `zekt-action@v3` now use hybrid encryption (from version 3.1.0).
+	Consumers that decrypted the older format, where each recipient had the whole payload
+	RSA-encrypted, must switch to the step above.
 </Aside>
 
 ### What Shield covers
