@@ -1,10 +1,22 @@
 name: Build and Deploy Documentation
 
+# Builds on every PR (as a check) and deploys to GitHub Pages on push to main.
+# The built site is uploaded as a Pages artifact; nothing is committed back to the repo.
+# Requires Settings → Pages → Build and deployment → Source: "GitHub Actions".
+
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -29,20 +41,24 @@ jobs:
         run: npm run build
         working-directory: shaggy-series
 
-      - name: Create docs directory if it doesn't exist
-        run: mkdir -p docs
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: shaggy-series/dist
 
-      - name: Copy build output to docs folder
-        run: cp -r shaggy-series/dist/* docs/
-
-      - name: Create .nojekyll file
-        run: touch docs/.nojekyll
-
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add docs/
-          git commit -m "Deploy: Update documentation from build" || true
-          git push
-
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy to GitHub Pages
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

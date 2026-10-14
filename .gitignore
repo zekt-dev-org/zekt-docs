@@ -1,0 +1,2 @@
+# Local editor/MCP config can hold tokens; never commit it
+.vscode/mcp.json
