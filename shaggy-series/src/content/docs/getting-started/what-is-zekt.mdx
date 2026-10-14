@@ -5,6 +5,21 @@ description: Zekt connects GitHub Actions workflows across repository and organi
 
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
+Zekt is for companies that want to turn their workflows into services that others can easily
+consume: teams inside the same GitHub organization, other GitHub organizations, or personal GitHub
+accounts.
+
+Zekt's orchestration is popular in platform engineering, where long chains of individual steps can
+be orchestrated across different providers.
+
+Your business logic stays in your own workflow YAML. Zekt handles only event dispatch and
+distribution, including orchestration. It never dictates the logic you expose. It routes events to
+the intended receivers, lists your services in the Zekt Directory, and handles
+[access approval](/zekt-docs/provider/access-requests/) and
+[payload schemas](/zekt-docs/provider/schemas/).
+
+## How it works
+
 Zekt connects GitHub Actions workflows across repository and organization boundaries. A workflow in
 one repository can trigger workflows in other repositories, and nobody shares tokens or repository
 access.
