@@ -1,0 +1,49 @@
+---
+title: Publish to the Directory
+description: Choose who can find your service — unlisted, organization or public — and what listing does and doesn't do.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The **Directory** is where signed-in Zekt accounts find services and request access. Listing a
+service makes it discoverable. Whether anyone actually gets events is still up to you: every
+subscription needs your approval or one of your [auto-approval rules](/zekt-docs/provider/access-requests/).
+
+## Visibility levels
+
+| Visibility | Who can find it | Typical use |
+| --- | --- | --- |
+| **Unlisted** | Nobody can browse to it. Anyone you give the service's ID to can still request access. | Private arrangements with known partners. |
+| **Organization** | Your own account, plus accounts that have active repositories under the same GitHub owner as the service. | Internal platform services within a company's GitHub organization. |
+| **Public** | Everyone, including the public [Zekt Registry](https://www.zekt.dev/zekt-registry.html), which anyone can browse without signing in. | Services offered to customers or partners at large. |
+
+### Defaults and rules
+
+- A new **provider service** starts **unlisted**: the Publish toggle is off.
+- A new **consumer service** starts at **Organization**. Zekt asks you to confirm before making one Public.
+- Re-listing an unlisted service puts it at **Organization**. Moving it to Public is a separate,
+  deliberate step.
+
+## What subscribers see
+
+A listing shows the service's name, the publisher name, its description and its tags. Choose these
+for the people who will consume the service, and don't expose internal repository or workflow names.
+
+- **Publisher name**: the name the service is published under. Each publisher name belongs to one
+  GitHub owner, so if another owner already uses it, you'll get `PUBLISHER_NAME_TAKEN`.
+- **Description**: what the service does, whether it sends a payload, and who to contact.
+- **Tags**: subscribers filter the Directory by tags.
+
+If the service has a [payload schema](/zekt-docs/provider/schemas/), you can choose to show it before
+access is granted, so people can see what they'd receive before they ask.
+
+<Aside type="caution" title="Know who you're dealing with">
+	A publisher name is chosen by the publisher, so it isn't proof of identity. Before you subscribe
+	to a service, or approve someone's request, make sure you know who is on the other side.
+</Aside>
+
+## Things that block changes
+
+- You **can't disable a provider repository** while one of its services is listed at Organization or
+  Public. Unlist the service first.
+- You **can't delete a provider service** that still has active subscribers. Revoke their access first.

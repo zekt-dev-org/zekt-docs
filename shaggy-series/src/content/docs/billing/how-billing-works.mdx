@@ -1,0 +1,112 @@
+---
+title: How billing works
+description: The free trial, what you pay for, monthly invoices, the Billing section, and what happens when a payment fails.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+For current prices, see [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html). For the
+contractual terms, see the [Terms of Service](https://www.zekt.dev/terms-of-service.html). This page
+explains how billing behaves day to day.
+
+## What you pay for
+
+Your bill has two parts:
+
+- **Fixed fees per repository**: a base fee for each enabled repository, plus a fee for each add-on
+  ([Analytics](/zekt-docs/add-ons/analytics/), [Shield](/zekt-docs/add-ons/shield/),
+  [Chainlink](/zekt-docs/add-ons/chainlink/)) enabled on it.
+- **Usage**: what you actually use, such as API calls, webhooks, storage, MCP calls, archive and
+  network transfer.
+
+Fixed fees are **pro-rated by the day**. You pay only for the days a repository or add-on was active
+in the month. A repository in Chainlink mode is charged the Chainlink fee for those days, and the base
+fee for its other active days. Usage isn't pro-rated, because it's already measured as you go.
+
+## Free trial
+
+<Steps>
+
+1. **Add a card to start the trial.** Signing up ends on the payment page. The 7-day trial starts
+   when you add a card, and each account gets only one trial. Your billing address must include a
+   country, so invoices can show the right tax. Without it, the card is refused.
+2. **Use Zekt for 7 days.** About 24 hours before the trial ends, an in-app message (not an email)
+   reminds you.
+3. **After the trial, service just continues.** Nothing is charged on that day. Your first charge
+   comes on the next monthly invoice.
+
+</Steps>
+
+<Aside type="caution" title="There is no &quot;cancel trial&quot; button">
+	To avoid being charged, [delete your account](/zekt-docs/operate/account/#delete-your-account)
+	before the 7 days are up. Delete within the trial and you won't be charged. After the trial,
+	fixed fees are pro-rated from the day it ended.
+</Aside>
+
+If a trial ends with no card on file, the account is suspended. Contact
+[Zekt support](mailto:support@zekt.dev).
+
+## Monthly invoice
+
+- You're billed **in arrears**: each month is invoiced on the **6th of the following month**, in USD,
+  and charged automatically to your card. Tax is added where it applies.
+- The invoice shows **one line** with the month's total, for example `Zekt Usage - 2026-10`, with
+  `(Pro-rated: X/Y days)` added when that applies. Any discount is already included in the total.
+  For the breakdown per repository and add-on, use the [Billing section](#the-billing-section).
+- No invoice is created for a month that totals $0.00.
+- Download invoices under **Management → Billing → Payment Method → Download Invoices**. Each
+  invoice shows its date, number, month, amount and status (Paid, Open, Draft, Void or
+  Uncollectible), with a PDF and a link to the hosted invoice page, where you can pay it.
+
+Zekt itself doesn't send billing emails.
+
+## The Billing section
+
+Go to **Management → Billing**:
+
+| Tab | Shows |
+| --- | --- |
+| **Current Usage** | This month's estimated total, your fixed fees (base and each add-on), and usage by type. If pro-rating applies, a *Pro-rated Billing Applied* notice appears. |
+| **Cost Breakdown** | Costs per repository and per service. |
+| **History** | A monthly chart, and past months broken down per repository. |
+| **Forecast** | A projection for the month, with recommendations. |
+| **Payment Method** | Your card (brand and last four digits), the billing email, banners about payment problems, and your invoices. |
+
+## Change your card
+
+You need the **Owner** or **Billing** [role](/zekt-docs/operate/members/#roles).
+
+<Steps>
+
+1. Go to **Management → Billing → Payment Method**.
+2. Choose **Update Card** and enter the new card. Stripe handles card entry, so card details never
+   reach Zekt.
+3. The new card is used for future invoices.
+
+</Steps>
+
+Updating your card doesn't retry a failed payment. To pay an open invoice, use its hosted invoice
+link under **Download Invoices**.
+
+## When a payment fails
+
+<Steps>
+
+1. **7-day grace period.** Service continues as normal. The **Payment Method** tab shows a banner with
+   the date your service continues until.
+2. **After the grace period, new work stops.** That means new dispatches, deliveries to subscribers,
+   orchestrations, replays, and MCP dispatch and replay. You can still read your data and change
+   settings, and work that was already accepted still finishes.
+3. **Service resumes** once the open invoice is paid and no other month is unpaid. Pay through the
+   hosted invoice link under **Download Invoices**.
+
+</Steps>
+
+The **Payment Method** tab also shows banners when your bank needs you to confirm a payment (3-D
+Secure), and when your card is about to expire.
+
+### Disputes and chargebacks
+
+If your bank opens a dispute on a Zekt charge, new work stops **immediately**, with no grace period.
+Service resumes if the dispute is resolved in Zekt's favour. If the chargeback succeeds, the account
+stays suspended, even if you pay later invoices. Contact [Zekt support](mailto:support@zekt.dev).

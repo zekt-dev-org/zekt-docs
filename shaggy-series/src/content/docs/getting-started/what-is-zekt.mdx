@@ -1,0 +1,66 @@
+---
+title: What is Zekt?
+description: Zekt is an event bus for GitHub Actions that connects workflows across repositories, organizations and enterprises.
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+GitHub Actions workflows stop at the organization boundary. When a workflow in one organization has to
+trigger a workflow in another one, teams usually share tokens, grant repository access or write
+webhook glue code.
+
+Zekt removes that work. A **provider** publishes a workflow as a Zekt **service**. A **consumer**
+subscribes to it. Each time the provider's workflow runs, Zekt delivers an event to every approved
+consumer repository as a standard `repository_dispatch` event. The two sides share no tokens, need
+no network path between them, and grant no access to each other's repositories.
+
+## What you can do with it
+
+<CardGrid>
+	<Card title="Trigger workflows across organizations" icon="rocket">
+		A platform team can trigger deployments in product teams, or a vendor can trigger a customer's
+		pipeline, without access to the other side's repositories.
+	</Card>
+	<Card title="Publish internal services" icon="list-format">
+		List workflows in the Zekt Directory. Other teams find them, request access and subscribe
+		without having to message the owning team.
+	</Card>
+	<Card title="Send context with events" icon="document">
+		Use the free Zekt Action to attach a JSON payload to an event: build outputs,
+		deployment targets, approval references.
+	</Card>
+	<Card title="See what happened" icon="magnifier">
+		Every delivery is recorded, so providers and consumers can both see whether an
+		event arrived and what happened to it.
+	</Card>
+</CardGrid>
+
+## The building blocks
+
+| Component | What it does |
+| --- | --- |
+| **Zekt Core** | The event bus: providers, consumers, services, the Directory and delivery tracking. Every other component builds on it. |
+| **Zekt Action** | A free GitHub Action that attaches a JSON payload to an event, and submits orchestration requests. |
+| **Zekt Analytics** (add-on) | Dashboards, event history, and Time Travel replay. |
+| **Zekt Shield** (add-on) | Zero-knowledge encryption of payloads with your own keys, plus Redaction Guard. |
+| **Zekt Chainlink** (add-on) | Lets one repository act as both provider and consumer, for multi-hop event chains. |
+
+For prices, see [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
+
+## When Zekt is the right fit
+
+- You need to trigger GitHub Actions in another organization without exposing secrets or granting repository access.
+- Your CI/CD crosses organizational boundaries, for example a platform team serving many product teams.
+- You want one team to publish a workflow that many teams subscribe to.
+- You want to replace hand-written webhook scripts with a monitored, replayable event bus.
+
+Zekt is not a general automation tool or a generic webhook service. It connects GitHub workflows
+to each other. For an honest comparison with other tools, see
+[Zekt vs. alternatives](https://www.zekt.dev/zekt-vs-alternatives.html).
+
+## Next steps
+
+<CardGrid>
+	<LinkCard title="Core concepts" href="/zekt-docs/getting-started/concepts/" description="Accounts, providers, consumers, services and the Directory." />
+	<LinkCard title="Quickstart" href="/zekt-docs/getting-started/quickstart/" description="From sign-in to your first delivered event." />
+</CardGrid>

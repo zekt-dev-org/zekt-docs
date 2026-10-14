@@ -2,59 +2,122 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
+// Old URLs (before the 2026-10 restructure) → new pages. zekt.dev links to some of these,
+// so keep them working. Keys and targets include the base path.
+const redirects = {
+	'/zekt-docs/overview/zekt-overview': '/zekt-docs/getting-started/what-is-zekt/',
+	'/zekt-docs/overview/business-justification': '/zekt-docs/getting-started/use-cases/',
+	'/zekt-docs/overview/technical-examples': '/zekt-docs/getting-started/use-cases/',
+	'/zekt-docs/overview/zekt-personas': '/zekt-docs/getting-started/concepts/',
+	'/zekt-docs/overview/zekt-directory': '/zekt-docs/provider/publish-to-directory/',
+	'/zekt-docs/overview/zekt-management': '/zekt-docs/getting-started/concepts/',
+	'/zekt-docs/overview/zekt-apps': '/zekt-docs/security/github-access/',
+	'/zekt-docs/overview/zekt-actions': '/zekt-docs/provider/zekt-action/',
+	'/zekt-docs/overview/zekt-events': '/zekt-docs/consumer/receive-events/',
+	'/zekt-docs/guides/zekt-onboarding': '/zekt-docs/getting-started/sign-up/',
+	'/zekt-docs/guides/zekt-enable-provider': '/zekt-docs/provider/enable-repository/',
+	'/zekt-docs/guides/handle-zekt-provider-repo': '/zekt-docs/provider/enable-repository/',
+	'/zekt-docs/guides/handle-zekt-provider-workflows': '/zekt-docs/provider/workflows-and-services/',
+	'/zekt-docs/guides/handle-zekt-provider-services': '/zekt-docs/provider/workflows-and-services/',
+	'/zekt-docs/guides/zekt-provider-ui': '/zekt-docs/provider/enable-repository/',
+	'/zekt-docs/guides/zekt-enable-consumer': '/zekt-docs/consumer/enable-repository/',
+	'/zekt-docs/guides/handle-zekt-consumer-repo': '/zekt-docs/consumer/enable-repository/',
+	'/zekt-docs/guides/handle-zekt-consumer-services': '/zekt-docs/consumer/consumer-services/',
+	'/zekt-docs/guides/handle-zekt-directory': '/zekt-docs/consumer/request-access/',
+	'/zekt-docs/architecture/system-architecture': '/zekt-docs/security/how-zekt-works/',
+	'/zekt-docs/architecture/integration-architecture': '/zekt-docs/security/how-zekt-works/',
+	'/zekt-docs/architecture/configuration-architecture': '/zekt-docs/security/how-zekt-works/',
+	'/zekt-docs/architecture/zekt-datam': '/zekt-docs/security/how-zekt-works/',
+	'/zekt-docs/security/zekt-security-overview': '/zekt-docs/security/overview/',
+};
+
 // Astro configuration for Zekt Docs site with Starlight
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://zekt-dev-org.github.io/zekt-docs/',
 	base: '/zekt-docs/',
+	redirects,
 	integrations: [
 		starlight({
 			title: 'Zekt Docs',
 			customCss: ['./src/styles/custom.css'],
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/zekt-dev-org' }],
+			// Every page must be listed here, or readers can't reach it.
 			sidebar: [
 				{
-					label: 'Zekt Overview',
+					label: 'Get started',
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Overview', slug: 'overview/zekt-overview' },
-						    // Subcategory:
-							{ label: 'Why do I need Zekt?', items: [	
-								{ label: 'Business justification', slug: 'overview/business-justification' },
-								{ label: 'Technical example(s)', slug: 'overview/technical-examples' },
-								],
-							},
-						{ label: 'Personas', slug: 'overview/zekt-personas' },
-						{ label: 'Directory', slug: 'overview/zekt-directory' },
-						{ label: 'Management', slug: 'overview/zekt-management' },
-						{ label: 'Apps', slug: 'overview/zekt-apps' },
-						{ label: 'Actions', slug: 'overview/zekt-actions' },
-						{ label: 'Events & Messaging', slug: 'overview/zekt-events' },
+						{ label: 'What is Zekt?', slug: 'getting-started/what-is-zekt' },
+						{ label: 'Quickstart', slug: 'getting-started/quickstart' },
+						{ label: 'Core concepts', slug: 'getting-started/concepts' },
+						{ label: 'Sign up and sign in', slug: 'getting-started/sign-up' },
+						{ label: 'Use cases', slug: 'getting-started/use-cases' },
 					],
 				},
 				{
-					label: 'Zekt Guides',
+					label: 'Provide services',
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Sign-up & Sign-in', slug: 'guides/zekt-onboarding' },
-						{ label: 'Provider enablement', slug: 'guides/zekt-enable-provider' },
-						{ label: 'Consumer enablement', slug: 'guides/zekt-enable-consumer' },
+						{ label: 'Enable a provider repository', slug: 'provider/enable-repository' },
+						{ label: 'Workflows and services', slug: 'provider/workflows-and-services' },
+						{ label: 'Publish to the Directory', slug: 'provider/publish-to-directory' },
+						{ label: 'Handle access requests', slug: 'provider/access-requests' },
+						{ label: 'Send a payload (Zekt Action)', slug: 'provider/zekt-action' },
+						{ label: 'Payload schemas', slug: 'provider/schemas' },
 					],
 				},
 				{
-					label: 'Zekt Architecture',
+					label: 'Consume services',
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'System Architecture', slug: 'architecture/system-architecture' },
-						{ label: 'Integration Architecture', slug: 'architecture/integration-architecture' },
-						{ label: 'Data Architecture', slug: 'architecture/configuration-architecture' },
+						{ label: 'Enable a consumer repository', slug: 'consumer/enable-repository' },
+						{ label: 'Find a service and request access', slug: 'consumer/request-access' },
+						{ label: 'Receive events', slug: 'consumer/receive-events' },
+						{ label: 'Offer a consumer service', slug: 'consumer/consumer-services' },
 					],
 				},
 				{
-					label: 'Zekt Security',
+					label: 'Orchestration',
+					items: [{ label: 'Orchestrate several services', slug: 'orchestration/overview' }],
+				},
+				{
+					label: 'Operate',
 					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Security', slug: 'security/zekt-security-overview' },
+						{ label: 'Delivery tracking', slug: 'operate/deliveries' },
+						{ label: 'Webhook health', slug: 'operate/webhook-health' },
+						{ label: 'Connections and blast radius', slug: 'operate/connections-view' },
+						{ label: 'Audit log', slug: 'operate/audit-log' },
+						{ label: 'Your account', slug: 'operate/account' },
+						{ label: 'Members and Flock', slug: 'operate/members' },
+						{ label: 'VS Code, MCP and API keys', slug: 'operate/vscode-and-mcp' },
+					],
+				},
+				{
+					label: 'Add-ons',
+					items: [
+						{ label: 'Zekt Analytics', slug: 'add-ons/analytics' },
+						{ label: 'Zekt Shield', slug: 'add-ons/shield' },
+						{ label: 'Zekt Chainlink', slug: 'add-ons/chainlink' },
+					],
+				},
+				{
+					label: 'Billing',
+					items: [{ label: 'How billing works', slug: 'billing/how-billing-works' }],
+				},
+				{
+					label: 'Security',
+					items: [
+						{ label: 'Security overview', slug: 'security/overview' },
+						{ label: 'GitHub access', slug: 'security/github-access' },
+						{ label: 'How Zekt works', slug: 'security/how-zekt-works' },
+					],
+				},
+				{
+					label: 'Reference',
+					items: [
+						{ label: 'Event payload', slug: 'reference/event-payload' },
+						{ label: 'Zekt Action inputs and outputs', slug: 'reference/zekt-action' },
+						{ label: 'Limits', slug: 'reference/limits' },
+						{ label: 'Troubleshooting', slug: 'reference/troubleshooting' },
+						{ label: 'Glossary', link: 'https://www.zekt.dev/zekt-terminology.html', attrs: { target: '_blank' } },
 					],
 				},
 			],

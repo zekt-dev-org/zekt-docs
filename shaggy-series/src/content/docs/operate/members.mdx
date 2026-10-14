@@ -1,0 +1,96 @@
+---
+title: Members and Flock
+description: Share an account with colleagues using member roles, or bill another person's account to yours with Flock.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+There are two ways for several people to work with Zekt under one bill:
+
+- **Members** share **one account**. Everyone works on the same repositories and services.
+- **Flock** links **separate accounts**. Each person keeps their own account, but the costs go to one
+  paying account.
+
+## Members
+
+Manage members under **Profile → Members**.
+
+### Roles
+
+| Role | Can do |
+| --- | --- |
+| **Owner** | Everything, including billing and managing members. |
+| **Billing** | Invoices, payment method and usage, plus everything a Member can do. |
+| **Member** (default) | Everyday product use. No billing and no member management. |
+
+Everyone on the account can see who belongs to it. Only owners can add, change or remove members.
+
+### Add a member
+
+<Steps>
+
+1. Go to **Profile → Members**.
+2. Type the person's **GitHub username** and choose a role.
+3. Confirm. The person is added straight away. Zekt sends no invitation and no email, so let them
+   know yourself.
+
+</Steps>
+
+Common messages when adding someone:
+
+| Message | Meaning |
+| --- | --- |
+| *GitHub has no user called …* | Check the spelling of the username. |
+| *… is a GitHub organisation, not a person* | Members are people. Enter a personal GitHub username. |
+| *We could not check that username with GitHub just now. Nothing has changed* | GitHub didn't answer. Try again shortly. |
+| *already owns this account* / *already a … on this account* | The person is already on the account. Change their role instead. |
+
+### Change or remove members
+
+Use the filters **Active**, **Owners**, **Removed** and **All** to find people. Removed members stay
+in the list as history.
+
+To protect the account:
+
+- The **last owner** can't be removed or demoted. Add another owner first.
+- The **account owner**, the GitHub login the account belongs to, can't be removed or demoted on
+  this screen.
+
+To leave someone else's account, remove yourself under **Profile → Members**.
+
+### Which account you act for
+
+- If you own a Zekt account, you always act for that account.
+- If you don't own an account but are a member of one, you act for that account.
+- If you don't own an account and are an active member of **more than one**, Zekt can't tell which
+  one you mean, and refuses the sign-in. Contact [Zekt support](mailto:support@zekt.dev).
+
+<Aside type="note" title="GitHub organization membership doesn't give access">
+	Being a member of a GitHub organization gives you no access to any Zekt account, even if that
+	account has repositories in the organization. An organization admin can't take over such an
+	account.
+</Aside>
+
+## Flock: Shepherd and Disciple accounts
+
+Use **Profile → Flock** when another person should keep their own Zekt account but have its costs
+billed to yours. The paying account is the **Shepherd**. The linked account is a **Disciple**.
+
+<Steps>
+
+1. In the Shepherd account, go to **Profile → Flock** and create an invitation for the other
+   person's **GitHub username**. You can restrict the link to a GitHub organization that you both
+   belong to.
+2. Send the link yourself. Zekt doesn't email it. It's valid for **7 days**.
+3. When the person accepts:
+	- their account becomes a Disciple account, and its costs are billed to the Shepherd;
+	- they're also added as a member of the Shepherd's account.
+
+</Steps>
+
+A Shepherd can create and revoke [API tokens](/zekt-docs/operate/vscode-and-mcp/#api-tokens) for an
+accepted Disciple.
+
+<Aside type="caution">
+	Everything a Disciple account does is billed to the Shepherd. Only invite people you trust.
+</Aside>

@@ -1,0 +1,103 @@
+---
+title: Core concepts
+description: The terms you need before using Zekt — accounts, personas, providers, consumers, services, the Directory, visibility and access.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+You need about a dozen terms to use Zekt. Every guide uses them as defined here. For the full
+glossary, see [zekt.dev/zekt-terminology](https://www.zekt.dev/zekt-terminology.html).
+
+## Account
+
+Your **Zekt account** is the customer: whoever signed up, holds the subscription and pays the bill.
+You sign in with your GitHub identity and manage everything in the web console at
+[www.zekt.dev](https://www.zekt.dev).
+
+The account is created when you first sign in with GitHub, and that GitHub login is the account
+owner. Colleagues can be added as [members](/zekt-docs/operate/members/).
+
+An account enables **repositories**, and those repositories can live under several GitHub owners:
+organizations, your personal GitHub account, or both. A repository can be enabled by only one Zekt
+account at a time.
+
+<Aside type="caution" title="An account is not a GitHub organization">
+	A GitHub organization is only a *scope* where repositories live. It doesn't own a Zekt account.
+	Several Zekt accounts can each enable repositories under the same GitHub organization, and each
+	account pays for its own repositories.
+</Aside>
+
+## Persona
+
+When you sign up, you choose the account's **persona**: **Provider**, **Consumer** or **Both**. The
+persona decides which parts of the console you see and which repository roles you can use.
+
+You can add the other role later, under **Profile → Persona & Access**. Upgrading to Both is
+one-way: you can't downgrade afterwards.
+
+## Provider repository
+
+A repository enabled as a **provider** sends events. Each workflow in it is either:
+
+- **Disabled**: Zekt ignores it. This is the default.
+- **Whitelisted**: the workflow is offered as a **service** that other repositories can subscribe to.
+
+When a run of a whitelisted workflow completes, Zekt delivers an event to every approved subscriber.
+
+## Consumer repository
+
+A repository enabled as a **consumer** receives events. Zekt delivers each one as a GitHub
+`repository_dispatch` event, so all the consumer needs is a workflow that listens for it. There are
+no tokens to manage and nothing to host.
+
+<Aside type="note" title="Plan for duplicates">
+	Zekt delivers at least once, so a receiving workflow may occasionally get the same event twice.
+	Make consumer workflows safe to run twice for the same event.
+</Aside>
+
+## Provider services and consumer services
+
+Most services are **provider services**: a provider's workflow runs and its subscribers are
+notified.
+
+An account with the **Both** persona can also offer a **consumer service**. Here the service sits on
+a consumer repository, and *other* accounts send events into it, typically to ask for work to be
+done ("create a resource group", "scan this image"). Consumer services are what
+[orchestration](/zekt-docs/orchestration/overview/) calls.
+
+## Event and payload
+
+An **event** tells subscribers that a workflow run happened, and carries metadata about that run.
+On its own, that's enough to trigger a consumer.
+
+If consumers need more context, add the [Zekt Action](/zekt-docs/provider/zekt-action/) to the
+provider workflow to attach a JSON **payload**. Consumers receive the event and the payload together.
+The [event reference](/zekt-docs/reference/event-payload/) shows the exact shape.
+
+## Directory and visibility
+
+The **Directory** is where signed-in accounts find services and request access. Each service has
+one of three **visibility** levels:
+
+| Visibility | Who can find it |
+| --- | --- |
+| **Unlisted** | Nobody can browse to it, but anyone who has the service's ID can still request access. |
+| **Organization** | Your own account, plus accounts that have active repositories under the same GitHub owner as the service. |
+| **Public** | Everyone, including visitors to the public [Zekt Registry](https://www.zekt.dev/zekt-registry.html), who don't need to sign in. |
+
+A new provider service starts **unlisted**. A new consumer service starts at **Organization**. See
+[Publish to the Directory](/zekt-docs/provider/publish-to-directory/).
+
+## Access requests and connections
+
+A consumer **requests access** to a service. The service owner approves or denies the request.
+Approval creates a subscription, which the console calls a **connection**, and events start flowing.
+
+To skip the manual step, owners can set up **auto-approval rules** for a specific GitHub user or
+for all consumers. See [Handle access requests](/zekt-docs/provider/access-requests/).
+
+## Schemas
+
+A service can publish versioned JSON **schemas** for its payload, so subscribers know what they'll
+receive. Consumer services can also publish the shape of the outputs they return. See
+[Payload schemas](/zekt-docs/provider/schemas/).
