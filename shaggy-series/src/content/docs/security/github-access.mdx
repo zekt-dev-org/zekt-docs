@@ -49,13 +49,10 @@ for these permissions:
 | Repository: **Contents** | Read & write | Read: listing the workflow files in `.github/workflows`. Write: GitHub requires it to send `repository_dispatch` to a consumer repository. |
 | Repository: **Webhooks** | Read & write | Creating, rotating and removing the webhook Zekt adds to enabled repositories. |
 | Repository: **Checks** | Read | Reading why a run failed. |
+| Repository: **Actions** | Read & write | Read: workflow lists and workflow runs. Write: used only to start Zekt's own demo workflows; Zekt doesn't use write access on your repositories. |
+| Repository: **Administration** | Read & write | Zekt doesn't currently use this permission. |
 | Repository: **Metadata** | Read | Required by GitHub for every App. |
 | Organization: **Members** | Read | Noticing when someone is removed from an organization (see [Members](/zekt-docs/operate/members/#when-someone-leaves-a-github-organization)). |
-
-<Aside type="note" title="Full list coming">
-	GitHub's install screen also lists two further repository permissions. This table will be
-	completed once their purpose is confirmed.
-</Aside>
 
 The App receives these GitHub events: **Organization**, **Repository**, **Workflow job** and
 **Workflow run**.
