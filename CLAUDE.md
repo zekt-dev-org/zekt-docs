@@ -36,20 +36,32 @@ Sync procedure ("sync docs to latest release"):
    `last_synced_date` to the newest processed entry.
 5. Open a PR. Never push docs changes straight to `main`; a human merges.
 
+### Where product facts come from
+
+Owner rule (2026-10-14): information flows from zektMainWeb to the docs, never the other way. What
+the product does is decided in zektMainWeb, from its code. These docs never originate a product
+claim: not from their own existing pages, not from www.zekt.dev / `public/*.html` (those drift too),
+and not by inference.
+
+The only two inputs are:
+
+1. live entries in zektMainWeb's `docs/releases.md`;
+2. **fact briefs** sent by a zektMainWeb session, checked against the code. Facts tagged unverified
+   in a brief are not published as fact.
+
+Where a fact is missing, ask the zektMainWeb side; don't infer it. Anything not yet backed by a
+release entry or a brief is "awaiting brief" and must not ship as fact. Say so in the PR description.
+
 ### What may be read from zektMainWeb
 
 The allow-list is enforced by these instructions, not by access control. Follow it exactly.
 
-- **Allowed:** `docs/releases.md`; `public/*.html` (already public on www.zekt.dev — use the
-  product/marketing pages, not admin tools such as `db-admin.html` or `zekt-admin.html`); a section
-  of `docs/decisions/*.md` **only when a live entry cites it under `sources`**, paraphrased, never
-  copied.
-- **Denied:** everything else, including `specs/**`, `docs/deferred/**`, `docs/billing/**`,
-  `docs/validation/**`, `docs/incidents/**`, `docs/pending-checks.md`, `docs/staging-runbook.md`,
-  `docs/stripe-live-cutover.md`, `ZEKT_PLATFORM_OVERVIEW.md`, `zekt-knowledge-base.md`, source
-  code and configuration.
-- If something a customer needs is not covered by an allowed source, do not infer it from a denied
-  one. List it as an open question in the PR description.
+- **Allowed:** `docs/releases.md`, and a section of `docs/decisions/*.md` **only when a release
+  entry or a brief cites it**, paraphrased, never copied.
+- **Denied:** everything else, including `public/*.html`, `specs/**`, `docs/deferred/**`,
+  `docs/billing/**`, `docs/validation/**`, `docs/incidents/**`, `docs/pending-checks.md`,
+  `docs/staging-runbook.md`, `docs/stripe-live-cutover.md`, `ZEKT_PLATFORM_OVERVIEW.md`,
+  `zekt-knowledge-base.md`, source code and configuration.
 
 ## Content rules
 
@@ -61,7 +73,8 @@ The allow-list is enforced by these instructions, not by access control. Follow 
 
 ### Terminology
 
-Base glossary: https://www.zekt.dev/zekt-terminology.html.
+The public glossary (https://www.zekt.dev/zekt-terminology.html) may be linked for readers, but it
+is not a source of facts: parts of it are known to be wrong.
 
 - The customer is the Zekt **account**.
 - A GitHub organisation is a **scope**, not an owner. Several Zekt accounts can each have
