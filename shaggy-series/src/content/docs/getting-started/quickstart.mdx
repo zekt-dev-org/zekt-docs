@@ -1,0 +1,119 @@
+---
+title: "Quickstart: your first event"
+description: From sign-in to a consumer workflow that runs when a provider workflow completes.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+In this quickstart, a **provider** workflow sends an event with a small payload, and a **consumer**
+workflow in another repository runs when it arrives.
+
+**You need:**
+
+- a Zekt account ([sign up](/zekt-docs/getting-started/sign-up/));
+- two GitHub repositories where you have **admin** permission: one to send from, one to receive in.
+
+<Aside type="note">
+	The provider and the consumer can be the same Zekt account, if it has the **Both** persona, or two
+	different accounts. Each repository can belong to only one Zekt account.
+</Aside>
+
+## 1. Set up the provider
+
+<Steps>
+
+1. **Enable the repository.** Go to **Provider → Repos** and turn on the toggle for your provider
+   repository. Install the Zekt GitHub App on it if asked: choose **Only select repositories**.
+   [Details](/zekt-docs/provider/enable-repository/).
+
+2. **Add a workflow that sends an event.** Commit this to `.github/workflows/hello-zekt.yml`:
+
+   ```yaml
+   name: Hello Zekt
+   on: workflow_dispatch
+   permissions:
+     id-token: write
+     contents: read
+   jobs:
+     send:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: zekt-dev-org/zekt-action@v3
+           with:
+             event-type: hello-zekt
+             payload: |
+               {"greeting":"hello from the provider"}
+   ```
+
+3. **Whitelist the workflow.** Go to **Provider → Workflows**, select the repository, and turn on
+   the toggle next to *Hello Zekt*. [Details](/zekt-docs/provider/workflows-and-services/).
+
+4. **Create the service.** Go to **Provider → Service Descriptions → Create New → Provider Services**.
+   Choose the repository and the *Hello Zekt* workflow, and set **Dispatch Event Type** to
+   `hello-zekt`. Turn on **Publish to Directory** with visibility **Organization** or **Public**, so
+   the consumer can find it. Choose **Save Service Description**.
+
+</Steps>
+
+## 2. Set up the consumer
+
+<Steps>
+
+1. **Enable the repository.** Go to **Consumer → Repos** and turn on the toggle for your consumer
+   repository. Keep **Track Workflow Completion** ticked, choose **Continue to GitHub**, and finish
+   with **Enable Consumer Repository**.
+   [Details](/zekt-docs/consumer/enable-repository/).
+
+2. **Add a workflow that receives the event.** Commit this to the **default branch** as
+   `.github/workflows/on-hello-zekt.yml`:
+
+   ```yaml
+   name: On hello-zekt
+   on:
+     repository_dispatch:
+       types: [hello-zekt]
+   run-name: ${{ github.event.client_payload.zekt.dispatch_id }}
+   jobs:
+     receive:
+       runs-on: ubuntu-latest
+       steps:
+         - env:
+             GREETING: ${{ github.event.client_payload.zekt.payload.greeting }}
+             CONCLUSION: ${{ github.event.client_payload.workflow_run.conclusion }}
+           run: echo "Provider run $CONCLUSION, says: $GREETING"
+   ```
+
+3. **Request access.** Go to **Directory → Browse Directory**, find the service, choose **Request
+   access**, pick your consumer repository as the **Target Repository**, and choose **Send Request**.
+   [Details](/zekt-docs/consumer/request-access/).
+
+</Steps>
+
+## 3. Approve and send
+
+<Steps>
+
+1. **Approve the request.** On the provider side, go to **Provider → Access**, filter **Pending**, and
+   choose **Approve Access**.
+
+2. **Run the provider workflow.** In the provider repository on GitHub, go to **Actions → Hello
+   Zekt → Run workflow**.
+
+3. **Watch it arrive.** When the provider run completes, Zekt sends the event. In the consumer
+   repository, *On hello-zekt* runs and prints the greeting. In Zekt, **Provider → Delivery Status**
+   shows the delivery move to *Completed*.
+
+</Steps>
+
+## Didn't work?
+
+See [Troubleshooting](/zekt-docs/reference/troubleshooting/#the-consumer-workflow-didnt-run). The
+usual causes are an event type that doesn't match `types`, or a workflow that isn't on the default
+branch.
+
+## Next steps
+
+- Learn the [payload fields](/zekt-docs/reference/event-payload/) and how to
+  [handle duplicates](/zekt-docs/consumer/receive-events/#duplicates-and-ordering).
+- Let consumers in without manual approval, using [auto-approval rules](/zekt-docs/provider/access-requests/#auto-approval-rules).
+- Call several services in one go with [orchestration](/zekt-docs/orchestration/overview/).

@@ -1,0 +1,69 @@
+---
+title: Find a service and request access
+description: Browse the Directory, request access to a service, and follow your requests and subscriptions.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+You need the **Consumer** or **Both** persona, and at least one
+[enabled consumer repository](/zekt-docs/consumer/enable-repository/).
+
+## Find a service
+
+Go to **Directory → Browse Directory**. Search by service, publisher, tag or event, and narrow the
+results with the tag filters. Each card shows the service name, publisher, description, tags and a
+[trust badge](/zekt-docs/provider/publish-to-directory/#trust-badges).
+
+You'll see public services, plus Organization-level services from GitHub organizations where your
+account has active repositories. If a provider has given you an unlisted service's ID, you can
+request access to it too.
+
+## Request access
+
+<Steps>
+
+1. On the service's card, choose **Request access**. You can also start from **Consumer → Requests**.
+2. In **Request Access**, choose the **Target Repository**: the consumer repository that should
+   receive the events. For a [consumer service](/zekt-docs/consumer/consumer-services/), choose the
+   **Source Repository** (one of your provider repositories) and the **Source Workflow** that
+   fires instead.
+3. Optionally add a **Message** to the provider, and filters: success only, failure only, or
+   **Source Branches**. You can only choose branches that the service declares.
+4. Choose **Send Request**. The card shows *Request waiting for the provider's approval.*, and
+   the request appears under **Consumer → Requests**.
+
+</Steps>
+
+If you have no enabled repository yet, the dialog says *Enable a repository in Zekt Repos tab first.*
+
+### Why a request can be refused
+
+- The service doesn't exist or is disabled ("not found").
+- The service is Organization-level, and your account isn't in its audience.
+- The service requires [Shield](/zekt-docs/add-ons/shield/), and you haven't uploaded a Shield
+  public key.
+- Your Shepherd's [Doctrine](/zekt-docs/add-ons/shield/#doctrine-shepherd-accounts) doesn't allow that provider.
+- You already have a pending or approved request for the same repository and service.
+
+## After you request
+
+You get an in-app message (under **Profile → Messages**) when the provider decides:
+
+- *Access request approved by @…*, or *…approved automatically by @…*. Events now flow to your
+  repository. [Write the receiving workflow](/zekt-docs/consumer/receive-events/) if you haven't.
+- *Access request denied by @…*, with the provider's reason. The card shows *The provider denied
+  your request.* and offers **Request again**.
+
+You can't withdraw a pending request. You can delete denied or revoked ones.
+
+## Leave a subscription
+
+Go to **Consumer → Subscriptions**, choose **Remove**, then **Confirm Removal**. The subscription
+ends at once and the provider is notified. Events that were queued but not yet sent aren't sent.
+Events GitHub already accepted still run.
+
+To subscribe again later, request access again.
+
+<Aside type="note">
+	Zekt doesn't send email for any of this. Notifications are in-app only and kept for 30 days.
+</Aside>

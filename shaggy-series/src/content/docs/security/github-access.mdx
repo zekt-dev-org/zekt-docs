@@ -1,0 +1,69 @@
+---
+title: GitHub access
+description: What Zekt asks GitHub for when you sign in, what the Zekt GitHub App is used for, and what happens when access changes.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Zekt uses GitHub in three ways:
+
+- **Your sign-in**, with the access listed below, to act on your behalf in the console.
+- **The Zekt GitHub App**, installed on the repositories you enable, to see workflow runs and
+  deliver events.
+- **GitHub Actions OIDC**, so the [Zekt Action](/zekt-docs/provider/zekt-action/) can sign in from your
+  workflows without a secret.
+
+Zekt **never asks for a GitHub personal access token**. [Zekt API tokens](/zekt-docs/operate/vscode-and-mcp/#api-tokens)
+are Zekt's own, not GitHub tokens.
+
+## Sign-in scopes
+
+| Scope | Used for |
+| --- | --- |
+| `user:email`, `read:user` | Your identity and email address. |
+| `repo` | Listing your repositories, checking that you have **admin** permission on a repository before it's enabled, and reading its workflows and branches. |
+| `read:org` | Seeing your GitHub organizations. |
+
+Your GitHub sign-in token is kept server-side, encrypted, and never sent to your browser. Zekt
+deletes it 24 hours after its last use, and immediately if you revoke Zekt's authorization in GitHub.
+
+## The Zekt GitHub App
+
+Zekt uses the App to:
+
+- create and remove a webhook on enabled repositories, so it can see workflow runs;
+- send `repository_dispatch` events to consumer repositories;
+- read why a run failed;
+- follow repository renames and transfers;
+- see when someone is removed from an organization.
+
+Zekt never stores App installation tokens. It creates a short-lived one whenever it needs to send.
+
+### How to install it
+
+- Install it on the GitHub account that **owns** the repository: your personal account or the
+  organization.
+- Choose **Only select repositories** and pick the repository. Zekt refuses installations that grant
+  *All repositories*.
+- The person enabling a repository needs **admin** permission on it.
+- If you can't install on an organization yourself, GitHub sends the request to the organization's
+  owners. Zekt shows **Request Submitted**, and the dashboard shows the repository as
+  *⏳ Pending org approval* until an owner approves it.
+
+Adding a repository to the installation doesn't enable it. Enable it in Zekt as a
+[provider](/zekt-docs/provider/enable-repository/) or a [consumer](/zekt-docs/consumer/enable-repository/).
+
+## When access changes on GitHub
+
+| What happens on GitHub | What Zekt does |
+| --- | --- |
+| A repository is **removed** from the installation | Its provider and consumer sides are switched off in every account that had it. Subscriptions are kept, and events for it are skipped. Each affected account gets the in-app message *GitHub App disconnected from repository*. To restore, add the repository back on GitHub, then switch it on again in Zekt. |
+| The App is **uninstalled** | Every repository under that installation is switched off, and each account gets a critical message, *GitHub App disconnected from your account*. Nothing comes back by itself: reinstall, then re-enable each repository. |
+| The App is **suspended** | Repositories pause. When it's unsuspended, they resume automatically (*GitHub App unsuspended — event delivery resumed*). |
+| A repository is **renamed or transferred** | Zekt follows it. A transfer doesn't move it to another Zekt account. |
+| Someone is **removed from an organization** | They're removed from Zekt accounts they're a member of. See [Members](/zekt-docs/operate/members/#when-someone-leaves-a-github-organization). |
+
+<Aside type="caution" title="Deleting your Zekt account">
+	The App and the webhooks Zekt added stay on your repositories until you uninstall the App and
+	remove them on GitHub.
+</Aside>

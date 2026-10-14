@@ -1,0 +1,92 @@
+---
+title: Offer a consumer service
+description: Let other accounts send work into one of your repositories, for example as a step in an orchestration, and return outputs.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+A **consumer service** turns the usual direction around. Other accounts send events *into* one of
+your repositories, typically to ask for work to be done ("scan this image", "create a resource
+group"). Consumer services are what [orchestration](/zekt-docs/orchestration/overview/) calls, and
+they can return outputs to the caller.
+
+## Requirements
+
+- Your account has the **Both** persona. Otherwise:
+  *Consumer services can only be created by accounts with the Both persona. Upgrade your persona in
+  Profile settings.*
+- The repository behind the service is an enabled consumer repository with **Track Completion** on.
+- The service is enabled.
+
+## Create the service
+
+<Steps>
+
+1. Go to **Provider → Service Descriptions → Consumer Services** and create a new one.
+2. Choose the backing consumer repository, and fill in **Service Name** and **Publisher Name**.
+3. Set the **Dispatch Event Type** your workflow listens for, and an **Orchestration Identifier**
+   (the slug callers use: lowercase kebab-case, 2–64 characters, which can't be changed once set).
+   Turn on **Supports Orchestration** if it will be called from orchestrations.
+4. Add a description and tags, and choose its [visibility](/zekt-docs/provider/publish-to-directory/).
+   A new consumer service starts at **Organization**, and Zekt asks you to confirm before making one
+   Public.
+
+</Steps>
+
+You can also publish an [input and output schema](/zekt-docs/provider/schemas/), so callers know
+what to send and what they'll get back.
+
+## What your workflow receives
+
+- `event_type`: the service's event type, or `zekt-workflow-completed` if it has none.
+- `client_payload.input`: the input the caller sent.
+- `client_payload._zekt`: orchestration context (`orchestration.executionId`,
+  `orchestration.stepId`, `orchestration.requestorRepository`) and `dispatch_id`.
+
+<Aside type="note">
+	As the service owner, you see the name of the repository that called you.
+</Aside>
+
+## Report outputs
+
+Call the Zekt Action **without** `event-type`. It detects the orchestration context by itself, and
+its `payload` (a JSON object) becomes the step's outputs.
+
+```yaml
+name: security-scan service
+on:
+  repository_dispatch:
+    types: [security-scan]
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - id: scan
+        env:
+          IMAGE: ${{ github.event.client_payload.input.image }}
+        run: echo "verdict=pass" >> "$GITHUB_OUTPUT"
+      - uses: zekt-dev-org/zekt-action@v3
+        with:
+          payload: |
+            {"verdict":"${{ steps.scan.outputs.verdict }}","findings":0}
+```
+
+- Only the run Zekt dispatched can report outputs. If it calls the action several times, the last
+  call wins.
+- Return scalar values (strings, numbers, booleans): output values reach the caller as strings.
+- The step's result follows the GitHub run's conclusion. A run that reports outputs and then fails
+  still fails the step.
+
+## Subscribers
+
+Subscribers to a consumer service name the provider repository they fire from and the workflow that
+fires. You approve them in **Provider → Access**, where these requests are badged *Consumer
+service*. Approving one needs the Both persona.
+
+## Disabling the service
+
+Disabling a consumer service hides it, refuses new requests, and **drops** subscriber events: they
+aren't held for later. Subscriptions are kept, and re-enabling the service restores everything.

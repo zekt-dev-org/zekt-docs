@@ -1,0 +1,48 @@
+---
+title: How Zekt works
+description: The path of an event from a provider's workflow run to a consumer's workflow, and how orchestration runs.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+## An event, end to end
+
+<Steps>
+
+1. **A provider enables a repository.** Zekt checks with GitHub that you administer it, and adds a
+   webhook with its own secret.
+2. **A consumer requests access**, and the provider approves, by hand or through an auto-approval rule.
+3. **A provider workflow run completes.** GitHub sends Zekt a signed webhook. Zekt rejects anything
+   with a bad signature or a mismatched repository ID.
+4. **Zekt finds the active subscriptions**, filtered by branch and by success or failure, and queues
+   a send for each. Just before sending, it re-checks the provider's account standing and that the
+   subscription is still active.
+5. **Zekt sends a `repository_dispatch`** to each consumer repository through the Zekt GitHub App,
+   carrying the reduced [event payload](/zekt-docs/reference/event-payload/).
+6. **Delivery is at-least-once.** Temporary GitHub failures are
+   [retried](/zekt-docs/operate/deliveries/#automatic-retries). There's no ordering guarantee.
+7. **The consumer's run is matched back** to the delivery, so both sides can see its status.
+
+</Steps>
+
+## An orchestration
+
+<Steps>
+
+1. A workflow submits a chain of steps, each naming a service by owner and slug. It signs in with
+   GitHub OIDC.
+2. Every step needs an active subscription. One refusal refuses the whole chain.
+3. Zekt runs the steps, re-checking the subscription before each one, and follows each run.
+4. Zekt sends the result back to the requesting repository as a `repository_dispatch`.
+5. Nesting depth is capped, and loops are refused.
+
+</Steps>
+
+See [Orchestrate several services](/zekt-docs/orchestration/overview/).
+
+## What stays where
+
+Your business logic stays in your own workflows. Zekt handles event dispatch, distribution and
+routing. Your workflows run in GitHub Actions, and Zekt passes payloads on unchanged, unless you
+turn on [Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard). For what Zekt stores and who
+can see it, see [Security and data](/zekt-docs/security/overview/).

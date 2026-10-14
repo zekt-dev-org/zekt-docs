@@ -1,0 +1,48 @@
+---
+title: Sign up and sign in
+description: Create a Zekt account with your GitHub identity, complete your profile, and start the free trial.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Zekt uses your GitHub identity. There's no separate Zekt password, and GitHub is the only way to
+sign in.
+
+## Sign up
+
+<Steps>
+
+1. Go to [www.zekt.dev](https://www.zekt.dev) and sign in. The **Sign in to your account** dialog
+   has one button: **Continue with GitHub**.
+2. Authorize Zekt in GitHub. See [GitHub access](/zekt-docs/security/github-access/) for what
+   Zekt asks for and why.
+3. On **Complete Your Profile**, enter your details and choose your
+   [persona](/zekt-docs/getting-started/concepts/#persona): Provider, Consumer or Both.
+4. Choose **Continue to Payment** and add a card, with a billing address that includes a country.
+   This starts your 7-day [free trial](/zekt-docs/billing/how-billing-works/#free-trial).
+   You need a card to reach the console.
+
+</Steps>
+
+The GitHub login you sign up with becomes the [account owner](/zekt-docs/operate/account/).
+
+## Sign in
+
+Choose **Continue with GitHub** at [www.zekt.dev](https://www.zekt.dev). If you're a
+[member](/zekt-docs/operate/members/) of someone else's account, you sign in the same way.
+
+## If GitHub authorization expires
+
+If Zekt's access to your GitHub account is missing or has expired, go to **Profile → GitHub
+Authorization** and choose **Authorize GitHub**. The button reads **Refresh GitHub** while the
+authorization is still valid.
+
+<Aside type="note" title="Organizations with SAML single sign-on">
+	If a GitHub organization enforces SAML SSO, authorize Zekt for that organization in GitHub before
+	you enable its repositories. Otherwise you'll see: *The organisation that owns owner/repo requires
+	single sign-on. Authorize Zekt for it in GitHub, then retry.*
+</Aside>
+
+## Next
+
+[Quickstart: your first event](/zekt-docs/getting-started/quickstart/).

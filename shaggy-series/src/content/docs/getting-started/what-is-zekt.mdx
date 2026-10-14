@@ -15,8 +15,9 @@ be orchestrated across different providers.
 Your business logic stays in your own workflow YAML. Zekt handles only event dispatch and
 distribution, including orchestration. It never dictates the logic you expose. It routes events to
 the intended receivers, lists your services in the Zekt Directory, and handles
-[access approval](/zekt-docs/provider/access-requests/) and
-[payload schemas](/zekt-docs/provider/schemas/).
+[access approval](/zekt-docs/provider/access-requests/),
+[payload schemas](/zekt-docs/provider/schemas/) and
+[delivery tracking](/zekt-docs/operate/deliveries/).
 
 ## How it works
 
@@ -34,9 +35,9 @@ records the delivery. Delivery is at-least-once. You manage everything in the we
 | --- | --- |
 | **Zekt Core** | Providers, consumers, the Directory and access approval. |
 | **[Zekt Action](/zekt-docs/provider/zekt-action/)** | The GitHub Action `zekt-dev-org/zekt-action@v3`. Use it to attach a payload to an event, submit orchestration requests, and report a consumer service's outputs. |
-| **[Zekt Analytics](/zekt-docs/add-ons/analytics/)** | Add-on. |
-| **[Zekt Shield](/zekt-docs/add-ons/shield/)** | Add-on. |
-| **[Zekt Chainlink](/zekt-docs/add-ons/chainlink/)** | Add-on. |
+| **[Zekt Analytics](/zekt-docs/add-ons/analytics/)** | Add-on: archive events, replay them with Time Travel and Webhook Replay, and get insights. |
+| **[Zekt Shield](/zekt-docs/add-ons/shield/)** | Add-on: end-to-end payload encryption with your own keys, Redaction Guard, and Doctrine. |
+| **[Zekt Chainlink](/zekt-docs/add-ons/chainlink/)** | Add-on: one repository acts as both consumer and provider, so events can chain across repositories. |
 
 For prices, see [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
 

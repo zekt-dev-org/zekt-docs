@@ -55,17 +55,22 @@ If deletion is refused, the dialog explains why.
 
 ### What happens after deletion
 
+- Your running orchestrations are cancelled first.
 - The providers and consumers your account was connected to each get a notice that the connection
   has ended.
 - Zekt keeps a small amount of data:
   - billing records for invoiced months, for 12 months;
   - ratings and complaints other accounts made about your services;
   - the scores of ratings you gave, without their text;
-  - complaints you filed, without your email address.
-- Everything else is deleted. For the legal terms, see the
-  [Terms of Service](https://www.zekt.dev/terms-of-service.html).
+  - complaints you filed, without your email address;
+  - [Audit Trail](/zekt-docs/operate/audit-log/) entries, for 1 year.
+- Records in **other accounts'** histories stay there: a provider's delivery records that name you as
+  a consumer, and a requester's orchestration steps that your service ran.
+- Everything else is deleted. Logs age out after 30 days, and backups keep data for up to 7 days.
+  For the legal terms, see the [Terms of Service](https://www.zekt.dev/terms-of-service.html) and
+  [Privacy Policy](https://www.zekt.dev/privacy-policy.html).
 
-<Aside type="caution" title="Uninstall the GitHub App yourself">
-	Deleting your Zekt account doesn't remove the Zekt GitHub App from your repositories. Uninstall it
-	in your GitHub settings.
+<Aside type="caution" title="Clean up on GitHub yourself">
+	Deleting your Zekt account doesn't remove the Zekt GitHub App, or the webhooks Zekt added, from your
+	repositories. Uninstall the App and remove the webhooks in GitHub.
 </Aside>

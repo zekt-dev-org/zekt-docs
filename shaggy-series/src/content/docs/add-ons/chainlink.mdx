@@ -1,0 +1,62 @@
+---
+title: Zekt Chainlink
+description: Let one repository act as both consumer and provider, so events can chain across repositories.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Normally a repository is either a provider or a consumer. **Chainlink** lets one repository be
+both: it receives events from upstream services and sends its own events downstream. That way,
+events can chain across repositories: A → B → C, across organizations if needed.
+
+## Requirements
+
+Your account needs the **Both** persona. Otherwise the Chainlink sidebar item is hidden, and
+enabling gives *Chainlink requires a dual-role (both provider and consumer) account*.
+
+## Enable a repository
+
+<Steps>
+
+1. Go to **Chainlink → Repos** and choose **Enable** on the repository.
+2. Only one side (provider or consumer) needs to exist already. Zekt creates the other side
+   automatically, with no second GitHub App installation.
+
+</Steps>
+
+The Chainlink section has three tabs: **Overview**, **Repos**, and **Topology**, a graph of your
+chains that marks whether each hop changed the payload.
+
+## How a chain works
+
+Zekt never changes a payload in transit. Each repository in the chain runs its own workflow:
+
+- **To pass an event on**, the middle repository's workflow sends a new event with the
+  [Zekt Action](/zekt-docs/provider/zekt-action/).
+- **To enrich or reduce the data**, that workflow builds the new payload itself.
+- **To hold an event for approval**, use GitHub environment protection rules in that workflow.
+- [Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard) scans every outgoing provider payload,
+  so it also covers what a relay repository sends.
+
+## Hop limit
+
+Set a hop limit per repository, from **2 to 10**, in the **Repos** tab. An event that would go beyond
+the limit isn't forwarded, and shows as *Not sent* in the
+[dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue).
+
+## Disable Chainlink
+
+When you disable Chainlink on a repository, you choose which role to keep. Keeping only the consumer
+role is refused while the repository's services still have active subscribers.
+
+## Cost
+
+A flat monthly fee per Chainlink repository, **instead of** the normal per-repository fee.
+[Analytics](/zekt-docs/add-ons/analytics/) or [Shield](/zekt-docs/add-ons/shield/) on a Chainlink
+repository is charged once, not per side. See
+[zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
+
+<Aside type="tip">
+	Many processes only need one step: a provider sends and consumers receive. Use Chainlink when a
+	repository genuinely needs to receive *and* send.
+</Aside>

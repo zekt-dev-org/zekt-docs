@@ -14,8 +14,14 @@ subscription needs your approval or one of your [auto-approval rules](/zekt-docs
 | Visibility | Who can find it | Typical use |
 | --- | --- | --- |
 | **Unlisted** | Nobody can browse to it. Anyone you give the service's ID to can still request access. | Private arrangements with known partners. |
-| **Organization** | Your own account, plus accounts that have active repositories under the same GitHub owner as the service. | Internal platform services within a company's GitHub organization. |
-| **Public** | Everyone, including the public [Zekt Registry](https://www.zekt.dev/zekt-registry.html), which anyone can browse without signing in. | Services offered to customers or partners at large. |
+| **Organization** | Your own account, plus any account with an **active** repository under the same GitHub organization that owns the service. If the owner is a personal GitHub account, only your own account qualifies. | Internal platform services within a company's GitHub organization. |
+| **Public** | Every signed-in Zekt account, plus the public [Zekt Registry](https://www.zekt.dev/zekt-registry.html), which anyone can browse without signing in. | Services offered to customers or partners at large. |
+
+### Setting visibility
+
+Set it in the service editor (**Provider → Service Descriptions**). With **Publish to Directory** off,
+the service is unlisted. Turn it on, then choose **Directory Visibility**: **Organization** (the
+default) or **Public**.
 
 ### Defaults and rules
 
@@ -23,6 +29,10 @@ subscription needs your approval or one of your [auto-approval rules](/zekt-docs
 - A new **consumer service** starts at **Organization**. Zekt asks you to confirm before making one Public.
 - Re-listing an unlisted service puts it at **Organization**. Moving it to Public is a separate,
   deliberate step.
+- Changing visibility never ends existing subscriptions. Unlisting a service that has subscribers
+  shows a warning, but is allowed.
+- If you set a **publisher name**, the public Registry shows it instead of your GitHub owner and
+  repository name.
 
 ## What subscribers see
 
@@ -59,6 +69,6 @@ The badge describes the GitHub owner of the provider's repository:
 
 ## Things that block changes
 
-- You **can't disable a provider repository** while one of its services is listed at Organization or
-  Public. Unlist the service first.
+- You **can't disable a provider repository** while consumers are subscribed to its services, or
+  while one of them is published. See [Disable a repository](/zekt-docs/provider/enable-repository/#disable-a-repository).
 - You **can't delete a provider service** that still has active subscribers. Revoke their access first.

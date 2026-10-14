@@ -1,0 +1,74 @@
+---
+title: Handle access requests
+description: Approve, deny and revoke access to your services, and set up auto-approval rules.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Every subscription to your services needs your approval, given by hand or through an auto-approval
+rule. When a request is filed, you get an in-app message: *New access request from @…*.
+
+## Approve or deny
+
+<Steps>
+
+1. Go to **Provider → Access**. Filter by **Pending**, **Approved**, **Denied**, **Revoked**,
+   **Exited** or **Auto-Rules**.
+2. On a pending request, choose **Approve Access**, or **Deny** and then **Confirm Deny**. You can
+   give a reason, which the consumer sees.
+
+</Steps>
+
+On approval, Zekt creates the subscription (shown in the console as a *connection*), and events start
+flowing. If creating it fails, the request stays pending with a reason.
+
+Requests for [consumer services](/zekt-docs/consumer/consumer-services/) are badged
+*Consumer service*. Approving one needs the Both persona.
+
+## Revoke access
+
+On an approved subscription, choose **Revoke Access**. You'll see *Consumer access revoked. Event
+delivery stopped.*, and the consumer is notified (*@… ended your subscription…*).
+
+- Events that were queued but not yet sent aren't sent. Events GitHub already accepted still run.
+- A running orchestration fails at its next step that needs this subscription. A step already
+  started finishes.
+- To undo a revocation, the consumer requests access again and you approve it.
+
+If a consumer leaves on their own, you get a message: *@… unsubscribed*.
+
+## Auto-approval rules
+
+Go to **Provider → Access → Auto-Rules**. A rule approves matching requests as soon as they're filed.
+For rules to work, auto-approval must be switched on for your account, and at least one rule must be
+active.
+
+| Rule | Matches |
+| --- | --- |
+| **GitHub user** | Requests from that GitHub user. It matches on the user's numeric ID, so it keeps working if they rename their login. |
+| **All Consumers** | Every request that passes the normal checks. You can have only one. |
+
+- User rules are checked before the All Consumers rule.
+- Rules apply only when a request is filed. They don't approve requests that are already pending.
+- Rules created in the console cover all of your services.
+- A rule never widens visibility: an Organization-level service still accepts only its audience.
+- If your account is a Disciple, your Shepherd's [Doctrine](/zekt-docs/add-ons/shield/#doctrine-shepherd-accounts) can
+  keep a request pending even when a rule matches.
+- You still get the *New access request* message for auto-approved requests.
+
+<Aside type="note" title="Rules marked &quot;Never fires&quot;">
+	Older rule types (for a whole GitHub organization, a minimum trust score, or Shield-required) are
+	no longer offered. Existing ones show **Never fires** and can only be deleted.
+</Aside>
+
+## When you delete a service
+
+Zekt declines its pending requests, and each consumer is told why. You can't delete a service that
+still has active subscribers: revoke them first.
+
+## Changing visibility
+
+Changing a service's [visibility](/zekt-docs/provider/publish-to-directory/) never ends existing
+subscriptions. Unlisting a service that has subscribers shows a warning, but is allowed.
+
+All of these decisions are recorded in the [audit log](/zekt-docs/operate/audit-log/).

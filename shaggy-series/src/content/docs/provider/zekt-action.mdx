@@ -1,0 +1,89 @@
+---
+title: Send a payload with the Zekt Action
+description: Add zekt-dev-org/zekt-action@v3 to a provider workflow to set the event type and attach a JSON payload.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Without any extra step, a whitelisted workflow's run already produces an event, of type
+`zekt-workflow-completed`. Add the **Zekt Action** when you want to:
+
+- choose the **event type** consumers listen for;
+- attach a **JSON payload** with context: versions, environments, references;
+- submit an [orchestration](/zekt-docs/orchestration/overview/), or report a
+  [consumer service's](/zekt-docs/consumer/consumer-services/) outputs.
+
+The action is `zekt-dev-org/zekt-action@v3`.
+
+## Before you start
+
+- The repository is [enabled as a provider](/zekt-docs/provider/enable-repository/).
+- The workflow is whitelisted, and a service is published with the event type you'll send. See
+  [Workflows and services](/zekt-docs/provider/workflows-and-services/).
+
+## Add the action
+
+```yaml
+name: Deploy
+on: { push: { branches: [main] } }
+permissions:
+  id-token: write   # the action signs in to Zekt with GitHub OIDC
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./deploy.sh
+      - uses: zekt-dev-org/zekt-action@v3
+        with:
+          event-type: deployment-complete
+          payload: |
+            {"environment":"production","version":"${{ github.ref_name }}"}
+```
+
+<Aside type="tip" title="No secrets">
+	The action signs in with GitHub OIDC, so the job needs `permissions: id-token: write`. There is
+	no Zekt secret or token to store.
+</Aside>
+
+## How sending works
+
+1. The action step sends the payload to Zekt, which holds it.
+2. When the **whole workflow run completes**, Zekt combines the run's details with the held
+   payload and delivers one event to every approved subscriber.
+3. Subscribers receive it whatever the run's result was. They can check the conclusion, or filter
+   on success or failure.
+
+Rules to know:
+
+- Only the **first** Zekt Action call in a run is used. Later calls are accepted but ignored.
+- Zekt holds the payload for **24 hours**. If the run finishes later than that, the event goes out
+  without it.
+- If the run submits an orchestration, it doesn't also broadcast to subscribers. A run either
+  broadcasts or orchestrates.
+
+## Payload size and format
+
+- The payload must be valid JSON. Otherwise the step fails with *Invalid JSON payload: …*.
+- Zekt refuses requests over **1 MB**: the step fails with *Failed to send event (HTTP 413)…*.
+- Keep payloads small: a few KB of metadata rather than build artefacts.
+
+## Encrypting the payload
+
+With [Zekt Shield](/zekt-docs/add-ons/shield/) enabled on the repository, set `shield: true` to
+encrypt the payload in your workflow before it reaches Zekt.
+
+## When the step fails
+
+Any refusal from Zekt fails the step with the server's error message. Common ones:
+
+| Message | Fix |
+| --- | --- |
+| *"event-type" input is required when orchestrate is false…* | Add `event-type`. |
+| *Invalid JSON payload: …* | Fix the JSON in `payload`. |
+| *Failed to send event (HTTP 413)…* | The payload is over 1 MB. |
+| *SHIELD_NOT_ENABLED…* | You set `shield: true`, but the repository doesn't have Shield. |
+| *SHIELD_ENFORCEMENT…* | The service requires encrypted payloads. Set `shield: true`. |
+
+For every input and output, see the [Zekt Action reference](/zekt-docs/reference/zekt-action/).

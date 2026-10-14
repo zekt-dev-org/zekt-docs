@@ -1,0 +1,106 @@
+---
+title: Delivery tracking
+description: Follow every event from send to the consumer's finished run, understand retries, and recover failed deliveries.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Zekt records every delivery, so providers and consumers can both see whether an event was sent, whether
+it started a run, and how that run finished.
+
+## Guarantees
+
+- **At-least-once.** An event may occasionally arrive twice. Deduplicate on `zekt.correlationId`
+  plus `zekt.replayId` (see [Receive events](/zekt-docs/consumer/receive-events/#duplicates-and-ordering)).
+- **No ordering guarantee** between events.
+
+## Delivery status
+
+**Provider → Delivery Status** shows one row per delivery attempt:
+
+| Status | Meaning |
+| --- | --- |
+| **Dispatched** | GitHub accepted the `repository_dispatch`. |
+| **Sent (completion not tracked)** | Accepted, but the receiving repository has [Track Completion](/zekt-docs/consumer/enable-repository/#track-completion) off. Counts as a success. |
+| **Confirmed** | The receiving run started. |
+| **Completed** | The receiving run finished. Its conclusion and duration are shown. |
+| **Failed** | This attempt was refused or errored. Each attempt has its own row. |
+| **Schema Violations** | The payload failed the service's enforced [schema](/zekt-docs/provider/schemas/) and wasn't delivered. |
+| **Filtered** | Blocked by the consumer's Inquisition filter rules. |
+
+A row can also show a schema check: valid, invalid, not validated or unavailable.
+
+With Track Completion on, deliveries move from *Dispatched* to *Confirmed* to *Completed* on their
+own. The consumer doesn't add any step or API call.
+
+## Dispatch queue
+
+A **Dispatch queue** panel covers the last 7 days. It's on **Provider → Delivery Status** and
+**Consumer → Received Events**, and switches between *Sent by me* and *Addressed to me*.
+
+- **Queue statuses:** Queued, Sending, Sent, Sent (completion not tracked), Failed, Not sent,
+  Filtered, Schema violation.
+- **Send log:** Sending, Sent, Refused by GitHub, Not sent (error), Run started, No run seen (no
+  run matched within 15 minutes).
+
+**Not sent** rows give a plain reason, for example:
+
+- the subscription was no longer active when the event was due;
+- the receiving repository is switched off, or the service was disabled;
+- the provider account couldn't start new work (see [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails));
+- it wasn't sent within 24 hours (the provider can replay it);
+- the self-trigger or Chainlink hop limit was reached;
+- the Zekt GitHub App isn't installed on the receiving repository.
+
+Run links are shown only to the account that owns the target repository.
+
+## Automatic retries
+
+Zekt retries sends that fail for temporary reasons:
+
+- GitHub server errors (5xx), rate limits (429 and secondary-rate-limit 403), timeouts and
+  network errors are retried. Zekt waits 30 seconds, then 1, 2 and 4 minutes, doubling up to
+  15 minutes, and honours GitHub's `Retry-After` or rate-limit reset.
+- At most **5 attempts**, all within **24 hours** of the event.
+- Any other 4xx from GitHub fails at once, with no retry.
+- Before every send, Zekt re-checks the provider's account standing and that the subscription is
+  still active.
+
+These are never sent, so never retried: Inquisition-filtered events, schema-blocked events, events
+for ended subscriptions, disabled services or switched-off repositories, and events stopped by a
+hop limit.
+
+A repository with Track Completion on receives one send at a time. Each waits until the previous run
+is matched, or for at most 3 minutes.
+
+## Failed deliveries (consumers)
+
+**Consumer → Failed Deliveries** lists deliveries that GitHub refused, either permanently or after the
+retries ran out. There's one entry per delivery, kept for 30 days.
+
+| Column | Shows |
+| --- | --- |
+| Event | The event. |
+| Source | The provider and service. |
+| Failed At | When it failed. |
+| Reason | Why. |
+| Attempts | How many sends were tried. |
+| Actions | Retry or Dismiss. |
+
+- **Retry** sends the event again from the stored payload, after re-checking account standing and
+  that the subscription is still active. The entry then leaves the list.
+- **Dismiss** hides the entry.
+
+Internal errors, and sends that expired after 24 hours, appear as *Not sent* in the dispatch queue
+instead.
+
+<Aside type="tip" title="Providers">
+	Providers don't have a Failed Deliveries screen. To recover, use **Replay This Event** in a
+	delivery's detail view. It needs [Zekt Analytics](/zekt-docs/add-ons/analytics/), and allows up to 10
+	replays per delivery.
+</Aside>
+
+## Connection health
+
+**Directory → My Connections** shows each connection's health. See
+[Connections and blast radius](/zekt-docs/operate/connections-view/).

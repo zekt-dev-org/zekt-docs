@@ -1,0 +1,42 @@
+---
+title: Connections and blast radius
+description: See who is connected to whom, how healthy each connection is, and what a change would affect.
+---
+
+The **Directory** section of the console has three views of your connections.
+
+## My Connections
+
+**Directory → My Connections** lists your connections in two groups, **As Provider** and
+**As Consumer**, with a search box. Each has a health dot:
+
+| Dot | Meaning |
+| --- | --- |
+| 🔴 Red | Success rate below 90%. |
+| 🟠 Amber | Success rate below 98%, or no events in the last 7 days. |
+| 🟢 Green | Otherwise. |
+
+**Details** shows: Success Rate, Total Events, Failed Events, Last Activity, Established and
+Workflow Path.
+
+## Brokering
+
+**Directory → Brokering** is an interactive graph of your providers, services and consumers. Switch
+between the provider, logical and consumer views, and filter by repository.
+
+## Blast Radius
+
+**Directory → Blast Radius** shows a provider or consumer topology, and lets you run **what-if**
+simulations before you change anything. Simulations are read-only and change nothing.
+
+| On a | You can simulate |
+| --- | --- |
+| Repository | Disable, Delete, Require Shield |
+| Workflow | Blacklist, Remove Whitelist |
+| Service | Delete, Require Shield |
+| Consumer | Revoke Access |
+
+## Chainlink topology
+
+With the Both persona, **Chainlink → Topology** shows event chains through your
+[Chainlink](/zekt-docs/add-ons/chainlink/) repositories.

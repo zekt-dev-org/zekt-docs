@@ -1,0 +1,84 @@
+---
+title: Zekt Analytics
+description: Archive events, replay them with Time Travel and Webhook Replay, and get insights into your event flows.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Zekt Analytics is an add-on that **archives** your events so you can look at them later and
+**replay** them, and gives you **insights** into your event flows. Find it under sidebar →
+**Analytics**, available with every persona. Its tabs are Repos, Insights, Time Travel, Webhook Replay
+and Audit Trail.
+
+## Turn it on
+
+Go to **Analytics → Repos** and turn on the toggle for each repository you want covered. On a
+[Chainlink](/zekt-docs/add-ons/chainlink/) repository, one toggle covers both sides.
+
+An event is archived when **either** the provider's or the consumer's repository has Analytics on.
+The archive keeps the original event, the provider's Zekt Action payload, and the payload that was
+dispatched.
+
+## Time Travel
+
+**Analytics → Time Travel** lets you browse archived events and replay them.
+
+<Steps>
+
+1. Filter by time (last 24 hours, 7 days or 30 days), status (archived or replayed), source
+   repository and destination repository.
+2. Open an event to see its full payload.
+3. Preview the replay, then replay it.
+
+</Steps>
+
+- Each archived event can be replayed **once**. A second attempt gives *Already replayed*.
+- The replay carries `zekt.isReplay` and `zekt.replayId`, and gets a new correlation ID. See the
+  [event payload reference](/zekt-docs/reference/event-payload/).
+
+## Webhook Replay (providers)
+
+**Analytics → Webhook Replay** has three sub-tabs: **Single Replay**, **Bulk Replay** and **Replay
+History**.
+
+- The source repository must have Analytics on.
+- A replay goes to the delivery's own consumer repository by default. You can choose another target,
+  but only a consumer repository with an active subscription to the same service and Analytics on.
+- Replaying into a repository whose subscription has ended is refused.
+- Up to **10 replays per original delivery** (counting every replay path), and up to **100 deliveries
+  per bulk replay**.
+
+A consumer replaying an event it received can only replay it into its own repository.
+
+## Insights
+
+**Analytics → Insights** points out failed events, stale subscriptions, growth trends, cost
+trajectory and inactive repositories.
+
+## Retention
+
+| Data | Kept for |
+| --- | --- |
+| Time Travel archive payloads | 30 days |
+| Replay history | 90 days |
+| Insights | 90 days |
+
+An event whose payload is larger than **512 KB** is archived with a placeholder instead of the payload.
+The event itself is delivered normally, but its archived copy can't be viewed or replayed with the
+original payload.
+
+<Aside type="note" title="Shield">
+	Zekt can't read or show the content of a [Shield](/zekt-docs/add-ons/shield/)-encrypted payload.
+	Archived and replayed Shield events stay encrypted.
+</Aside>
+
+## Cost
+
+A monthly fee per Analytics-enabled repository (a Chainlink repository counts once), plus usage:
+archive writes and reads, Time Travel queries, and replayed events. Who pays for a replay:
+
+- the provider pays for replays it starts;
+- a consumer pays for its own replay, and only if it succeeds;
+- a target repository the provider chose pays nothing.
+
+For amounts, see [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).

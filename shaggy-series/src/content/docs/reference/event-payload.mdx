@@ -1,0 +1,82 @@
+---
+title: Event payload
+description: Every field in the repository_dispatch event a consumer repository receives from Zekt.
+---
+
+A consumer repository receives a GitHub `repository_dispatch` event. Its `event_type` is the
+provider's `event-type`, or `zekt-workflow-completed` if the provider didn't use the Zekt Action.
+
+## `client_payload` fields
+
+### `zekt`
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `correlationId` | string | The event's ID. The same for every consumer of the event, and on a re-send. Treat it as opaque. |
+| `dispatchedAt` | string | When Zekt sent it (ISO 8601, UTC). |
+| `payload` | any JSON, or `null` | The provider's payload, unchanged. `null` if none was sent; `{}` if the action ran without a `payload` input. |
+| `dispatch_id` | string | Unique per send (`dsp_` followed by 32 hex characters). A re-send gets a new one. Use it for `run-name`, never for deduplication. |
+| `schemaVersion` | string | Present only if the provider publishes a [schema](/zekt-docs/provider/schemas/). |
+| `schemaValid` | boolean | Present only with a schema. A label only: it never blocks delivery. |
+| `isReplay` | boolean | Present only on replays. |
+| `replayId` | string | Present only on replays. |
+| `originalDeliveryId` or `originalCorrelationId` | string | Present only on replays: what was replayed. |
+
+### `workflow_run`
+
+The provider's run: `id`, `name`, `conclusion`, `status`, `head_branch`, `event`, `created_at`,
+`updated_at`.
+
+### `repository`
+
+`is_private`: whether the provider repository is private.
+
+### Never sent
+
+The payload never contains the provider repository's name, owner or URL, the commit SHA, the
+actor, the run number, or any provider account ID.
+
+## Example
+
+```json
+{
+  "zekt": {
+    "correlationId": "11845502231-default",
+    "dispatchedAt": "2026-10-14T09:12:03Z",
+    "payload": { "environment": "production", "version": "1.4.2" },
+    "dispatch_id": "dsp_3f9c1a2b7d4e4f0a9b8c6d5e4f3a2b1c"
+  },
+  "workflow_run": {
+    "id": 11845502231,
+    "name": "Deploy",
+    "conclusion": "success",
+    "status": "completed",
+    "head_branch": "main",
+    "event": "push",
+    "created_at": "2026-10-14T09:08:41Z",
+    "updated_at": "2026-10-14T09:11:58Z"
+  },
+  "repository": { "is_private": true }
+}
+```
+
+## Deduplication
+
+Delivery is at-least-once. Deduplicate on `zekt.correlationId` plus `zekt.replayId`.
+
+## Payload rules
+
+- Only the **first** Zekt Action call in a provider run is used. Later calls in the same run are
+  accepted but ignored.
+- Zekt holds a payload for **24 hours**. If the provider's run finishes more than 24 hours after the
+  action step, the event is sent without it.
+- Keep payloads small: a few KB of metadata rather than build artefacts. See [Limits](/zekt-docs/reference/limits/).
+
+## Orchestration events
+
+Two other event types appear in orchestration:
+
+- A [consumer service](/zekt-docs/consumer/consumer-services/) receives its step input as
+  `client_payload.input`, plus orchestration context in `client_payload._zekt`.
+- The requesting repository receives `zekt-orchestration-result` when an orchestration ends. See
+  [Orchestration](/zekt-docs/orchestration/overview/#the-result-event).

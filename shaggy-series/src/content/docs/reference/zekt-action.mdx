@@ -1,0 +1,47 @@
+---
+title: Zekt Action inputs and outputs
+description: Reference for zekt-dev-org/zekt-action@v3.
+---
+
+`zekt-dev-org/zekt-action@v3`. The job must have `permissions: id-token: write`: the action signs in
+to Zekt with GitHub OIDC and takes no secret or token.
+
+## Inputs
+
+No input is strictly required, but some are needed depending on what you do.
+
+| Input | Default | Description |
+| --- | --- | --- |
+| `event-type` | — | The event type consumers listen for. Required to send a normal event. Not used with `orchestrate: true`, or when a consumer service reports its outputs. |
+| `payload` | `{}` | Must be JSON. The event's payload, or, with `orchestrate: true`, the [orchestration plan](/zekt-docs/orchestration/overview/#the-plan). |
+| `shield` | `false` | Encrypt the payload with [Zekt Shield](/zekt-docs/add-ons/shield/). |
+| `orchestrate` | `false` | Submit an orchestration plan instead of sending an event. |
+| `execution_mode` | `sequential` | Orchestration only. The plan's own `execution_mode` takes precedence. |
+| `wait` | `false` | Orchestration only. Wait for the orchestration to finish, checking every 30 seconds. |
+| `zekt-api-url`, `orchestration-api-url` | — | Leave these unset. |
+
+## Outputs
+
+| Output | When set | Description |
+| --- | --- | --- |
+| `status` | Always | `success` when the call succeeded. |
+| `execution_id` | `orchestrate: true` | The orchestration's ID. |
+| `execution_status` | `orchestrate: true` and `wait: true` | `completed`, `failed` or `timed_out`. |
+| `step_<step_id>_outputs_<field>` | `orchestrate: true` and `wait: true` | One output per step output field. |
+
+Output values are strings. An object value comes through unusable, so have services return
+scalar outputs.
+
+## Failures
+
+- Any refusal from Zekt fails the step with the server's error message.
+- With `wait: true`, an orchestration that fails or times out fails the job.
+
+## Modes at a glance
+
+| You want to | Use |
+| --- | --- |
+| Send an event with a payload | `event-type` + `payload` |
+| Send an encrypted payload | `event-type` + `payload` + `shield: true` |
+| Run several services in order | `orchestrate: true` + `payload` (the plan), optionally `wait: true` |
+| Report a consumer service's outputs | `payload` only (no `event-type`), in the service's workflow |

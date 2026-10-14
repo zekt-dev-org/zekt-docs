@@ -12,13 +12,14 @@ it from outside the console:
 - **VS Code extension**: available on the
   [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp).
   It sets up an MCP connection to Zekt for you.
-- **Programmatic use**: start orchestrations and replays from your own tooling.
+- **REST API**: use Zekt from your own tooling.
 
 All of them sign in with an **API token**.
 
 ## API tokens
 
-Manage tokens under **Profile → API Access**.
+Manage tokens under **Profile → API Access**, which has three tabs: **Generate Tokens**, **Active
+Tokens** and **MCP Setup Docs**. API Access is shown to accounts that pay their own bill.
 
 <Aside type="note">
 	Today only the **account owner** (the GitHub login the account belongs to) can create, list or
@@ -75,7 +76,42 @@ You can only create a token with **No expiration** while signed in to the consol
 A Shepherd account can create and revoke tokens on behalf of an accepted Disciple account. See
 [Members and Flock](/zekt-docs/operate/members/#flock-shepherd-and-disciple-accounts).
 
+## MCP
+
+Connect any MCP client to Zekt. The endpoint address and setup steps are in **Profile → API Access →
+MCP Setup Docs**.
+
+- Authenticate with an API token as a Bearer token (`zekt_…`). Each call is a single, stateless
+  request.
+- Reading needs only a valid token. Every change needs the `manage` scope.
+
+### What you can do through MCP
+
+| Area | Tools |
+| --- | --- |
+| Account | Account summary. |
+| Directory | Browse the Directory and services. |
+| Provider services | List, create and delete services, set visibility, list and whitelist workflows. |
+| Access | Pending requests, approve, deny, subscribers, revoke. |
+| Consumer | Repositories, subscriptions, subscribe, unsubscribe. |
+| Events | Delivery status, event history (up to 50 per call), replay. |
+
+Read-only resources are also available: account summary, provider repositories and consumer
+repositories.
+
+<Aside type="caution" title="Dispatching isn't available through MCP">
+	To send events, use the [Zekt Action](/zekt-docs/provider/zekt-action/) in a workflow.
+</Aside>
+
+If your account isn't in good standing (see [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails)),
+replay is refused with error code `-32003`. Reading and settings still work.
+
+MCP is limited to 30 requests per minute per token, and every tool call counts. See
+[Limits](/zekt-docs/reference/limits/#rate-limits).
+
 ## Usage and cost
 
-MCP calls are billed as usage. See [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html),
-and track them under **Management → Billing → Current Usage**.
+MCP tool calls are billed as usage. Connection housekeeping isn't billed: initialising, pinging,
+listing tools and resources, and notifications. See
+[zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html), and track usage under
+**Management → Billing → Current Usage**.

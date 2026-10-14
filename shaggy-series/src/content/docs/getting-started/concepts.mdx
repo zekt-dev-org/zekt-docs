@@ -66,11 +66,13 @@ done ("create a resource group", "scan this image"). Consumer services are what
 
 ## Event and payload
 
-An **event** tells subscribers that a workflow run happened, and carries metadata about that run.
-On its own, that's enough to trigger a consumer.
+An **event** tells subscribers that a provider workflow run has completed. It carries the run's name,
+conclusion, branch and timestamps, and a **correlation ID**, but never the provider's repository name
+or owner. On its own, that's enough to trigger a consumer.
 
 If consumers need more context, add the [Zekt Action](/zekt-docs/provider/zekt-action/) to the
-provider workflow to attach a JSON **payload**. Consumers receive the event and the payload together.
+provider workflow to set the event type and attach a JSON **payload**. Consumers receive the event and the payload
+together.
 The [event reference](/zekt-docs/reference/event-payload/) shows the exact shape.
 
 ## Directory and visibility

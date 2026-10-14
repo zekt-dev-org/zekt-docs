@@ -104,7 +104,7 @@ export default defineConfig({
 				{
 					label: 'Security',
 					items: [
-						{ label: 'Security overview', slug: 'security/overview' },
+						{ label: 'Security and data', slug: 'security/overview' },
 						{ label: 'GitHub access', slug: 'security/github-access' },
 						{ label: 'How Zekt works', slug: 'security/how-zekt-works' },
 					],
