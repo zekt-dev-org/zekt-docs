@@ -72,7 +72,8 @@ Rules to know:
 ## Encrypting the payload
 
 With [Zekt Shield](/zekt-docs/add-ons/shield/) enabled on the repository, set `shield: true` to
-encrypt the payload in your workflow before it reaches Zekt.
+encrypt the payload in your workflow before it reaches Zekt. If none of the service's subscribers has
+uploaded a public key, the step fails: nothing is ever sent unencrypted by mistake.
 
 ## When the step fails
 

@@ -87,6 +87,7 @@ jobs:
 | `services` | Yes | 1–20 steps. |
 | `default_service_owner` | | The GitHub owner used for steps that don't set `service_owner_name`. |
 | `execution_mode` | | `sequential` (the default) or `parallel`. |
+| `strict_output_schema_resolution` | | `true` or `false` (the default). When `true`, a step fails at dispatch if a `$zekt{{ steps.X.outputs.Y }}` reference names a field that service X hasn't declared in its published [output schema](/zekt-docs/provider/schemas/#output-schemas-for-consumer-services). |
 
 Each step:
 
@@ -117,6 +118,8 @@ Write `$zekt{{ steps.<step_id>.outputs.<field> }}` in a step's `input`.
 - **Inside a longer string**, it's inserted as text. An object or array there fails the step.
 - A reference that can't be resolved fails the step:
   *Dispatch error: Template reference to '…' failed: …*
+- To make a step fail at dispatch when it references an output field the service hasn't declared, set
+  `strict_output_schema_resolution: true` in the plan.
 
 ## The result event
 
@@ -159,6 +162,11 @@ jobs:
 | Step states | Orchestration states |
 | --- | --- |
 | pending, waiting, dispatching, running, completed, failed, skipped, timed_out | pending, running, completed, failed, timed_out, cancelled |
+
+## Warnings
+
+If Zekt has advisory warnings about a submitted plan, they appear as `::warning::` annotations in
+your workflow log. Warnings don't stop the orchestration.
 
 ## Refusals
 

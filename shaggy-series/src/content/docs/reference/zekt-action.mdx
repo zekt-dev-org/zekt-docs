@@ -36,6 +36,10 @@ scalar outputs.
 
 - Any refusal from Zekt fails the step with the server's error message.
 - With `wait: true`, an orchestration that fails or times out fails the job.
+- With `shield: true`, the step fails if no subscriber has uploaded a public key. Nothing is sent
+  unencrypted.
+- Advisory warnings about an orchestration plan appear as `::warning::` annotations in the workflow
+  log.
 
 ## Modes at a glance
 
