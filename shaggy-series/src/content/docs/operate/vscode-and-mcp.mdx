@@ -106,7 +106,9 @@ repositories.
 If your account isn't in good standing (see [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails)),
 replay is refused with error code `-32003`. Reading and settings still work.
 
-MCP is limited to 30 requests per minute per token, and every tool call counts. See
+MCP is limited to 30 requests per minute per token. Every request to the MCP endpoint counts,
+including housekeeping such as initialising, pinging and listing tools, and a per-second burst limit
+also applies. See
 [Limits](/zekt-docs/reference/limits/#rate-limits).
 
 ## Usage and cost

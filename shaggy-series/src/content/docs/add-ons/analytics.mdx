@@ -8,7 +8,7 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 Zekt Analytics is an add-on that **archives** your events so you can look at them later and
 **replay** them, and gives you **insights** into your event flows. Find it under sidebar →
 **Analytics**, available with every persona. Its tabs are Repos, Insights, Time Travel, Webhook Replay
-and Audit Trail.
+and Audit Trail. An Export tab is marked *Coming soon* and isn't available yet.
 
 ## Turn it on
 
@@ -45,8 +45,8 @@ History**.
 - A replay goes to the delivery's own consumer repository by default. You can choose another target,
   but only a consumer repository with an active subscription to the same service and Analytics on.
 - Replaying into a repository whose subscription has ended is refused.
-- Up to **10 replays per original delivery** (counting every replay path), and up to **100 deliveries
-  per bulk replay**.
+- Up to **10 replays per original delivery**, and up to **100 deliveries per bulk replay**. Time Travel
+  replays don't count toward the 10: they have their own once-per-event rule.
 
 A consumer replaying an event it received can only replay it into its own repository.
 

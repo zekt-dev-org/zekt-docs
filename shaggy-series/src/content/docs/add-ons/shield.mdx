@@ -69,7 +69,12 @@ public key (**RSA-OAEP, SHA-256**).
 - If no subscriber has uploaded a public key, the provider's step **fails**. Nothing is ever sent
   unencrypted by mistake.
 - If wrapping fails for any subscriber, the step fails and names that subscriber.
-- There's no size limit beyond the normal [1 MB request limit](/zekt-docs/reference/limits/).
+- If **some** subscribers have uploaded a key and others haven't, the step succeeds, and those without
+  a key are left out of the envelope. Their decrypt step then reports *This envelope has no key for
+  this account*. Make sure every subscriber has uploaded a key, or mark the service **Require Shield**,
+  which refuses subscribers without one.
+- The [1 MB request limit](/zekt-docs/reference/limits/) applies to the encrypted, base64-encoded
+  envelope, so the payload itself can be up to about 750 KB.
 
 #### What you receive
 
@@ -130,8 +135,9 @@ A tampered ciphertext fails decryption.
 	never print the decrypted file.
 </Aside>
 
-<Aside type="note" title="Changed in zekt-action 3.1.0">
-	Provider workflows using `zekt-action@v3` now use hybrid encryption (from version 3.1.0).
+<Aside type="note" title="Changed in zekt-action 3.2.0">
+	Provider workflows using `zekt-action@v3` now use hybrid encryption (from version 3.2.0, the current
+	v3).
 	Consumers that decrypted the older format, where each recipient had the whole payload
 	RSA-encrypted, must switch to the step above.
 </Aside>

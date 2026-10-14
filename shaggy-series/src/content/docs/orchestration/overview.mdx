@@ -35,8 +35,9 @@ group*, each owned by a different team, triggered from one workflow.
   Otherwise you get: *Repository '…' is not enabled for Zekt. Enable it in the Zekt portal first.*
 - Your account has an approved subscription to each service you call. The approval belongs to the
   **account**, so any of your provider repositories can use it.
-- Each service is a [consumer service](/zekt-docs/consumer/consumer-services/) that is enabled and
-  has Track Completion on.
+- Each step targets a **provider service** or a [consumer service](/zekt-docs/consumer/consumer-services/).
+  Zekt looks for a provider service first. A consumer-service target must be enabled and of the
+  *Subscribers fire events to me* kind.
 
 ## Submit an orchestration
 
@@ -87,7 +88,7 @@ jobs:
 | `services` | Yes | 1–20 steps. |
 | `default_service_owner` | | The GitHub owner used for steps that don't set `service_owner_name`. |
 | `execution_mode` | | `sequential` (the default) or `parallel`. |
-| `strict_output_schema_resolution` | | `true` or `false` (the default). When `true`, a step fails at dispatch if a `$zekt{{ steps.X.outputs.Y }}` reference names a field that service X hasn't declared in its published [output schema](/zekt-docs/provider/schemas/#output-schemas-for-consumer-services). |
+| `strict_output_schema_resolution` | | `true` or `false` (the default). When `true`, a step fails at dispatch if a `$zekt{{ steps.X.outputs.Y }}` reference names a field that service X hasn't declared in its published [output schema](/zekt-docs/provider/schemas/#output-schemas). Only applies when service X has published one, and checks the field's first path segment. |
 
 Each step:
 
@@ -176,8 +177,9 @@ Any refusal when you submit refuses the whole orchestration:
   service that doesn't exist, one you have no subscription to, and one that can't be called. Check
   your subscription to that owner and slug.
 - *Rate limit exceeded: maximum N concurrent orchestrations per customer.*
-- *This account cannot start new orchestrations: Account suspended: …* Resolve
-  [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails) to continue.
+- *This account cannot start new orchestrations: &lt;reason&gt;. Resolve billing to continue.* The reason
+  is *Account suspended: …*, *Account has an open payment dispute* or *Grace period ended without
+  payment*. See [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails).
 
 ## Limits
 

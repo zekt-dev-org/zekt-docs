@@ -23,7 +23,7 @@ it started a run, and how that run finished.
 | **Dispatched** | GitHub accepted the `repository_dispatch`. |
 | **Sent (completion not tracked)** | Accepted, but the receiving repository has [Track Completion](/zekt-docs/consumer/enable-repository/#track-completion) off. Counts as a success. |
 | **Confirmed** | The receiving run started. |
-| **Completed** | The receiving run finished. Its conclusion and duration are shown. |
+| **Completed** | The receiving run finished. The row shows the Dispatched, Confirmed and Completed times, and a retry count. The run's conclusion is in the [dispatch queue](#dispatch-queue)'s send log. |
 | **Failed** | This attempt was refused or errored. Each attempt has its own row. |
 | **Schema Violations** | The payload failed the service's enforced [schema](/zekt-docs/provider/schemas/) and wasn't delivered. |
 | **Filtered** | Blocked by the consumer's Inquisition filter rules. |
@@ -43,14 +43,16 @@ A **Dispatch queue** panel covers the last 7 days. It's on **Provider → Delive
 - **Send log:** Sending, Sent, Refused by GitHub, Not sent (error), Run started, No run seen (no
   run matched within 15 minutes).
 
-**Not sent** rows give a plain reason, for example:
+**Not sent** rows are events Zekt deliberately skipped, and give the reason:
 
 - the subscription was no longer active when the event was due;
 - the receiving repository is switched off, or the service was disabled;
 - the provider account couldn't start new work (see [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails));
-- it wasn't sent within 24 hours (the provider can replay it);
 - the self-trigger or Chainlink hop limit was reached;
 - the Zekt GitHub App isn't installed on the receiving repository.
+
+Sends that expired after 24 hours, and internal errors, show as **Failed**, with a note. The provider
+can replay them.
 
 Run links are shown only to the account that owns the target repository.
 
@@ -91,8 +93,8 @@ retries ran out. There's one entry per delivery, kept for 30 days.
   that the subscription is still active. The entry then leaves the list.
 - **Dismiss** hides the entry.
 
-Internal errors, and sends that expired after 24 hours, appear as *Not sent* in the dispatch queue
-instead.
+Internal errors, and sends that expired after 24 hours, appear as *Failed* (with a note) in the
+dispatch queue instead.
 
 <Aside type="tip" title="Providers">
 	Providers don't have a Failed Deliveries screen. To recover, use **Replay This Event** in a
