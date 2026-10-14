@@ -7,34 +7,42 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 
 A **consumer service** turns the usual direction around. Other accounts send events *into* one of
 your repositories, typically to ask for work to be done ("scan this image", "create a resource
-group"). Consumer services are what [orchestration](/zekt-docs/orchestration/overview/) calls, and
-they can return outputs to the caller.
+group"). Consumer services are commonly called from [orchestration](/zekt-docs/orchestration/overview/),
+and can return outputs to the caller.
 
 ## Requirements
 
-- Your account has the **Both** persona. Otherwise:
-  *Consumer services can only be created by accounts with the Both persona. Upgrade your persona in
-  Profile settings.*
-- The repository behind the service is an enabled consumer repository with **Track Completion** on.
+- Your account has the **Both** persona. The **Consumer Services** sub-tab is shown only to accounts
+  with Both. Upgrade under **Profile → Persona & Access**.
+- The repository behind the service is an active consumer repository with **Track Completion** on.
 - The service is enabled.
 
 ## Create the service
 
 <Steps>
 
-1. Go to **Provider → Service Descriptions → Consumer Services** and create a new one.
-2. Choose the backing consumer repository, and fill in **Service Name** and **Publisher Name**.
-3. Set the **Dispatch Event Type** your workflow listens for, and an **Orchestration Identifier**
-   (the slug callers use: lowercase kebab-case, 2–64 characters, which can't be changed once set).
-   Turn on **Supports Orchestration** if it will be called from orchestrations.
-4. Add a description and tags, and choose its [visibility](/zekt-docs/provider/publish-to-directory/).
-   A new consumer service starts at **Organization**, and Zekt asks you to confirm before making one
-   Public.
+1. Go to **Provider → Service Descriptions → Consumer Services**.
+2. Fill in the form (see below).
+3. Choose **Create Consumer Service**. Use **Reset** to clear the form.
 
 </Steps>
 
-You can also publish an [input and output schema](/zekt-docs/provider/schemas/), so callers know
-what to send and what they'll get back.
+| Field | What it's for |
+| --- | --- |
+| **Consumer Repository** * | The repository that receives the requests. Only active consumer repositories are listed. |
+| **Service Name** * | Up to 100 characters. |
+| **Publisher Name** | Up to 50 characters. |
+| **Description** | What the service does, for people browsing the Directory. |
+| **Event Direction** * | *Subscribers fire events to me*. |
+| **Dispatch Event Type** | The event type your workflow listens for. |
+| **Service Slug (Optional)** | The slug orchestration plans use. Lowercase kebab-case, 2–64 characters. Immutable once set. |
+| **Supports Orchestration** | Declares that the service is meant to be orchestrated. It's a declaration, not a gate: an undeclared service can still be orchestrated, and the requester gets a warning. |
+| **Service Tags** | Help people find the service. |
+| **Publish to Directory** | Choose **Public** or **Organization**. A new consumer service starts at Organization, and Zekt asks you to confirm before making one Public. See [visibility](/zekt-docs/provider/publish-to-directory/). |
+
+After the service is created, you can add an avatar. In edit mode, you can publish an
+[input and output schema](/zekt-docs/provider/schemas/) so callers know what to send and what they'll
+get back.
 
 ## What your workflow receives
 
@@ -76,7 +84,7 @@ jobs:
 
 - Only the run Zekt dispatched can report outputs. If it calls the action several times, the last
   call wins.
-- Return scalar values (strings, numbers, booleans): output values reach the caller as strings.
+- Return scalar values (strings, numbers, booleans): the Zekt Action exposes outputs as strings.
 - The step's result follows the GitHub run's conclusion. A run that reports outputs and then fails
   still fails the step.
 

@@ -15,7 +15,7 @@ legal terms, see the [Privacy Policy](https://www.zekt.dev/privacy-policy.html) 
 | --- | --- |
 | The console at www.zekt.dev | GitHub sign-in. See [GitHub access](/zekt-docs/security/github-access/). |
 | REST API and MCP | [Zekt API tokens](/zekt-docs/operate/vscode-and-mcp/#api-tokens) (`zekt_…`, as a Bearer token), with an optional expiry, revocable at any time. |
-| The Zekt Action in your workflows | GitHub Actions OIDC (`id-token: write`), with no secret. Zekt binds the token to the repository's numeric GitHub ID, so a renamed or re-created repository can't impersonate the old one. |
+| The Zekt Action in your workflows | GitHub Actions OIDC (`id-token: write`), with no secret. Zekt checks the token against the repository's numeric GitHub ID. |
 
 Data is encrypted in transit (TLS).
 
@@ -38,8 +38,9 @@ Data is encrypted in transit (TLS).
 | Replay records | 90 days |
 | Failed deliveries | 30 days |
 | [Audit Trail](/zekt-docs/operate/audit-log/) entries | 1 year |
-| Redaction Guard records (pattern name only, never the matched value) | 90 days |
-| Application logs (never payload content, only size, kind and field names) | 30 days |
+| Redaction Guard records (a short preview of the match, its first 10 characters followed by `...`, plus the field path and repository) | 90 days |
+
+Zekt's event pipeline logs payload size, never payload content.
 
 ### Your account
 
@@ -51,11 +52,12 @@ Data is encrypted in transit (TLS).
 
 ### Credentials
 
-- **Your GitHub sign-in token:** stored encrypted. It's deleted 24 hours after its last use, and
-  immediately if you revoke Zekt's authorization in GitHub.
+- **Your GitHub sign-in token:** stored encrypted, and deleted 24 hours after its last use. Zekt's
+  pages don't read or keep it.
 - **GitHub App installation tokens:** never stored. Zekt creates a short-lived one when it needs to
   send.
-- **API tokens:** only a one-way hash is stored. The token itself is shown to you once.
+- **API tokens:** Zekt stores a one-way hash, plus a short prefix (`zekt_` and 8 characters) so you can
+  recognise the token in the list. The full token is shown to you once.
 - **Webhook secrets:** one per repository, stored encrypted and rotated automatically.
 - **Shield:** only the consumer's *public* key.
 
@@ -63,9 +65,9 @@ Data is encrypted in transit (TLS).
 
 | Who | Sees |
 | --- | --- |
-| **A provider**, about its consumers | Their GitHub login and account ID, the target repository name, subscription settings and dates, and each delivery's run status and conclusion. Run links are shown only to the target repository's owner. |
+| **A provider**, about its consumers | Their GitHub login and account ID, the target repository, subscription settings and dates, and for each delivery the consumer run's ID, status, conclusion, duration and any error. The assembled link to the run is shown only to the target repository's owner. |
 | **A consumer**, about a provider | The Directory card (name, description, tags, owner, repository name, event type, trust badge), each delivered payload, and, in Analytics event detail, the provider's login, account ID and repository. The dispatched payload itself leaves the provider's repository out. |
-| **Anyone**, on the public Registry | Public services. The GitHub owner is shown only when no publisher name is set. |
+| **Anyone**, on the public Registry | Public services. Without a publisher name, the GitHub owner and the repository's full name are shown. With one, the publisher name is shown instead. |
 | **An orchestration requester** | Each service's owner/slug, display name, status, timing, errors and outputs. Not the service's run links or logs. |
 | **A service owner**, in an orchestration | The requesting repository, and the run links of its own steps. |
 
@@ -82,8 +84,8 @@ receives it. Zekt routes only ciphertext and has no private key.
 
 - Shield protects the payload only. Run metadata (workflow name, branch, conclusion, timestamps) is
   still visible to Zekt and to the consumer.
-- It doesn't cover orchestration step inputs and outputs.
-- Redaction Guard doesn't scan orchestration steps or subscriber-fired sends.
+- Orchestration step inputs and outputs aren't Shield-encrypted, and Redaction Guard doesn't scan
+  them.
 
 ## When you delete your account
 

@@ -165,8 +165,9 @@ compile and run quickly, or it's refused (`INVALID_PATTERN`).
   delivered.
 - If a scan can't finish, the payload is withheld, unless you chose *Log only*.
 - Each delivery shows what Redaction Guard did: clean, redacted, withheld, failed or log-only.
-- Logs record the pattern name, never the matched value, and are kept for 90 days.
-- Orchestration steps and subscriber-fired sends aren't scanned.
+- Redaction records keep a short preview of each match (its first 10 characters followed by `...`),
+  plus the field path and repository, for 90 days.
+- Orchestration step inputs and outputs aren't scanned.
 
 ## Doctrine (Shepherd accounts)
 

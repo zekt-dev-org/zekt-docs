@@ -16,7 +16,10 @@ results with the tag filters. Each card shows the service name, publisher, descr
 
 You'll see public services, plus Organization-level services from GitHub organizations where your
 account has active repositories. If a provider has given you an unlisted service's ID, you can
-request access to it too.
+request access to it through the API or [MCP](/zekt-docs/operate/vscode-and-mcp/#mcp). The console
+has no field for entering an ID.
+
+Your own services show *This is your service.* with a **Manage** button instead of **Request access**.
 
 ## Request access
 
@@ -27,8 +30,9 @@ request access to it too.
    receive the events. For a [consumer service](/zekt-docs/consumer/consumer-services/), choose the
    **Source Repository** (one of your provider repositories) and the **Source Workflow** that
    fires instead.
-3. Optionally add a **Message** to the provider, and filters: success only, failure only, or
-   **Source Branches**. You can only choose branches that the service declares.
+3. Optionally add a **Message** to the provider, and **Source Branches** to receive events only from
+   certain provider branches. If the service declares its branches, you pick from those; otherwise
+   you type them. Every run conclusion, success or failure, is delivered.
 4. Choose **Send Request**. The card shows *Request waiting for the provider's approval.*, and
    the request appears under **Consumer → Requests**.
 

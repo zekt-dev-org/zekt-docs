@@ -13,7 +13,8 @@ whitelisted workflow becomes a **service** once you give it a service descriptio
 <Steps>
 
 1. Go to **Provider → Workflows** and select an enabled repository. Workflows from the default
-   branch are listed. Use the branch selector to see other branches.
+   branch are listed. Use the branch selector to see other branches; in the branch view, workflows are
+   listed by file name. Any workflow can be whitelisted, whatever triggers it.
 2. Turn on the toggle next to the workflow (**Add to whitelist**). You'll see *Workflow
    whitelisted*, and a **Whitelisted** badge appears. On a non-default branch, it reads
    *Enabled on &lt;branch&gt;*.
@@ -25,7 +26,8 @@ whitelisted workflow becomes a **service** once you give it a service descriptio
 
 <Steps>
 
-1. Go to **Provider → Service Descriptions → Create New → Provider Services**.
+1. Go to **Provider → Service Descriptions**. On the **Provider Services** sub-tab (the default),
+   choose **Create New**.
 2. Choose the repository, then the branch and the whitelisted workflow. Only whitelisted workflows
    can have service descriptions.
 3. Fill in the fields (see below), then choose **Save Service Description**.
@@ -36,7 +38,8 @@ whitelisted workflow becomes a **service** once you give it a service descriptio
 | --- | --- |
 | **Zekt Alias → Provider Display Name** | Optional. Shown in the Directory instead of the repository name. The service itself is shown under the workflow's name. |
 | **Dispatch Event Type** | The `event-type` your [Zekt Action](/zekt-docs/provider/zekt-action/) sends, and that consumers listen for. Letters, numbers and hyphens, up to 50 characters. |
-| **Orchestration Identifier** | The slug used in [orchestration](/zekt-docs/orchestration/overview/) plans. Lowercase kebab-case, 2–64 characters. It can't be changed once set. Turn on **Supports Orchestration** to allow it. |
+| **Orchestration Identifier** | The slug used in [orchestration](/zekt-docs/orchestration/overview/) plans. Lowercase kebab-case, 2–64 characters. It can't be changed once set. |
+| **Supports Orchestration** | Declares that the service is meant to be orchestrated. It's a declaration, not a gate: an undeclared service can still be orchestrated, and the requester gets a warning. |
 | **Service Description** | What the service does, for people browsing the Directory. |
 | **Service Tags** | Help people find the service. |
 | **Service Avatar** | JPG, PNG or WebP, up to 2 MB. |

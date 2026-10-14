@@ -52,14 +52,15 @@ jobs:
 1. The action step sends the payload to Zekt, which holds it.
 2. When the **whole workflow run completes**, Zekt combines the run's details with the held
    payload and delivers one event to every approved subscriber.
-3. Subscribers receive it whatever the run's result was. They can check the conclusion, or filter
-   on success or failure.
+3. Subscribers receive it whatever the run's result was. They can check `workflow_run.conclusion`,
+   or limit their subscription to certain branches.
 
 Rules to know:
 
 - Only the **first** Zekt Action call in a run is used. Later calls are accepted but ignored.
 - Zekt holds the payload for **24 hours**. If the run finishes later than that, the event goes out
-  without it.
+  without the payload **and** without your event type: it arrives as `zekt-workflow-completed`, so a
+  consumer listening only for your event type won't run.
 - If the run submits an orchestration, it doesn't also broadcast to subscribers. A run either
   broadcasts or orchestrates.
 
@@ -86,5 +87,8 @@ Any refusal from Zekt fails the step with the server's error message. Common one
 | *Failed to send event (HTTP 413)…* | The payload is over 1 MB. |
 | *SHIELD_NOT_ENABLED…* | You set `shield: true`, but the repository doesn't have Shield. |
 | *SHIELD_ENFORCEMENT…* | The service requires encrypted payloads. Set `shield: true`. |
+| *Shield encryption requested but no consumers have uploaded a public key…* | No subscriber can decrypt yet. Ask them to upload a key in **Shield → Consumer Keys**. |
+
+In the workflow log, the `SHIELD_*` errors appear after *Failed to send event (HTTP 403/400): …*.
 
 For every input and output, see the [Zekt Action reference](/zekt-docs/reference/zekt-action/).

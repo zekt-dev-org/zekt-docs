@@ -59,8 +59,8 @@ jobs:
 - Zekt sends the event after the provider's **whole workflow run has completed**, not when the Zekt
   Action step runs.
 - You're triggered **whatever the provider run's result was**, failure included. Check
-  `client_payload.workflow_run.conclusion` if you only want to act on success, or set a
-  success/failure filter on your subscription.
+  `client_payload.workflow_run.conclusion` if you only want to act on success. Every conclusion
+  is delivered.
 - A subscription can be limited to certain provider branches.
 
 ## Reading the payload

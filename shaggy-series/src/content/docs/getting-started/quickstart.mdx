@@ -10,15 +10,15 @@ workflow in another repository runs when it arrives.
 
 **You need:**
 
-- a Zekt account ([sign up](/zekt-docs/getting-started/sign-up/));
-- two GitHub repositories where you have **admin** permission: one to send from, one to receive in.
-
-<Aside type="note">
-	The provider and the consumer can be the same Zekt account, if it has the **Both** persona, or two
-	different accounts. Each repository can belong to only one Zekt account.
-</Aside>
+- **two Zekt accounts**: one with the **Provider** persona, and one with **Consumer** (or **Both**)
+  ([sign up](/zekt-docs/getting-started/sign-up/));
+- two GitHub repositories where you have **admin** permission: one for the provider account to send
+  from, one for the consumer account to receive in. Each repository can belong to only one Zekt
+  account.
 
 ## 1. Set up the provider
+
+Sign in to Zekt as the **provider account**.
 
 <Steps>
 
@@ -46,16 +46,23 @@ workflow in another repository runs when it arrives.
    ```
 
 3. **Whitelist the workflow.** Go to **Provider → Workflows**, select the repository, and turn on
-   the toggle next to *Hello Zekt*. [Details](/zekt-docs/provider/workflows-and-services/).
+   the toggle next to the workflow, listed by its file name `hello-zekt.yml`. [Details](/zekt-docs/provider/workflows-and-services/).
 
-4. **Create the service.** Go to **Provider → Service Descriptions → Create New → Provider Services**.
-   Choose the repository and the *Hello Zekt* workflow, and set **Dispatch Event Type** to
-   `hello-zekt`. Turn on **Publish to Directory** with visibility **Organization** or **Public**, so
-   the consumer can find it. Choose **Save Service Description**.
+4. **Create the service.** Go to **Provider → Service Descriptions**, stay on the **Provider Services**
+   sub-tab, and choose **Create New**. Choose the repository and the `hello-zekt.yml` workflow, and set
+   **Dispatch Event Type** to `hello-zekt`. Turn on **Publish to Directory** and choose **Public**, so
+   the consumer account can find it. Choose **Save Service Description**.
+
+   <Aside type="note">
+   	**Organization** visibility only reaches other accounts when the repository is owned by a GitHub
+   	organization where they have an active repository. Public is the simple choice for this test.
+   </Aside>
 
 </Steps>
 
 ## 2. Set up the consumer
+
+Sign in to Zekt as the **consumer account**.
 
 <Steps>
 
@@ -93,7 +100,7 @@ workflow in another repository runs when it arrives.
 
 <Steps>
 
-1. **Approve the request.** On the provider side, go to **Provider → Access**, filter **Pending**, and
+1. **Approve the request.** Signed in as the **provider account**, go to **Provider → Access**, filter **Pending**, and
    choose **Approve Access**.
 
 2. **Run the provider workflow.** In the provider repository on GitHub, go to **Actions → Hello

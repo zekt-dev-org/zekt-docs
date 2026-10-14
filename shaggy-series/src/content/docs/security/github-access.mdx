@@ -20,18 +20,18 @@ are Zekt's own, not GitHub tokens.
 
 | Scope | Used for |
 | --- | --- |
-| `user:email`, `read:user` | Your identity and email address. |
-| `repo` | Listing your repositories, checking that you have **admin** permission on a repository before it's enabled, and reading its workflows and branches. |
+| `user:email`, `read:user` | Your GitHub identity (login and user ID). Zekt doesn't read your GitHub email: you enter a contact email on **Complete Your Profile**. |
+| `repo` | Listing your repositories, checking that you have **admin** permission on a repository before it's enabled, reading its workflows and branches, and creating repository webhooks. |
 | `read:org` | Seeing your GitHub organizations. |
 
-Your GitHub sign-in token is kept server-side, encrypted, and never sent to your browser. Zekt
-deletes it 24 hours after its last use, and immediately if you revoke Zekt's authorization in GitHub.
+Zekt stores your GitHub sign-in token encrypted, and deletes it 24 hours after its last use. Zekt's
+pages don't read or keep your GitHub token.
 
 ## The Zekt GitHub App
 
-Zekt uses the App to:
+Zekt creates and removes a webhook on enabled repositories, so it can see workflow runs. It uses the
+App to:
 
-- create and remove a webhook on enabled repositories, so it can see workflow runs;
 - send `repository_dispatch` events to consumer repositories;
 - read why a run failed;
 - follow repository renames and transfers;
@@ -61,8 +61,8 @@ The App receives these GitHub events: **Organization**, **Repository**, **Workfl
 
 - Install it on the GitHub account that **owns** the repository: your personal account or the
   organization.
-- Choose **Only select repositories** and pick the repository. Zekt refuses installations that grant
-  *All repositories*.
+- Choose **Only select repositories** and pick the repository. Zekt's setup page stops you if the
+  installation grants *All repositories*.
 - The person enabling a repository needs **admin** permission on it.
 - If you can't install on an organization yourself, GitHub sends the request to the organization's
   owners. Zekt shows **Request Submitted**, and the dashboard shows the repository as
@@ -75,11 +75,11 @@ Adding a repository to the installation doesn't enable it. Enable it in Zekt as 
 
 | What happens on GitHub | What Zekt does |
 | --- | --- |
-| A repository is **removed** from the installation | Its provider and consumer sides are switched off in every account that had it. Subscriptions are kept, and events for it are skipped. Each affected account gets the in-app message *GitHub App disconnected from repository*. To restore, add the repository back on GitHub, then switch it on again in Zekt. |
+| A repository is **removed** from the installation | Zekt switches off the repository and notifies the account that enabled it. To restore, add the repository back on GitHub, then switch it on again in Zekt. |
 | The App is **uninstalled** | Every repository under that installation is switched off, and each account gets a critical message, *GitHub App disconnected from your account*. Nothing comes back by itself: reinstall, then re-enable each repository. |
 | The App is **suspended** | Repositories pause. When it's unsuspended, they resume automatically (*GitHub App unsuspended — event delivery resumed*). |
 | A repository is **renamed or transferred** | Zekt follows it. A transfer doesn't move it to another Zekt account. |
-| Someone is **removed from an organization** | They're removed from Zekt accounts they're a member of. See [Members](/zekt-docs/operate/members/#when-someone-leaves-a-github-organization). |
+| Someone is **removed from an organization** | They're removed from Zekt accounts they're a member of, except as an account's only owner, who keeps access while the account is told to add another owner. See [Members](/zekt-docs/operate/members/#when-someone-leaves-a-github-organization). |
 
 <Aside type="caution" title="Deleting your Zekt account">
 	The App and the webhooks Zekt added stay on your repositories until you uninstall the App and

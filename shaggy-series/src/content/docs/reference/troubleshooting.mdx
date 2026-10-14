@@ -44,6 +44,10 @@ Delivery is at-least-once. Deduplicate on `zekt.correlationId` plus `zekt.replay
 | *"event-type" input is required…* | Add `event-type`. |
 | *SHIELD_NOT_ENABLED…* | Turn on [Shield](/zekt-docs/add-ons/shield/) for the repository, or remove `shield: true`. |
 | *SHIELD_ENFORCEMENT…* | The service requires encryption. Set `shield: true`. |
+| *Shield encryption requested but no consumers have uploaded a public key…* | No subscriber can decrypt yet. Ask them to upload a key in **Shield → Consumer Keys**. |
+| *Orchestration payload is not valid JSON: …* | Fix the JSON of the plan in `payload`. |
+| *Repository not enabled in Zekt* (404) | [Enable the repository](/zekt-docs/provider/enable-repository/) as a provider. |
+| *Repository is disabled* (403) | The repository is switched off in Zekt. Switch it on again under **Provider → Repos**. |
 | HTTP 429 | You hit a [rate limit](/zekt-docs/reference/limits/#rate-limits). Wait for `Retry-After`. |
 
 Also check that the job has `permissions: id-token: write`.

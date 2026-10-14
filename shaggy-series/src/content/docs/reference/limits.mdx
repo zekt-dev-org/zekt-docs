@@ -71,6 +71,9 @@ How requests are counted:
 | Zekt Action event submission | 30 per provider repository |
 | MCP | 30 per token. Every tool call counts, including reads. |
 
-The Zekt Action's rate-limit body is `{"error":"rate_limit_exceeded","retryAfterSeconds":N}`.
+Two areas use a different body:
+
+- **Zekt Action** event submission: `{"error":"rate_limit_exceeded","retryAfterSeconds":N}`.
+- **MCP**: `{"error":"Rate limit exceeded (<type>)","retryAfter":N}`.
 
 Honour `Retry-After` and back off before retrying.

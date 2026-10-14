@@ -14,8 +14,8 @@ rule. When a request is filed, you get an in-app message: *New access request fr
 
 1. Go to **Provider → Access**. Filter by **Pending**, **Approved**, **Denied**, **Revoked**,
    **Exited** or **Auto-Rules**.
-2. On a pending request, choose **Approve Access**, or **Deny** and then **Confirm Deny**. You can
-   give a reason, which the consumer sees.
+2. On a pending request, choose **Approve Access**, or **Deny**. To deny, you must enter a
+   **Reason for denial**, which the consumer sees, then choose **Confirm Deny**.
 
 </Steps>
 
@@ -31,8 +31,8 @@ On an approved subscription, choose **Revoke Access**. You'll see *Consumer acce
 delivery stopped.*, and the consumer is notified (*@… ended your subscription…*).
 
 - Events that were queued but not yet sent aren't sent. Events GitHub already accepted still run.
-- A running orchestration fails at its next step that needs this subscription. A step already
-  started finishes.
+- A running orchestration fails at its next step that needs this subscription. Steps not yet
+  dispatched are stopped.
 - To undo a revocation, the consumer requests access again and you approve it.
 
 If a consumer leaves on their own, you get a message: *@… unsubscribed*.
@@ -69,6 +69,6 @@ still has active subscribers: revoke them first.
 ## Changing visibility
 
 Changing a service's [visibility](/zekt-docs/provider/publish-to-directory/) never ends existing
-subscriptions. Unlisting a service that has subscribers shows a warning, but is allowed.
+subscriptions.
 
 All of these decisions are recorded in the [audit log](/zekt-docs/operate/audit-log/).

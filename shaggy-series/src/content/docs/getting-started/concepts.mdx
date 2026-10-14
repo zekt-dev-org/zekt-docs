@@ -14,8 +14,8 @@ Your **Zekt account** is the customer: whoever signed up, holds the subscription
 You sign in with your GitHub identity and manage everything in the web console at
 [www.zekt.dev](https://www.zekt.dev).
 
-The account is created when you first sign in with GitHub, and that GitHub login is the account
-owner. Colleagues can be added as [members](/zekt-docs/operate/members/).
+The account is created when you sign in with GitHub and submit **Complete Your Profile**. That
+GitHub login is the account owner. Colleagues can be added as [members](/zekt-docs/operate/members/).
 
 An account enables **repositories**, and those repositories can live under several GitHub owners:
 organizations, your personal GitHub account, or both. A repository can be enabled by only one Zekt
@@ -40,7 +40,8 @@ one-way: you can't downgrade afterwards.
 A repository enabled as a **provider** sends events. Each workflow in it is either:
 
 - **Disabled**: Zekt ignores it. This is the default.
-- **Whitelisted**: the workflow is offered as a **service** that other repositories can subscribe to.
+- **Whitelisted**: the workflow is allowed to become a **service**. It becomes one when you save a
+  service description for it, and other repositories can then subscribe to it.
 
 When a run of a whitelisted workflow completes, Zekt delivers an event to every approved subscriber.
 
@@ -61,8 +62,8 @@ notified.
 
 An account with the **Both** persona can also offer a **consumer service**. Here the service sits on
 a consumer repository, and *other* accounts send events into it, typically to ask for work to be
-done ("create a resource group", "scan this image"). Consumer services are what
-[orchestration](/zekt-docs/orchestration/overview/) calls.
+done ("create a resource group", "scan this image"). Consumer services are commonly called from
+[orchestration](/zekt-docs/orchestration/overview/).
 
 ## Event and payload
 
@@ -82,9 +83,9 @@ one of three **visibility** levels:
 
 | Visibility | Who can find it |
 | --- | --- |
-| **Unlisted** | Nobody can browse to it, but anyone who has the service's ID can still request access. |
-| **Organization** | Your own account, plus accounts that have active repositories under the same GitHub owner as the service. |
-| **Public** | Everyone, including visitors to the public [Zekt Registry](https://www.zekt.dev/zekt-registry.html), who don't need to sign in. |
+| **Unlisted** | Nobody can browse to it. Anyone given its service ID can still request it through the API or MCP; the console has no field for entering an ID. |
+| **Organization** | Your own account, plus accounts with an active repository under the same GitHub **organization** that owns the service, plus accounts that joined through a Shepherd invitation. A service in a personal GitHub account's repository reaches only your own account. |
+| **Public** | Every signed-in Zekt account, plus visitors to the public [Zekt Registry](https://www.zekt.dev/zekt-registry.html), who don't need to sign in. |
 
 A new provider service starts **unlisted**. A new consumer service starts at **Organization**. See
 [Publish to the Directory](/zekt-docs/provider/publish-to-directory/).
