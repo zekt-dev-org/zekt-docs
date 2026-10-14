@@ -85,7 +85,9 @@ public key (**RSA-OAEP, SHA-256**).
 }
 ```
 
-Your entry in `recipients` is keyed by your Zekt account ID, which starts with `cust-`.
+Your entry in `recipients` is keyed by your Zekt account ID, which starts with `cust-`. It's shown
+as **Customer ID** under **Profile → Profile**, with a copy button. Use it for `ZEKT_ACCOUNT_ID` in the
+step below.
 
 #### Decrypt in your workflow
 
@@ -113,14 +115,19 @@ to a file for later steps to read:
             const plain = Buffer.concat([d.update(Buffer.from(e.ciphertext, "base64")), d.final()]);
             require("fs").writeFileSync(process.env.RUNNER_TEMP + "/zekt-payload.json", plain);
           '
-      - run: jq . "$RUNNER_TEMP/zekt-payload.json"
+      - name: Use the payload
+        run: |
+          ENVIRONMENT=$(jq -r .environment "$RUNNER_TEMP/zekt-payload.json")
+          echo "::add-mask::$ENVIRONMENT"
+          ./deploy.sh "$ENVIRONMENT"
 ```
 
 A tampered ciphertext fails decryption.
 
 <Aside type="caution" title="Keep it out of the logs">
-	Never echo the decrypted payload or the private key into workflow logs. Read the decrypted file in
-	later steps instead.
+	Never echo the private key or the decrypted payload into workflow logs. `::add-mask::` only hides a
+	value in log lines that come *after* it, so mask each value before anything could print it, and
+	never print the decrypted file.
 </Aside>
 
 <Aside type="note" title="Changed in zekt-action 3.1.0">
