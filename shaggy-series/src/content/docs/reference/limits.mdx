@@ -1,0 +1,79 @@
+---
+title: Limits
+description: Payload sizes, counts, schema rules and rate limits.
+---
+
+## Payloads
+
+| Limit | Value |
+| --- | --- |
+| Zekt Action request | Up to **1 MB**. Larger requests get HTTP 413. |
+| Time Travel archive copy | Payloads over **512 KB** are archived as a placeholder. The event is still delivered normally. |
+| GitHub `client_payload` top-level properties | GitHub allows 10. Zekt nests its own fields, so this doesn't limit you. |
+
+Keep payloads small: a few KB of metadata rather than build artefacts.
+
+## Counts
+
+| What | Limit |
+| --- | --- |
+| Repositories, services, subscriptions, API tokens per account | No limit |
+| Repositories listed per GitHub App installation, when choosing what to enable | 500 |
+| Schema versions per service lineage | 20 (a deprecated version stops counting after its sunset date) |
+| Consumer event filtering | 30 rule sets per consumer, 10 conditions per rule set |
+| Orchestration steps | 20 |
+| Orchestration nesting depth | 5 |
+| Orchestrations running at once, per account | 5 by default. Contact support to raise it. |
+| Replays per delivery | 10 |
+| Deliveries per bulk replay | 100 |
+| Time Travel replays per archived event | 1 |
+| Chainlink hop limit | 2–10 |
+| Directory results per page | 100 |
+| Service avatar | 2 MB |
+
+## Schemas
+
+- At most **64 KB** (UTF-8), and it must be a JSON object.
+- Only local `$ref` (starting with `#`), and every reference must resolve. `$dynamicRef` and
+  `$recursiveRef` are refused.
+- Regular-expression patterns: at most 512 characters, with no nested repetition such as `(a+)+`.
+- Changelog: at most 4,000 characters.
+- Refusals start with *Schema refused: …*. A secret-screening check can block a publish, or ask you
+  to acknowledge a warning.
+
+## Rate limits
+
+When you hit a rate limit, Zekt responds with **HTTP 429** and these headers:
+
+- `Retry-After`: seconds to wait;
+- `X-RateLimit-Limit`;
+- `X-RateLimit-Remaining: 0`.
+
+The body looks like:
+
+```json
+{ "error": "Rate limit exceeded", "bucket": "…", "retryAfter": 30, "requestId": "…" }
+```
+
+How requests are counted:
+
+- Signed-in callers are counted per user, anonymous callers per IP address.
+- Counting is per calendar minute, with a burst limit of 10 per second.
+- Endpoints in the same family share a counter.
+
+| Area | Typical limit per minute |
+| --- | --- |
+| Most changes | 60 |
+| Member management | 20 |
+| Directory | 120 |
+| Replay history and trust lookups | 120 |
+| Public registry and avatars | 30 per IP |
+| Zekt Action event submission | 30 per provider repository |
+| MCP | 30 per token. Every tool call counts, including reads. |
+
+Two areas use a different body:
+
+- **Zekt Action** event submission: `{"error":"rate_limit_exceeded","retryAfterSeconds":N}`.
+- **MCP**: `{"error":"Rate limit exceeded (<type>)","retryAfter":N}`.
+
+Honour `Retry-After` and back off before retrying.

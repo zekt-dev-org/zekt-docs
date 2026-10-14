@@ -1,0 +1,51 @@
+---
+title: Payload schemas
+description: Publish versioned JSON schemas for your service's payload so subscribers don't have to guess its shape.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+A service can publish versioned **JSON schemas** describing the payload it sends. Subscribers see
+exactly what they'll receive, can write their parsing logic against it, and are told when it changes.
+Public schemas also appear in the [Zekt Registry](https://www.zekt.dev/zekt-registry.html).
+
+## Versions and compatibility
+
+Schemas use semantic versions: `major.minor.patch`. Prerelease versions such as `1.2.0-beta.1`
+also exist, but only a stable version (one without a prerelease suffix) can be a service's current
+version.
+
+- A change that would break existing subscribers needs a new **major** version. Zekt refuses to
+  publish a breaking change under the same major version.
+- You can **deprecate** a version. A deprecation names a successor version and a sunset date at least
+  30 days in the future.
+- When the version a subscriber uses changes, the subscriber gets a notice on their dashboard.
+
+## How subscribers pick a version
+
+Each subscriber chooses how closely to follow your versions:
+
+| Pin | Follows |
+| --- | --- |
+| **Latest** | Every new version. |
+| **Major** | New minor and patch versions within one major version. |
+| **Minor** | New patch versions within one minor version. |
+| **Exact** | One version only. |
+
+## Who can see the schema
+
+- Approved subscribers can always see the schema.
+- With **Show schema before access** turned on, the service's Directory audience can also see it
+  before requesting access, but only while the service is listed (Organization or Public). See
+  [visibility](/zekt-docs/provider/publish-to-directory/).
+
+## Output schemas
+
+A service that takes part in [orchestration](/zekt-docs/orchestration/overview/), whether a provider
+service or a [consumer service](/zekt-docs/consumer/consumer-services/), can also publish an **output
+schema**. It describes the values the service returns to the workflow that called it.
+
+<Aside type="tip">
+	Publish a schema before you list a service publicly. A clear contract is the quickest way to
+	reduce support questions from subscribers.
+</Aside>

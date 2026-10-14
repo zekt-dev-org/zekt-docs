@@ -1,0 +1,75 @@
+---
+title: Publish to the Directory
+description: Choose who can find your service — unlisted, organization or public — and what listing does and doesn't do.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The **Directory** is where signed-in Zekt accounts find services and request access. Listing a
+service makes it discoverable. Whether anyone actually gets events is still up to you: every
+subscription needs your approval or one of your [auto-approval rules](/zekt-docs/provider/access-requests/).
+
+## Visibility levels
+
+| Visibility | Who can find it | Typical use |
+| --- | --- | --- |
+| **Unlisted** | Nobody can browse to it. Anyone you give the service's ID to can still request it through the API or MCP; the console has no field for entering an ID. | Private arrangements with known partners. |
+| **Organization** | Your own account, plus any account with an **active** repository under the same GitHub organization that owns the service, plus accounts that joined through a Shepherd invitation. If the owner is a personal GitHub account, only your own account qualifies. | Internal platform services within a company's GitHub organization. |
+| **Public** | Every signed-in Zekt account, plus the public [Zekt Registry](https://www.zekt.dev/zekt-registry.html), which anyone can browse without signing in. | Services offered to customers or partners at large. |
+
+### Setting visibility
+
+Set it in the service editor (**Provider → Service Descriptions**). With **Publish to Directory** off,
+the service is unlisted. Turn it on, then choose **Directory Visibility**: **Organization** (the
+default) or **Public**.
+
+### Defaults and rules
+
+- A new **provider service** starts **unlisted**: the Publish toggle is off.
+- A new **consumer service** starts at **Organization**. Zekt asks you to confirm before making one Public.
+- Re-listing an unlisted service puts it at **Organization**. Moving it to Public is a separate,
+  deliberate step.
+- Changing visibility never ends existing subscriptions. Switching **Publish to Directory** off in the
+  service editor unlists the service straight away. The toggle under **Manage Existing** refuses to
+  unlist a service that still has active consumers.
+- If you set a **publisher name**, the public Registry shows it instead of your GitHub owner and
+  repository name.
+
+## What subscribers see
+
+Each listing card shows:
+
+- **Service name**: the card's title.
+- **Publisher name**: the name the service is published under. Each publisher name belongs to one
+  GitHub owner, so if another owner already uses it, you'll get `PUBLISHER_NAME_TAKEN`.
+- **Description**: if you leave it empty, the card says *No description provided*.
+- **Tags**.
+- **Trust badge**: what Zekt knows about the provider repository's owner (see below).
+
+People search the Directory by service, publisher, tag or event, and can narrow results with tag
+filters. Choose names, descriptions and tags with the people who will consume the service in mind.
+
+If the service has a [payload schema](/zekt-docs/provider/schemas/), you can choose to show it before
+access is granted, so people can see what they'd receive before they ask.
+
+### Trust badges
+
+The badge describes the GitHub owner of the provider's repository:
+
+| Badge | Meaning |
+| --- | --- |
+| **Not checked** | Zekt hasn't been able to check the owner yet. |
+| **Basic Provider** | GitHub confirms the owner exists. It isn't a GitHub-verified organization and hasn't verified a domain. |
+| **GitHub Verified** | The owner is an organization that GitHub has verified. Zekt shows GitHub's verification and runs no check of its own. |
+| **Domain Verified** | Where available: the owner has proved ownership of a domain with a DNS TXT record. |
+
+<Aside type="caution" title="Know who you're dealing with">
+	The publisher name is chosen by the publisher. Check the trust badge, and before you subscribe to
+	a service or approve someone's request, make sure you know who is on the other side.
+</Aside>
+
+## Things that block changes
+
+- You **can't disable a provider repository** while consumers are subscribed to its services, or
+  while one of them is published. See [Disable a repository](/zekt-docs/provider/enable-repository/#disable-a-repository).
+- You **can't delete a provider service** that still has active subscribers. Revoke their access first.

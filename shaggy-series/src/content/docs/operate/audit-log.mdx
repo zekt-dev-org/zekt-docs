@@ -1,0 +1,52 @@
+---
+title: Audit log
+description: What the Audit Trail records, who can see it, how long it's kept, and how to export it.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The **Audit Trail** (sidebar → **Audit Trail**) records consent and configuration events where your
+account acted or was acted on. That includes the other party's actions on your subscriptions,
+with their GitHub login.
+
+<Aside type="note">
+	Only the account's primary sign-in, the GitHub login the account belongs to, can open the Audit
+	Trail.
+</Aside>
+
+## What's recorded
+
+| Area | Events |
+| --- | --- |
+| **Subscriptions** | Requested, approved, auto-approved, denied, revoked, unsubscribed, ended by Zekt, marked implemented, settings changed, schema policy changed, schema version acknowledged. |
+| **Schemas** | Published, deprecated, force-deleted. |
+| **Members** | Added, role changed, removed. |
+| **API tokens** | Created, revoked, expired. |
+| **Webhook secrets** | Rotated by you, rotated automatically, rotation failed. |
+| **Shield public key** | Uploaded, updated, deleted. |
+| **GitHub App** | Installation re-synced. |
+| **Auto-approval** (providers) | Rule changes. |
+
+## What isn't recorded
+
+Sign-ins, enabling or disabling repositories, add-on changes and payment changes are **not** in the
+Audit Trail.
+
+## Find entries
+
+Filter by **Action** (it lists the common actions, not every recorded one), **Role** (whether you were the actor or the target), date range (the last 30
+days by default) and free-text search. 25 rows are shown per page.
+
+## Export
+
+Export the filtered view as JSON, up to 100 entries. Auto-approval rule entries aren't included in
+the export.
+
+## Retention
+
+Entries are kept for **1 year**, including after the account is deleted.
+
+<Aside type="tip" title="Not the same as Analytics → Audit Trail">
+	**Analytics → Audit Trail** is a different screen: event-flow diagrams for the last 24 hours, 7 days (the default) or 30 days, part
+	of the [Zekt Analytics](/zekt-docs/add-ons/analytics/) add-on.
+</Aside>

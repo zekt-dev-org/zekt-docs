@@ -1,0 +1,26 @@
+---
+title: Webhook health
+description: Check and rotate the webhooks Zekt manages on your provider repositories.
+---
+
+When you enable a provider repository, Zekt adds a webhook to it so it can see workflow runs. Zekt
+creates, secures and removes these webhooks for you. You never handle the webhook secret.
+
+Go to **Health → Webhook Health**. It's available with the Provider or Both persona, and lists the
+webhooks on your active provider repositories.
+
+## Ping a webhook
+
+Choose **Ping Webhook**. GitHub sends a test event, and the result is shown. Use it after changes on
+GitHub, or when events stop arriving.
+
+## Rotate the secret
+
+Choose **Cycle Secret**. Zekt creates a new webhook secret and updates GitHub.
+
+- Zekt also rotates every secret automatically every **30 days**.
+- The tab shows the last rotation, how many rotations there have been, and when the next one is due.
+- During a rotation the old and new secrets briefly overlap.
+
+Rotations, including automatic ones and failures, are recorded in the
+[audit log](/zekt-docs/operate/audit-log/).

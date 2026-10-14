@@ -1,0 +1,99 @@
+---
+title: Security and data
+description: What Zekt stores and for how long, who can see what, and how each part of Zekt authenticates.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+This page explains what Zekt stores, who can see it, and how sign-in works across Zekt. For the
+legal terms, see the [Privacy Policy](https://www.zekt.dev/privacy-policy.html) and
+[Terms of Service](https://www.zekt.dev/terms-of-service.html).
+
+## Authentication
+
+| Where | How you authenticate |
+| --- | --- |
+| The console at www.zekt.dev | GitHub sign-in. See [GitHub access](/zekt-docs/security/github-access/). |
+| REST API and MCP | [Zekt API tokens](/zekt-docs/operate/vscode-and-mcp/#api-tokens) (`zekt_…`, as a Bearer token), with an optional expiry, revocable at any time. |
+| The Zekt Action in your workflows | GitHub Actions OIDC (`id-token: write`), with no secret. Zekt checks the token against the repository's numeric GitHub ID. |
+
+Data is encrypted in transit (TLS).
+
+## What Zekt stores
+
+### Events
+
+- Consumers receive a reduced copy of each event. The provider repository's name, owner, URL,
+  account ID and actor are removed first. See the [event payload reference](/zekt-docs/reference/event-payload/).
+- **Delivery records** keep the delivered payload (after any Shield or Redaction Guard
+  processing). They have no fixed expiry, and are deleted when the provider's account is deleted.
+
+| Data | Kept for |
+| --- | --- |
+| A payload sent with the Zekt Action, until it's matched to its run | Up to 24 hours |
+| A queued send, until it's sent | Up to 24 hours |
+| Send records (metadata only, no payload) | 90 days |
+| Time Travel archive ([Analytics](/zekt-docs/add-ons/analytics/) only) | 30 days |
+| Orchestration step inputs and outputs | 30 days |
+| Replay records | 90 days |
+| Failed deliveries | 30 days |
+| [Audit Trail](/zekt-docs/operate/audit-log/) entries | 1 year |
+| Redaction Guard records (a short preview of the match, its first 10 characters followed by `...`, plus the field path and repository) | 90 days |
+
+Zekt's event pipeline logs payload size, never payload content.
+
+### Your account
+
+- **Profile:** GitHub user ID and login, email, display name, company name and website, tax ID,
+  country, and subscription status.
+- **Billing contact:** email, phone and address.
+- **Card:** brand, last four digits, and expiry month and year, from the payment processor. Never
+  the full card number or the CVC.
+
+### Credentials
+
+- **Your GitHub sign-in token:** stored encrypted, and deleted 24 hours after its last use. Zekt's
+  pages don't read or keep it.
+- **GitHub App installation tokens:** never stored. Zekt creates a short-lived one when it needs to
+  send.
+- **API tokens:** Zekt stores a one-way hash, plus a short prefix (`zekt_` and 8 characters) so you can
+  recognise the token in the list. The full token is shown to you once.
+- **Webhook secrets:** one per repository, stored encrypted and rotated automatically.
+- **Shield:** only the consumer's *public* key.
+
+## Who can see what
+
+| Who | Sees |
+| --- | --- |
+| **A provider**, about its consumers | Their GitHub login and account ID, the target repository, subscription settings and dates, and for each delivery the consumer run's ID, status, conclusion, duration and any error. The assembled link to the run is shown only to the target repository's owner. |
+| **A consumer**, about a provider | The Directory card (name, description, tags, owner, repository name, event type, trust badge), each delivered payload, and, in Analytics event detail, the provider's login, account ID and repository. The dispatched payload itself leaves the provider's repository out. |
+| **Anyone**, on the public Registry | Public services. Without a publisher name, the GitHub owner and the repository's full name are shown. With one, the publisher name is shown instead. |
+| **An orchestration requester** | Each service's owner/slug, display name, status, timing, errors and outputs. Not the service's run links or logs. |
+| **A service owner**, in an orchestration | The requesting repository, and the run links of its own steps. |
+
+A service that doesn't exist and one you're not allowed to use give the same refusal, so private
+services can't be found by guessing.
+
+Authorised Zekt operators can access stored account and delivery data for support and operations.
+Shield-encrypted payloads stay unreadable to Zekt.
+
+## Shield
+
+[Zekt Shield](/zekt-docs/add-ons/shield/) encrypts the payload in the provider's workflow, before Zekt
+receives it. Zekt routes only ciphertext and has no private key.
+
+- Shield protects the payload only. Run metadata (workflow name, branch, conclusion, timestamps) is
+  still visible to Zekt and to the consumer.
+- Orchestration step inputs and outputs aren't Shield-encrypted, and Redaction Guard doesn't scan
+  them.
+
+## When you delete your account
+
+See [Delete your account](/zekt-docs/operate/account/#delete-your-account). Logs age out after 30 days,
+and backups keep data for up to 7 days.
+
+<Aside type="tip" title="Keep payloads lean">
+	Delivery records keep payloads until the provider's account is deleted. Send only what consumers
+	need, and use [Shield](/zekt-docs/add-ons/shield/) or
+	[Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard) for anything sensitive.
+</Aside>

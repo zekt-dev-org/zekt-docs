@@ -1,0 +1,95 @@
+---
+title: Receive events
+description: Write the consumer workflow that runs when Zekt delivers an event, read the payload, and handle duplicates.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Zekt delivers each event to your consumer repository as a GitHub `repository_dispatch` event. Your
+workflow listens for it like any other trigger.
+
+## What you need
+
+- The repository [enabled as a consumer](/zekt-docs/consumer/enable-repository/), with the Zekt GitHub
+  App installed on it.
+- An approved subscription to the service ([request access](/zekt-docs/consumer/request-access/)).
+- A workflow that listens for the provider's event type.
+
+A plain consumer workflow needs **no token, no secret and nothing hosted**: the Zekt GitHub App sends
+the dispatch. The only exception is decrypting [Shield](/zekt-docs/add-ons/shield/) payloads, which
+needs your private key.
+
+<Aside type="note" title="GitHub's rule">
+	GitHub runs `repository_dispatch` workflows from the repository's **default branch**. The workflow
+	file must exist there.
+</Aside>
+
+## A minimal consumer workflow
+
+```yaml
+name: On deployment-complete
+on:
+  repository_dispatch:
+    types: [deployment-complete]        # must equal the provider's event type
+run-name: ${{ github.event.client_payload.zekt.dispatch_id }}
+jobs:
+  handle:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          CORRELATION_ID: ${{ github.event.client_payload.zekt.correlationId }}
+          CONCLUSION: ${{ github.event.client_payload.workflow_run.conclusion }}
+          ENVIRONMENT: ${{ github.event.client_payload.zekt.payload.environment }}
+          PAYLOAD: ${{ toJSON(github.event.client_payload.zekt.payload) }}
+        run: |
+          echo "event $CORRELATION_ID, provider run: $CONCLUSION, env: $ENVIRONMENT"
+          echo "$PAYLOAD" | jq .
+```
+
+- **`types`** must match the `event-type` the provider sends with the
+  [Zekt Action](/zekt-docs/provider/zekt-action/). If the provider doesn't use the action, the event
+  type is `zekt-workflow-completed`.
+- **`run-name`** is optional. It lets Zekt match your run to the delivery exactly. Without it, Zekt
+  matches by time and event type.
+- Pass values into scripts through **`env`**, as above. Don't write `${{ … }}` directly inside
+  `run:`, because a quote in the payload could break or inject into the script.
+
+## When events arrive
+
+- Zekt sends the event after the provider's **whole workflow run has completed**, not when the Zekt
+  Action step runs.
+- You're triggered **whatever the provider run's result was**, failure included. Check
+  `client_payload.workflow_run.conclusion` if you only want to act on success. Every conclusion
+  is delivered.
+- A subscription can be limited to certain provider branches.
+
+## Reading the payload
+
+The provider's payload is at `github.event.client_payload.zekt.payload`, unchanged. It arrives as
+JSON, so you can read fields directly, for example `…zekt.payload.environment`. You don't need
+`fromJSON`.
+
+- `zekt.payload` is `null` if the provider sent no payload, and `{}` if the action ran without a
+  `payload` input.
+- If the provider uses Redaction Guard, matching values arrive as `***REDACTED***`. In Block mode,
+  `zekt.payload` arrives as `null`.
+
+For every field, see the [event payload reference](/zekt-docs/reference/event-payload/).
+
+## Duplicates and ordering
+
+Delivery is **at-least-once**, and there's **no ordering guarantee** between events.
+
+- Make your workflow safe to run twice for the same event.
+- To deduplicate, use `zekt.correlationId` together with `zekt.replayId`. The correlation ID is the
+  same for every consumer of an event and on a re-send. `replayId` is present only on replays.
+- Don't deduplicate on `dispatch_id`: it changes on every send.
+
+## Track Completion
+
+**Track Completion** is a repository setting, on by default for new consumer repositories. With it
+on, Zekt watches the run your event triggered, so both you and the provider can see whether it
+started and how it finished. See [Delivery tracking](/zekt-docs/operate/deliveries/).
+
+There's no confirm or complete step to add to your workflow. Track Completion is required to
+[offer a consumer service](/zekt-docs/consumer/consumer-services/).

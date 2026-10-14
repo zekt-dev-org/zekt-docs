@@ -1,0 +1,194 @@
+---
+title: Zekt Shield
+description: End-to-end encryption of payloads with keys you control, Redaction Guard for secrets, and Doctrine for Shepherd accounts.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Zekt Shield is an add-on with three parts:
+
+- **End-to-end encryption**: payloads are encrypted in the provider's workflow, and only the consumer
+  can decrypt them. Zekt routes ciphertext and never has the private key.
+- **Redaction Guard**: scans outgoing payloads for secrets and masks or withholds them.
+- **Doctrine**: allow-lists that a Shepherd account sets for its Disciples.
+
+Find it under sidebar → **Shield**, with the tabs Provider Shield, Consumer Keys, Redaction Guard and
+Doctrine. Shield is shown to accounts that pay their own bill, not to Disciple accounts.
+
+## End-to-end encryption
+
+### Consumer: upload your public key
+
+<Steps>
+
+1. Generate an RSA key pair on your own machine. Use 4096 bits (recommended) or at least 2048:
+
+   ```bash
+   openssl genrsa -out zekt-shield.pem 4096
+   openssl rsa -in zekt-shield.pem -pubout -out zekt-shield.pub.pem
+   ```
+
+2. Go to **Shield → Consumer Keys** and upload **only the public key** (`zekt-shield.pub.pem`). One
+   key covers all of your account's subscriptions. If you paste a private key, it's rejected.
+3. Store the **private key** (`zekt-shield.pem`) as a GitHub Actions secret in your consumer
+   repository, for example `ZEKT_SHIELD_PRIVATE_KEY`. It never goes to Zekt.
+
+</Steps>
+
+The screen shows your key's fingerprint and age, and recommends rotating it after 90 days. Uploading
+a key is free.
+
+### Provider: turn on Shield and encrypt
+
+<Steps>
+
+1. Go to **Shield → Provider Shield** and turn it on for the provider repository.
+2. In the workflow, set `shield: true` on the [Zekt Action](/zekt-docs/provider/zekt-action/). The
+   payload is encrypted in your workflow, before it reaches Zekt.
+3. Optionally, mark the service **Require Shield (Strict Mode)** in its service description. Then
+   every payload must be encrypted, and consumers must have uploaded a key to subscribe.
+
+</Steps>
+
+| Error | Meaning |
+| --- | --- |
+| *SHIELD_NOT_ENABLED…* | `shield: true` was set, but Shield isn't on for the repository. |
+| *SHIELD_ENFORCEMENT…* | The service requires encryption, and the payload wasn't encrypted. |
+| **Shield Not Enabled** | You tried to mark a service *Require Shield* without Shield on the repository. |
+
+### Consumer: decrypt
+
+The consumer decrypts in its own workflow, with its private key.
+
+#### How the payload is encrypted
+
+The provider's workflow uses hybrid encryption. The payload is encrypted once with **AES-256-GCM**,
+using a random key and a 12-byte IV. That key is then wrapped for each subscriber with their RSA
+public key (**RSA-OAEP, SHA-256**).
+
+- If no subscriber has uploaded a public key, the provider's step **fails**. Nothing is ever sent
+  unencrypted by mistake.
+- If wrapping fails for any subscriber, the step fails and names that subscriber.
+- If **some** subscribers have uploaded a key and others haven't, the step succeeds, and those without
+  a key are left out of the envelope. Their decrypt step then reports *This envelope has no key for
+  this account*. Make sure every subscriber has uploaded a key, or mark the service **Require Shield**,
+  which refuses subscribers without one.
+- The [1 MB request limit](/zekt-docs/reference/limits/) applies to the encrypted, base64-encoded
+  envelope, so the payload itself can be up to about 750 KB.
+
+#### What you receive
+
+`client_payload.zekt.payload` is an envelope:
+
+```json
+{
+  "type": "zekt-shield-envelope",
+  "iv": "<base64>",
+  "authTag": "<base64>",
+  "ciphertext": "<base64>",
+  "recipients": { "<Zekt account ID>": "<base64 wrapped key>" }
+}
+```
+
+Your entry in `recipients` is keyed by your Zekt account ID, which starts with `cust-`. It's shown
+as **Customer ID** under **Profile → Profile**, with a copy button. Use it for `ZEKT_ACCOUNT_ID` in the
+step below.
+
+#### Decrypt in your workflow
+
+This step uses only Node's built-in `crypto`, with no extra packages. It writes the decrypted payload
+to a file for later steps to read:
+
+```yaml
+      - name: Decrypt Zekt Shield payload
+        env:
+          ENVELOPE: ${{ toJSON(github.event.client_payload.zekt.payload) }}
+          ZEKT_ACCOUNT_ID: cust-000123        # your Zekt account ID
+          ZEKT_SHIELD_PRIVATE_KEY: ${{ secrets.ZEKT_SHIELD_PRIVATE_KEY }}
+        run: |
+          node -e '
+            const c = require("crypto");
+            const e = JSON.parse(process.env.ENVELOPE);
+            if (e.type !== "zekt-shield-envelope") throw new Error("Not a Shield envelope");
+            const wrapped = e.recipients[process.env.ZEKT_ACCOUNT_ID];
+            if (!wrapped) throw new Error("This envelope has no key for this account");
+            const key = c.privateDecrypt(
+              { key: process.env.ZEKT_SHIELD_PRIVATE_KEY, padding: c.constants.RSA_PKCS1_OAEP_PADDING, oaepHash: "sha256" },
+              Buffer.from(wrapped, "base64"));
+            const d = c.createDecipheriv("aes-256-gcm", key, Buffer.from(e.iv, "base64"));
+            d.setAuthTag(Buffer.from(e.authTag, "base64"));
+            const plain = Buffer.concat([d.update(Buffer.from(e.ciphertext, "base64")), d.final()]);
+            require("fs").writeFileSync(process.env.RUNNER_TEMP + "/zekt-payload.json", plain);
+          '
+      - name: Use the payload
+        run: |
+          ENVIRONMENT=$(jq -r .environment "$RUNNER_TEMP/zekt-payload.json")
+          echo "::add-mask::$ENVIRONMENT"
+          ./deploy.sh "$ENVIRONMENT"
+```
+
+A tampered ciphertext fails decryption.
+
+<Aside type="caution" title="Keep it out of the logs">
+	Never echo the private key or the decrypted payload into workflow logs. `::add-mask::` only hides a
+	value in log lines that come *after* it, so mask each value before anything could print it, and
+	never print the decrypted file.
+</Aside>
+
+<Aside type="note" title="Changed in zekt-action 3.2.0">
+	Provider workflows using `zekt-action@v3` now use hybrid encryption (from version 3.2.0, the current
+	v3).
+	Consumers that decrypted the older format, where each recipient had the whole payload
+	RSA-encrypted, must switch to the step above.
+</Aside>
+
+### What Shield covers
+
+- It protects the **payload** only. Run metadata (workflow name, branch, conclusion, timestamps) is
+  still visible to Zekt and to the consumer.
+- It doesn't cover orchestration step inputs and outputs.
+- Zekt can't read or show an encrypted payload. Archived and replayed Shield events stay encrypted.
+
+## Redaction Guard
+
+Redaction Guard is one setting for the whole account, separate from the per-repository Shield
+toggle. Configure it in **Shield → Redaction Guard**. It scans each outgoing provider payload,
+field by field.
+
+**Patterns:** built-in patterns for GitHub tokens, Stripe keys, AWS keys, Azure keys, JWTs and generic
+API keys. You can add your own, as regular expressions or literal text. A regular expression must
+compile and run quickly, or it's refused (`INVALID_PATTERN`).
+
+**Actions:**
+
+| Action | What consumers get |
+| --- | --- |
+| **Redact and log** (default) | Matching values replaced with `***REDACTED***`. |
+| **Block** | The payload is withheld: `zekt.payload` arrives as `null`. |
+| **Log only** | The payload unchanged. The match is only logged. |
+
+- After redacting, Redaction Guard scans again. If anything is still found, the payload isn't
+  delivered.
+- If a scan can't finish, the payload is withheld, unless you chose *Log only*.
+- Each delivery shows what Redaction Guard did: clean, redacted, withheld, failed or log-only.
+- Redaction records keep a short preview of each match (its first 10 characters followed by `...`),
+  plus the field path and repository, for 90 days.
+- Orchestration step inputs and outputs aren't scanned.
+
+## Doctrine (Shepherd accounts)
+
+Doctrine lets a [Shepherd](/zekt-docs/operate/members/#flock-shepherd-and-disciple-accounts) limit
+what its Disciples can connect to:
+
+- **Provider rules**: which providers a Disciple may request access from, optionally narrowed to
+  specific services.
+- **Consumer rules**: which consumers a Disciple may approve.
+
+Doctrine is off by default, and an empty rule list allows everything. It's checked when a Disciple
+requests or approves access. Refusals are recorded and kept for 90 days. Doctrine has no separate
+fee.
+
+## Cost
+
+The provider pays: a monthly fee per Shield-enabled repository (a Chainlink repository counts once),
+plus usage. See [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).

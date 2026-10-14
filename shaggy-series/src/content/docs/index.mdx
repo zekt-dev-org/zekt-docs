@@ -1,20 +1,32 @@
 ---
 title: Zekt Docs
-description: Overview documentation for the Zekt services
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+description: Documentation for Zekt, which connects GitHub Actions workflows across repository and organization boundaries.
+template: splash
 hero:
-  tagline: Join the Zekt - read the docs!
+  tagline: Connect GitHub Actions workflows across repositories and organizations, with no shared tokens or repository access.
   image:
     file: ../../assets/zekt-logo-clean.svg
-    alt: Zekt Logo
+    alt: Zekt logo
   actions:
-    - text: Overview
-      link: /zekt-docs/overview/zekt-overview/
+    - text: Quickstart
+      link: /zekt-docs/getting-started/quickstart/
       icon: right-arrow
-    - text: Goto Zekt
+    - text: What is Zekt?
+      link: /zekt-docs/getting-started/what-is-zekt/
+      variant: secondary
+    - text: Go to zekt.dev
       link: https://www.zekt.dev
       icon: external
       variant: minimal
 ---
 
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
+<CardGrid>
+	<LinkCard title="Core concepts" href="/zekt-docs/getting-started/concepts/" description="Accounts, providers, consumers, services, the Directory and access." />
+	<LinkCard title="Provide a service" href="/zekt-docs/provider/enable-repository/" description="Enable a repository, whitelist a workflow and publish it." />
+	<LinkCard title="Consume a service" href="/zekt-docs/consumer/enable-repository/" description="Enable a repository, request access and receive events." />
+	<LinkCard title="Send a payload" href="/zekt-docs/provider/zekt-action/" description="Attach JSON to an event with the free Zekt Action." />
+	<LinkCard title="Orchestration" href="/zekt-docs/orchestration/overview/" description="Call several services in order from one workflow and collect their outputs." />
+	<LinkCard title="Billing" href="/zekt-docs/billing/how-billing-works/" description="The free trial, invoices and what happens if a payment fails." />
+</CardGrid>

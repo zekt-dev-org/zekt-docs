@@ -1,0 +1,119 @@
+---
+title: VS Code, MCP and API keys
+description: Manage Zekt outside the web console — create scoped API tokens for the VS Code extension, MCP clients and automation.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+You manage Zekt in the web console at [www.zekt.dev](https://www.zekt.dev). You can also work with
+it from outside the console:
+
+- **MCP**: connect MCP clients to Zekt through the Model Context Protocol.
+- **VS Code extension**: available on the
+  [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp).
+  It sets up an MCP connection to Zekt for you.
+- **REST API**: use Zekt from your own tooling.
+
+All of them sign in with an **API token**.
+
+## API tokens
+
+Manage tokens under **Profile → API Access**, which has three tabs: **Generate Tokens**, **Active
+Tokens** and **MCP Setup Docs**. API Access is shown to accounts that pay their own bill.
+
+<Aside type="note">
+	Today only the **account owner** (the GitHub login the account belongs to) can create, list or
+	revoke tokens.
+</Aside>
+
+### Create a token
+
+<Steps>
+
+1. Go to **Profile → API Access** and create a new token.
+2. Give it a name that says where it will be used, for example `vscode-laptop` or `release-pipeline`.
+3. Choose its **scopes** (see below).
+4. Choose an expiry: **30**, **90** (the default), **180** or **365 days**, or **No expiration**.
+5. Copy the token. **It's shown only once.** Store it in a secret store, such as GitHub Secrets or
+   your editor's secret storage.
+
+</Steps>
+
+### Scopes
+
+Choose each scope separately. Scopes don't include each other.
+
+| Scope | Allows |
+| --- | --- |
+| `read` | Reading repositories, connections and delivery status. Any valid token can read. |
+| `dispatch` | Dispatching events. |
+| `replay` | Replaying past events and webhooks. |
+| `manage` | Creating and changing configuration. |
+
+A call that needs a scope the token doesn't have is rejected with **403**.
+
+Give each token only the scopes it needs. A token that only reads delivery status should have no
+other scopes.
+
+### Expiry and revocation
+
+- The token list shows each token as **Active**, **Expired** or **Revoked**, with the date it was
+  last used.
+- Revoking takes effect immediately.
+- An expired or revoked token gets *Invalid or expired API token*.
+
+### Tokens that create tokens
+
+A token can create new tokens, but only with these limits:
+
+- the new token's scopes must be a subset of its own;
+- it must have an expiry, no later than the creating token's own expiry.
+
+You can only create a token with **No expiration** while signed in to the console.
+
+### Tokens for Flock members
+
+A Shepherd account can create and revoke tokens on behalf of an accepted Disciple account. See
+[Members and Flock](/zekt-docs/operate/members/#flock-shepherd-and-disciple-accounts).
+
+## MCP
+
+Connect any MCP client to Zekt. The endpoint address and setup steps are in **Profile → API Access →
+MCP Setup Docs**.
+
+- Authenticate with an API token as a Bearer token (`zekt_…`). Each call is a single, stateless
+  request.
+- Reading needs only a valid token. Every change needs the `manage` scope.
+
+### What you can do through MCP
+
+| Area | Tools |
+| --- | --- |
+| Account | Account summary. |
+| Directory | Browse the Directory and services. |
+| Provider services | List, create and delete services, set visibility, list and whitelist workflows. |
+| Access | Pending requests, approve, deny, subscribers, revoke. |
+| Consumer | Repositories, subscriptions, subscribe, unsubscribe. |
+| Events | Delivery status, event history (up to 50 per call), replay. |
+
+Read-only resources are also available: account summary, provider repositories and consumer
+repositories.
+
+<Aside type="caution" title="Dispatching isn't available through MCP">
+	To send events, use the [Zekt Action](/zekt-docs/provider/zekt-action/) in a workflow.
+</Aside>
+
+If your account isn't in good standing (see [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails)),
+replay is refused with error code `-32003`. Reading and settings still work.
+
+MCP is limited to 30 requests per minute per token. Every request to the MCP endpoint counts,
+including housekeeping such as initialising, pinging and listing tools, and a per-second burst limit
+also applies. See
+[Limits](/zekt-docs/reference/limits/#rate-limits).
+
+## Usage and cost
+
+MCP tool calls are billed as usage. Connection housekeeping isn't billed: initialising, pinging,
+listing tools and resources, and notifications. See
+[zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html), and track usage under
+**Management → Billing → Current Usage**.

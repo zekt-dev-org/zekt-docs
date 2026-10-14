@@ -1,0 +1,211 @@
+---
+title: Orchestrate several services
+description: Run a chain of services in order or in parallel from one workflow, pass outputs between steps, and receive the result.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+With orchestration, one workflow asks Zekt to run several services, in order or in parallel. Each
+step's outputs can feed later steps. Your workflow holds no credentials for the repositories that do
+the work.
+
+For example: *create a subscription → create a resource group in it → create a key vault in that
+group*, each owned by a different team, triggered from one workflow.
+
+## How it works
+
+<Steps>
+
+1. Your workflow submits a **plan**, a list of steps, each naming a service by owner and slug. It
+   uses the [Zekt Action](/zekt-docs/provider/zekt-action/) with `orchestrate: true`.
+2. Zekt checks that your account has an **approved subscription** to every service in the plan. If
+   any step is refused, the whole submission is refused, and nothing starts.
+3. Zekt dispatches each step to the service's repository and follows the run. Before each step, it
+   checks the subscription again.
+4. Each service reports its **outputs**, which later steps can use.
+5. When the orchestration ends, Zekt sends the result back to your repository as a
+   `zekt-orchestration-result` event. With `wait: true`, the action step also waits and exposes
+   each step's outputs.
+
+</Steps>
+
+## Before you start
+
+- The requesting repository is [enabled as a provider](/zekt-docs/provider/enable-repository/).
+  Otherwise you get: *Repository '…' is not enabled for Zekt. Enable it in the Zekt portal first.*
+- Your account has an approved subscription to each service you call. The approval belongs to the
+  **account**, so any of your provider repositories can use it.
+- Each step targets a **provider service** or a [consumer service](/zekt-docs/consumer/consumer-services/).
+  Zekt looks for a provider service first. A consumer-service target must be enabled and of the
+  *Subscribers fire events to me* kind.
+
+## Submit an orchestration
+
+```yaml
+name: Provision environment
+on: workflow_dispatch
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+    steps:
+      - id: orch
+        uses: zekt-dev-org/zekt-action@v3
+        with:
+          orchestrate: true
+          wait: true
+          payload: |
+            {
+              "default_service_owner": "platform-team",
+              "services": [
+                {
+                  "step_id": "create-sub",
+                  "service_slug": "new-subscription",
+                  "input": { "name": "team-a" }
+                },
+                {
+                  "step_id": "create-rg",
+                  "service_slug": "new-resource-group",
+                  "input": {
+                    "subscriptionId": "$zekt{{ steps.create-sub.outputs.subscription_id }}",
+                    "region": "westeurope"
+                  }
+                }
+              ]
+            }
+      - env:
+          STATUS: ${{ steps.orch.outputs.execution_status }}
+          RG: ${{ steps.orch.outputs.step_create-rg_outputs_resource_group_name }}
+        run: echo "orchestration $STATUS, resource group $RG"
+```
+
+## The plan
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `services` | Yes | 1–20 steps. |
+| `default_service_owner` | | The GitHub owner used for steps that don't set `service_owner_name`. |
+| `execution_mode` | | `sequential` (the default) or `parallel`. |
+| `strict_output_schema_resolution` | | `true` or `false` (the default). When `true`, a step fails at dispatch if a `$zekt{{ steps.X.outputs.Y }}` reference names a field that service X hasn't declared in its published [output schema](/zekt-docs/provider/schemas/#output-schemas). Only applies when service X has published one, and checks the field's first path segment. |
+
+Each step:
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `step_id` | Yes | Unique. Letters, digits, `_` and `-`, up to 64 characters. |
+| `service_slug` | Yes | The service's orchestration identifier: lowercase kebab-case, 2–64 characters. |
+| `service_owner_name` | * | The service's GitHub owner. *Either this or `default_service_owner` must be set. |
+| `input` | Yes | A JSON object passed to the service. |
+| `depends_on` | | A list of `step_id`s that must finish first. |
+| `timeout_minutes` | | 1–1440, default 60. See [Timeouts](#timeouts-and-failures). |
+| `input_schema_version` | | A semantic version of the service's input schema. |
+
+**Sequential:** each step waits for the previous one, unless it sets `depends_on`. **Parallel:**
+every step whose dependencies are met starts at once. Plans with a dependency cycle are refused.
+
+### Passing outputs between steps
+
+Write `$zekt{{ steps.<step_id>.outputs.<field> }}` in a step's `input`.
+
+<Aside type="caution">
+	Use `$zekt{{ … }}`, never `${{ steps… }}`. GitHub would evaluate `${{ }}` in your own workflow
+	before Zekt sees it.
+</Aside>
+
+- If the template is the **whole** JSON string, it's replaced by the typed value (number, boolean,
+  object…).
+- **Inside a longer string**, it's inserted as text. An object or array there fails the step.
+- A reference that can't be resolved fails the step:
+  *Dispatch error: Template reference to '…' failed: …*
+- To make a step fail at dispatch when it references an output field the service hasn't declared, set
+  `strict_output_schema_resolution: true` in the plan.
+
+## The result event
+
+When an orchestration ends, in any final state, Zekt sends a `zekt-orchestration-result`
+`repository_dispatch` to the requesting repository. It's retried for up to 24 hours. It only runs
+something if a workflow listens for it:
+
+```yaml
+name: Orchestration finished
+on:
+  repository_dispatch:
+    types: [zekt-orchestration-result]
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          EXECUTION: ${{ github.event.client_payload.execution_id }}
+          STATUS: ${{ github.event.client_payload.status }}
+          STEPS: ${{ toJSON(github.event.client_payload.steps) }}
+        run: |
+          echo "orchestration $EXECUTION ended: $STATUS"
+          echo "$STEPS" | jq .
+```
+
+`client_payload` carries `dispatch_id`, `execution_id`, `status`, `execution_mode`, `total_steps`,
+`completed_steps`, `completed_at`, `failed_at_step`, `error_message` and `steps` (each with
+`step_id`, `service_slug`, `status` and `outputs`).
+
+## Timeouts and failures
+
+- `timeout_minutes` limits how long Zekt waits for the service's run to **start**. A step that
+  hasn't started in time becomes `timed_out`, and so does the orchestration. Once a run has started,
+  GitHub's result decides the outcome.
+- A failed step fails the orchestration. Steps that haven't started become `skipped`. Parallel steps
+  already running continue.
+- If a subscription is revoked mid-way, the next step that needs it fails: *The subscription to
+  service '…' is no longer active, so this step was not dispatched. Subscribe again to run it.*
+
+| Step states | Orchestration states |
+| --- | --- |
+| pending, waiting, dispatching, running, completed, failed, skipped, timed_out | pending, running, completed, failed, timed_out, cancelled |
+
+## Warnings
+
+If Zekt has advisory warnings about a submitted plan, they appear as `::warning::` annotations in
+your workflow log. Warnings don't stop the orchestration.
+
+## Refusals
+
+Any refusal when you submit refuses the whole orchestration:
+
+- *Service '&lt;owner&gt;/&lt;slug&gt;' not found or you are not authorized to use it.* This covers a
+  service that doesn't exist, one you have no subscription to, and one that can't be called. Check
+  your subscription to that owner and slug.
+- *Rate limit exceeded: maximum N concurrent orchestrations per customer.*
+- *This account cannot start new orchestrations: &lt;reason&gt;. Resolve billing to continue.* The reason
+  is *Account suspended: …*, *Account has an open payment dispute* or *Grace period ended without
+  payment*. See [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails).
+
+## Limits
+
+- 20 steps per orchestration.
+- 5 orchestrations running at once per account by default. Contact support to raise it.
+- Nesting depth 5. An orchestration can't call back into a repository already in its chain.
+- In nested orchestrations, a failed child fails the parent's step, and cancelling a parent cancels its
+  children.
+- [Shield](/zekt-docs/add-ons/shield/) doesn't encrypt orchestration inputs and outputs.
+
+## Cost
+
+The account that starts the orchestration pays for all of it. See
+[zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
+
+## Follow orchestrations in the console
+
+Go to **Management → Orchestrations**:
+
+| Tab | Shows |
+| --- | --- |
+| **Overview** | A summary, filtered *As Requester* or *As Service Owner*. |
+| **Orchestration Requests** | Orchestrations you submitted, with step detail and outputs. |
+| **Orchestration Processing** | Steps dispatched by you or to you. |
+| **Service Invocations** | Who calls your services, and how those calls went. |
+
+As the requester, you see each service as owner/slug, with its status, timing, errors and outputs.
+Run links for service steps are visible only to the service owner. The service owner sees the
+requesting repository and the run links of its own steps.

@@ -1,0 +1,73 @@
+---
+title: Troubleshooting
+description: Fixes for the most common problems — events that don't arrive, failing Zekt Action steps, refused orchestrations and rate limits.
+---
+
+## The consumer workflow didn't run
+
+1. **Check the dispatch queue.** In **Consumer → Received Events** (or **Provider → Delivery Status**),
+   look at the [dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue). A *Not sent* row
+   gives the reason.
+2. **Check the event type.** The workflow's `on.repository_dispatch.types` must equal the provider's
+   `event-type`. Without the Zekt Action, it's `zekt-workflow-completed`.
+3. **Check the branch.** GitHub runs `repository_dispatch` workflows from the repository's
+   **default branch**. The workflow file must be there.
+4. **Check the subscription and the repository.** The subscription must be active
+   (**Consumer → Subscriptions**), and the repository enabled (**Consumer → Repos**).
+5. **Try the Event Simulator** (**Consumer → Event Simulator**). If it reports *No workflows detected*,
+   the cause is one of these:
+	- no workflow listens for `repository_dispatch`;
+	- the event type doesn't match `types`;
+	- the workflow is slow to start.
+
+Zekt doesn't check that your workflow file exists, so there's no specific error for a missing
+workflow.
+
+## A delivery failed
+
+If GitHub refused the delivery, it's listed in **Consumer → Failed Deliveries**. Choose **Retry**.
+See [Failed deliveries](/zekt-docs/operate/deliveries/#failed-deliveries-consumers).
+
+Providers can replay a delivery with [Zekt Analytics](/zekt-docs/add-ons/analytics/).
+
+## The same event ran twice
+
+Delivery is at-least-once. Deduplicate on `zekt.correlationId` plus `zekt.replayId`. See
+[Receive events](/zekt-docs/consumer/receive-events/#duplicates-and-ordering).
+
+## The Zekt Action step failed
+
+| Message | Fix |
+| --- | --- |
+| *Failed to send event (HTTP 413)…* | The payload is over 1 MB. Send less. |
+| *Invalid JSON payload: …* | Fix the JSON in `payload`. |
+| *"event-type" input is required…* | Add `event-type`. |
+| *SHIELD_NOT_ENABLED…* | Turn on [Shield](/zekt-docs/add-ons/shield/) for the repository, or remove `shield: true`. |
+| *SHIELD_ENFORCEMENT…* | The service requires encryption. Set `shield: true`. |
+| *Shield encryption requested but no consumers have uploaded a public key…* | No subscriber can decrypt yet. Ask them to upload a key in **Shield → Consumer Keys**. |
+| *Orchestration payload is not valid JSON: …* | Fix the JSON of the plan in `payload`. |
+| *Repository not enabled in Zekt* (404) | [Enable the repository](/zekt-docs/provider/enable-repository/) as a provider. |
+| *Repository is disabled* (403) | The repository is switched off in Zekt. Switch it on again under **Provider → Repos**. |
+| HTTP 429 | You hit a [rate limit](/zekt-docs/reference/limits/#rate-limits). Wait for `Retry-After`. |
+
+Also check that the job has `permissions: id-token: write`.
+
+## An orchestration was refused
+
+- *Service '…' not found or you are not authorized to use it.* Check that your account has an approved
+  subscription to that owner and slug.
+- *Repository '…' is not enabled for Zekt…* Enable the requesting repository as a provider.
+- *Rate limit exceeded: maximum N concurrent orchestrations per customer.* Wait for running
+  orchestrations to finish.
+- *This account cannot start new orchestrations: …. Resolve billing to continue.* Resolve
+  [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails).
+
+## A repository won't enable
+
+See the error table in [Enable a provider repository](/zekt-docs/provider/enable-repository/#if-enabling-fails).
+
+## New work stopped
+
+If dispatches, orchestrations and replays stop while reading and settings still work, check
+**Management → Billing → Payment Method** for a payment banner. See
+[When a payment fails](/zekt-docs/billing/how-billing-works/#when-a-payment-fails).

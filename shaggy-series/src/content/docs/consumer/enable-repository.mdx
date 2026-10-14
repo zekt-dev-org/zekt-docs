@@ -1,0 +1,58 @@
+---
+title: Enable a consumer repository
+description: Switch on a GitHub repository to receive events from the services you subscribe to.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+A consumer repository receives events. You need the **Consumer** or **Both**
+[persona](/zekt-docs/getting-started/concepts/#persona), and **admin** permission on the repository.
+
+## Enable a repository
+
+<Steps>
+
+1. Go to **Consumer → Repos**.
+2. Turn on the repository's toggle.
+	- **Enabled before:** choose **Re-activate Now**.
+	- **Otherwise:** a dialog opens with a **Track Workflow Completion** checkbox, ticked by default.
+	  Leave it ticked unless you have a reason not to (see below). Choose **Continue to GitHub**.
+3. On GitHub, install the Zekt GitHub App on the repository, or confirm it's selected. Choose
+   **Only select repositories**.
+4. Back in Zekt, on **Processing GitHub Installation**, choose **Enable Consumer Repository**.
+   You'll see *Consumer repository enabled successfully!*.
+
+</Steps>
+
+Enabling a consumer repository usually goes through GitHub, even if the App is already installed.
+Re-activating a repository you enabled before happens in place.
+
+Next: [find a service and request access](/zekt-docs/consumer/request-access/), then
+[write the workflow that receives events](/zekt-docs/consumer/receive-events/).
+
+## Track Completion
+
+With **Track Completion** on, Zekt watches the run each event triggers in this repository, so you and
+the provider can see whether it started and how it finished. You don't add anything to your
+workflow. You need it:
+
+- to see deliveries move from *Dispatched* to *Confirmed* and *Completed*
+  (see [Delivery tracking](/zekt-docs/operate/deliveries/));
+- to [offer a consumer service](/zekt-docs/consumer/consumer-services/) from this repository.
+
+With it off, deliveries show as *Sent (completion not tracked)*.
+
+## If enabling fails
+
+The error messages are the same as for provider repositories. See
+[Enable a provider repository](/zekt-docs/provider/enable-repository/#if-enabling-fails).
+
+## Disable a repository
+
+Turn off the toggle. The **Disable Consumer Repository** dialog notes that *This Action is
+Reversible*. Choose **Disable Repository**.
+
+<Aside type="note">
+	While a consumer repository is switched off, events addressed to it aren't sent. They show as *Not
+	sent* in the [dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue).
+</Aside>

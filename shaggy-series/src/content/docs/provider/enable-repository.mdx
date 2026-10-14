@@ -1,0 +1,67 @@
+---
+title: Enable a provider repository
+description: Switch on a GitHub repository as a Zekt provider, install the Zekt GitHub App on it, and disable it again.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+A provider repository holds the workflows you offer as services. You need the **Provider** or
+**Both** [persona](/zekt-docs/getting-started/concepts/#persona), and **admin** permission on the
+repository.
+
+## Enable a repository
+
+<Steps>
+
+1. Go to **Provider → Repos**. Use the filters **Show** (*All Repos*, *Enabled Only*, *Disabled
+   Only*) and **Owner** (*All Owners* or one owner) to find the repository.
+2. Turn on the repository's toggle in the **Actions** column.
+3. What happens next depends on the repository:
+	- **App installed and your admin rights confirmed:** it's enabled straight away
+	  (*owner/repo enabled as Provider*).
+	- **Enabled before:** the **Re-activate Repository** dialog opens. Choose **Re-activate Now**.
+	- **Otherwise:** you're sent to GitHub to install the Zekt GitHub App, or to add the repository to
+	  it. Choose **Only select repositories** and pick the repository. Back in Zekt, **Processing
+	  GitHub Installation** confirms *GitHub App installation verified!*. Choose **Complete
+	  Repository Setup**, and you'll see *Repository enabled successfully!*.
+
+</Steps>
+
+When a repository is enabled, Zekt adds a webhook to it so it can see workflow runs. You don't
+configure anything in GitHub yourself. See [GitHub access](/zekt-docs/security/github-access/) for
+what the App is used for.
+
+Next: [whitelist a workflow and shape it into a service](/zekt-docs/provider/workflows-and-services/).
+
+## If enabling fails
+
+| Message | What to do |
+| --- | --- |
+| *The Zekt GitHub App is not installed on owner/repo…* | Select that repository on GitHub's installation screen, then retry. |
+| *This installation grants access to all repositories…* | In the App's settings on GitHub, switch to **Only select repositories**, pick the repository, then retry. |
+| *The Zekt GitHub App is suspended on owner/repo…* | Unsuspend it in GitHub, then retry. |
+| *Admin permission on owner/repo is required to enable it with Zekt.* | Ask a repository admin to enable it, or to give you admin permission. |
+| *Your GitHub account cannot access owner/repo.* | Check that you're signed in with the right GitHub account. |
+| *GitHub authorization is missing or expired…* / *…was revoked or has expired…* | Sign in again, or use **Profile → GitHub Authorization**. |
+| *The organisation that owns owner/repo requires single sign-on…* | Authorize Zekt for that organization in GitHub, then retry. |
+| *GitHub did not answer for owner/repo. Nothing was changed…* | Retry in a minute. |
+| *GitHub App installation was cancelled or uninstalled.* | Start again and complete the installation on GitHub. |
+| **Repository Already Enabled** | Another Zekt account holds it. See [one account per repository](/zekt-docs/operate/account/#one-account-per-repository). |
+| **Repository Role Conflict** | The repository is already a consumer in your account. A repository can have both roles only with [Chainlink](/zekt-docs/add-ons/chainlink/). |
+
+## Disable a repository
+
+Turn off the toggle and confirm with **Disable Repository**. Zekt removes its webhook from the
+repository.
+
+Zekt refuses to disable a provider repository while:
+
+- it still has **whitelisted workflows**. The **Cannot Disable Repository** dialog sends you to the
+  **Workflows** tab to remove them first;
+- consumers are **subscribed** to its services;
+- one of its services is **published** in the Directory.
+
+<Aside type="note">
+	You can't unwhitelist a workflow that has subscribers (*Cannot Unwhitelist Workflow*). Revoke the
+	subscribers' access first, in **Provider → Access**.
+</Aside>
