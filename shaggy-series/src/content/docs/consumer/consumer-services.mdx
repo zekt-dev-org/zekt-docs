@@ -44,7 +44,129 @@ After the service is created, you can add an avatar. In edit mode, you can publi
 [input and output schema](/zekt-docs/provider/schemas/) so callers know what to send and what they'll
 get back.
 
-## What your workflow receives
+A consumer service receives events in two ways:
+
+- [from subscribers' workflows](#when-subscribers-fire-events-into-it), when a run of their approved
+  workflow completes; and
+- [as an orchestration step](#when-called-from-an-orchestration), when someone's orchestration calls it.
+
+## When subscribers fire events into it
+
+### Who can fire
+
+A subscriber requests access with **one** workflow in one of its **provider** repositories. The request
+form lists only those repositories, and each additional workflow needs its own request. The normal
+access rules apply: the service's audience, a [Shield](/zekt-docs/add-ons/shield/) key if the
+service requires Shield, Doctrine, and your approval by hand or by rule.
+
+When you approve, the subscriber's workflow is whitelisted automatically. If it isn't, the subscriber
+can whitelist it in **Provider → Workflows**. You approve these requests in **Provider → Access**,
+where they're badged *Consumer service*. Approving one needs the Both persona.
+
+### When an event fires
+
+- An event fires when a run of the subscriber's approved workflow **completes**. A Zekt Action call
+  on its own doesn't fire it.
+- A run that concludes **failure** doesn't fire. Other conclusions, including *cancelled* and
+  *timed_out*, do, so check `workflow_run.conclusion`.
+- A run that submitted an orchestration doesn't fire subscriber events.
+- The subscriber's account pays for firing, and must be in good standing. See
+  [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
+- [Inquisition](/zekt-docs/consumer/inquisition/) filter rules don't apply to these events.
+
+The Zekt Action call is optional. It decides what you receive:
+
+- **With it**, you receive the action's `event-type`, and its `payload` as `client_payload.zekt.payload`.
+  Only the first call in a run counts.
+- **Without it**, the event type is `zekt-workflow-completed`, and there's no payload.
+
+<Aside type="caution" title="The service's event type isn't applied">
+	You receive whatever `event-type` the subscriber's workflow sent, not the type the service declares.
+	Tell subscribers which event type to send, and list every type you accept in your workflow's
+	`types:`, including `zekt-workflow-completed` if you accept runs without the Zekt Action.
+</Aside>
+
+### The subscriber's workflow
+
+This must be the workflow chosen in the access request:
+
+```yaml
+name: Fire order event
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  fire:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build payload
+        id: payload
+        env:
+          SHA: ${{ github.sha }}
+          REF: ${{ github.ref_name }}
+        run: |
+          json=$(jq -cn --arg sha "$SHA" --arg ref "$REF" '{sha: $sha, ref: $ref}')
+          echo "json=$json" >> "$GITHUB_OUTPUT"
+      - uses: zekt-dev-org/zekt-action@v3
+        with:
+          event-type: order-placed   # the service's declared event type
+          payload: ${{ steps.payload.outputs.json }}
+```
+
+If the Zekt Action step fails, the run concludes *failure*, and nothing fires.
+
+### What your repository receives
+
+A `repository_dispatch` to the service's consumer repository. The event type is available as
+`github.event.action`. `client_payload` contains:
+
+- `workflow_run`: `id`, `name`, `conclusion`, `status`, `head_branch`, `event`, `created_at`,
+  `updated_at`. These describe the **subscriber's** run.
+- `repository`: `is_private` only.
+- `zekt`: `correlationId`, `dispatchedAt`, `serviceOrigin` (`consumer`), `eventDirection`
+  (`SubscriberFires`), `dispatch_id`, `payload` (left out entirely when the subscriber sent none),
+  and `schemaVersion`/`schemaValid` when you enforce a schema.
+
+The firing repository's name isn't in the payload. You see it in Zekt, on the delivery record and on
+the access request. Don't trust identity fields a subscriber puts in its payload.
+
+```yaml
+name: Handle subscriber events
+run-name: ${{ github.event.client_payload.zekt.dispatch_id }}
+on:
+  repository_dispatch:
+    types: [order-placed, zekt-workflow-completed]
+jobs:
+  handle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read the event
+        env:
+          EVENT_TYPE: ${{ github.event.action }}
+          CORRELATION_ID: ${{ github.event.client_payload.zekt.correlationId }}
+          SENDER_CONCLUSION: ${{ github.event.client_payload.workflow_run.conclusion }}
+          ORDER_REF: ${{ github.event.client_payload.zekt.payload.ref }}
+        run: echo "Received $EVENT_TYPE ($CORRELATION_ID), sender run: $SENDER_CONCLUSION, ref: $ORDER_REF"
+```
+
+Put this workflow on the default branch. Setting `run-name` to the `dispatch_id` lets Zekt match the
+run exactly.
+
+### Following the events
+
+- The subscriber sees its sends in **Provider → Delivery Status**. You see them in
+  **Consumer → Received Events**.
+- Statuses: dispatched, sent (completion not tracked), failed, schema blocked (if you
+  [enforce a schema](/zekt-docs/provider/schemas/#enforce-a-schema)), confirmed and completed.
+- Nothing is sent or held while the service is disabled or its repository is switched off.
+
+## When called from an orchestration
+
+### What your workflow receives
 
 - `event_type`: the service's event type, or `zekt-workflow-completed` if it has none.
 - `client_payload.input`: the input the caller sent.
@@ -55,7 +177,7 @@ get back.
 	As the service owner, you see the name of the repository that called you.
 </Aside>
 
-## Report outputs
+### Report outputs
 
 Call the Zekt Action **without** `event-type`. It detects the orchestration context by itself, and
 its `payload` (a JSON object) becomes the step's outputs.
@@ -87,12 +209,6 @@ jobs:
 - Return scalar values (strings, numbers, booleans): the Zekt Action exposes outputs as strings.
 - The step's result follows the GitHub run's conclusion. A run that reports outputs and then fails
   still fails the step.
-
-## Subscribers
-
-Subscribers to a consumer service name the provider repository they fire from and the workflow that
-fires. You approve them in **Provider → Access**, where these requests are badged *Consumer
-service*. Approving one needs the Both persona.
 
 ## Disabling the service
 

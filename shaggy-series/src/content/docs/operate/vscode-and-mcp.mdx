@@ -1,6 +1,6 @@
 ---
 title: VS Code, MCP and API keys
-description: Manage Zekt outside the web console — create scoped API tokens for the VS Code extension, MCP clients and automation.
+description: Manage Zekt outside the web console with the VS Code extension or any MCP client, using scoped API tokens.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
@@ -8,13 +8,12 @@ import { Aside, Steps } from '@astrojs/starlight/components';
 You manage Zekt in the web console at [www.zekt.dev](https://www.zekt.dev). You can also work with
 it from outside the console:
 
-- **MCP**: connect MCP clients to Zekt through the Model Context Protocol.
-- **VS Code extension**: available on the
-  [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp).
-  It sets up an MCP connection to Zekt for you.
-- **REST API**: use Zekt from your own tooling.
+- **[VS Code extension](#vs-code-extension)**: manage Zekt from your editor.
+- **[MCP](#mcp)**: connect AI assistants and other MCP clients to Zekt through the Model Context
+  Protocol.
 
-All of them sign in with an **API token**.
+Both sign in with an **API token**. Programmatic access is through MCP. The REST endpoints the console
+uses aren't a public API.
 
 ## API tokens
 
@@ -76,44 +75,126 @@ You can only create a token with **No expiration** while signed in to the consol
 A Shepherd account can create and revoke tokens on behalf of an accepted Disciple account. See
 [Members and Flock](/zekt-docs/operate/members/#flock-shepherd-and-disciple-accounts).
 
+## VS Code extension
+
+Install **Zekt — Cross-Org Event Dispatch** (`zekt-dev-org.zekt-mcp`) from the
+[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp). It
+needs VS Code 1.95 or later.
+
+### Sign in
+
+<Steps>
+
+1. [Create an API token](#create-a-token) in **Profile → API Access**.
+2. In VS Code, run **Zekt: Sign In** (or **Zekt: Configure API Token**) and paste the token. There's no
+   browser sign-in.
+3. The extension checks the token. Your account must be active, with a payment method on file.
+
+</Steps>
+
+The token is kept in VS Code's secret storage, which uses your operating system's credential store.
+**Zekt: Sign Out** clears it, and offers to remove the MCP configuration.
+
+### MCP configuration
+
+After you sign in, the extension adds a `zekt` server to `.vscode/mcp.json` in your first workspace
+folder. It does this automatically (the `zekt.autoConfigureMcp` setting, on by default), or when you run
+**Zekt: Setup MCP Server Configuration**. Other servers already in the file are kept.
+
+<Aside type="danger" title="The MCP file holds your token in plain text">
+	`.vscode/mcp.json` contains your API token. The extension adds it to `.gitignore` only if a
+	`.gitignore` already exists. Make sure `.vscode/mcp.json` is git-ignored, and never commit it.
+</Aside>
+
+### Commands
+
+| When | Commands |
+| --- | --- |
+| Always | **Zekt: Configure API Token**, **Zekt: Setup MCP Server Configuration**, **Zekt: Open Dashboard** |
+| Signed out | **Zekt: Sign In**, **Zekt: Sign Up for Zekt** |
+| Signed in | **Zekt: Sign Out**, **Zekt: Check Delivery Status** (`Ctrl+Shift+Z S`), **Zekt: List Subscribers**, **Zekt: Browse Provider Directory**, **Zekt: Replay Event**, **Zekt: Event History**, **Zekt: Subscribe to Provider**, **Zekt: Account Summary**, **Zekt: Manage Workflows**, **Zekt: Manage Services**, **Zekt: Create Service**, **Zekt: List Pending Access Requests**, **Zekt: Browse Service Catalog**, **Zekt: List My Consumer Repos**, **Zekt: List My Subscriptions** |
+
+The Zekt sidebar has these views: **Account**, **Providers**, **Directory**, **Consumers**, **Recent
+Activity** and **Approve & Reject**. Right-click items to whitelist or blacklist a workflow, connect a
+workflow to a service, publish or unpublish a service and set its visibility, remove a service, revoke
+a subscriber, subscribe or unsubscribe, and approve or deny requests. The status bar shows whether
+you're connected.
+
+The extension can't send events. Events are sent only by the [Zekt Action](/zekt-docs/provider/zekt-action/)
+in GitHub Actions.
+
 ## MCP
 
-Connect any MCP client to Zekt. The endpoint address and setup steps are in **Profile → API Access →
-MCP Setup Docs**.
+Zekt is a remote MCP server over Streamable HTTP. Each request is independent (stateless).
 
-- Authenticate with an API token as a Bearer token (`zekt_…`). Each call is a single, stateless
-  request.
-- Reading needs only a valid token. Every change needs the `manage` scope.
+### Connect a client
+
+<Steps>
+
+1. [Create an API token](#create-a-token) in **Profile → API Access → Generate Tokens**. API Access is
+   available to accounts that manage their own billing, not to Disciple accounts.
+2. Copy the server address from **Profile → API Access → MCP Setup Docs**.
+3. Add the server to your client, sending the token in an `Authorization: Bearer` header. Tokens in
+   the URL are refused. For VS Code or Cursor:
+
+   ```json
+   {
+     "servers": {
+       "zekt": {
+         "type": "http",
+         "url": "<address from MCP Setup Docs>",
+         "headers": { "Authorization": "Bearer <your zekt_ token>" }
+       }
+     }
+   }
+   ```
+
+</Steps>
+
+Keep any file that holds your token out of version control.
 
 ### What you can do through MCP
+
+Reading needs only a valid token. Every change needs the `manage` scope.
 
 | Area | Tools |
 | --- | --- |
 | Account | Account summary. |
 | Directory | Browse the Directory and services. |
-| Provider services | List, create and delete services, set visibility, list and whitelist workflows. |
+| Provider services | List and create services, set visibility, list and whitelist workflows. |
 | Access | Pending requests, approve, deny, subscribers, revoke. |
-| Consumer | Repositories, subscriptions, subscribe, unsubscribe. |
-| Events | Delivery status, event history (up to 50 per call), replay. |
+| Consumer | Repositories, subscriptions, subscribe (by service ID), unsubscribe. |
+| Events | Delivery status, event history (up to 50 per call), replay (by the original provider only). |
 
-Read-only resources are also available: account summary, provider repositories and consumer
+Three read-only resources are also available: account summary, provider repositories and consumer
 repositories.
 
 <Aside type="caution" title="Dispatching isn't available through MCP">
 	To send events, use the [Zekt Action](/zekt-docs/provider/zekt-action/) in a workflow.
 </Aside>
 
-If your account isn't in good standing (see [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails)),
-replay is refused with error code `-32003`. Reading and settings still work.
+### Errors
 
-MCP is limited to 30 requests per minute per token. Every request to the MCP endpoint counts,
-including housekeeping such as initialising, pinging and listing tools, and a per-second burst limit
-also applies. See
-[Limits](/zekt-docs/reference/limits/#rate-limits).
+| Response | Meaning |
+| --- | --- |
+| 401 | The token is invalid, expired or revoked. |
+| 403 (JSON-RPC `-32003`) | The token lacks a scope (the error names it), or your account can't start new work, for example a replay while a payment is overdue (see [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails)). |
+| 503 (JSON-RPC `-32603`) | Zekt couldn't check your account's standing. Retry. |
+| 429 | Rate-limited. Wait for `Retry-After`. |
+
+### Rate limits
+
+Every request to the MCP endpoint counts, including housekeeping such as `tools/list`:
+
+- 30 per minute and 10 per second, per token;
+- plus a shared limit of 60 changes per minute per user, which also counts your console actions. A
+  busy agent can slow down your own changes in the console.
+
+See [Limits](/zekt-docs/reference/limits/#rate-limits).
 
 ## Usage and cost
 
-MCP tool calls are billed as usage. Connection housekeeping isn't billed: initialising, pinging,
-listing tools and resources, and notifications. See
+MCP tool calls and resource reads are billed as usage. Connection housekeeping isn't billed:
+initialising, pinging, list calls and notifications. See
 [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html), and track usage under
 **Management → Billing → Current Usage**.

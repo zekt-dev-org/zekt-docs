@@ -62,6 +62,7 @@ export default defineConfig({
 						{ label: 'Handle access requests', slug: 'provider/access-requests' },
 						{ label: 'Send a payload (Zekt Action)', slug: 'provider/zekt-action' },
 						{ label: 'Payload schemas', slug: 'provider/schemas' },
+						{ label: 'Manage services and subscribers', slug: 'provider/manage-services' },
 					],
 				},
 				{
@@ -70,6 +71,9 @@ export default defineConfig({
 						{ label: 'Enable a consumer repository', slug: 'consumer/enable-repository' },
 						{ label: 'Find a service and request access', slug: 'consumer/request-access' },
 						{ label: 'Receive events', slug: 'consumer/receive-events' },
+						{ label: 'Subscriptions and received events', slug: 'consumer/subscriptions' },
+						{ label: 'Filter events (Inquisition)', slug: 'consumer/inquisition' },
+						{ label: 'Test with the Event Simulator', slug: 'consumer/event-simulator' },
 						{ label: 'Offer a consumer service', slug: 'consumer/consumer-services' },
 					],
 				},
@@ -87,6 +91,9 @@ export default defineConfig({
 						{ label: 'Your account', slug: 'operate/account' },
 						{ label: 'Members and Flock', slug: 'operate/members' },
 						{ label: 'VS Code, MCP and API keys', slug: 'operate/vscode-and-mcp' },
+						{ label: 'Messages and notifications', slug: 'operate/messages' },
+						{ label: 'Reviews and abuse reports', slug: 'operate/reviews-and-reports' },
+						{ label: 'Support and feedback', slug: 'operate/support' },
 					],
 				},
 				{

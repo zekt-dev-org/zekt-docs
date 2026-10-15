@@ -1,0 +1,48 @@
+---
+title: Subscriptions and received events
+description: See the services you subscribe to, set schema version policies, remove subscriptions, and review recent activity.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Consumer → Subscriptions
+
+**Consumer → Subscriptions** lists the services your repositories receive events from. Tiles at the
+top show your **Connections**, **Services** and **Providers**.
+
+- Filter by **All Services**, **Provider Services** or **Consumer Services**, search by service,
+  provider, repository or event, pick **Companies**, or click tag filters.
+- Each service is a card with its provider and [trust badge](/zekt-docs/provider/publish-to-directory/#trust-badges).
+  Expand it to see **Delivers to N repositories**: each repository, when it subscribed, and its status
+  (Active or Paused).
+
+For each repository, there are two actions:
+
+- **Schema:** set your [schema version policy](/zekt-docs/provider/schemas/#for-subscribers).
+- **Remove:** in **Remove Subscription**, choose **Confirm Removal**, or **Keep Subscription** to
+  cancel. The repository stops receiving events, the subscription ends, and the provider is told. To
+  undo it, request access again.
+
+The schema version policy is the only setting you can change on an existing subscription. Branch
+limits can't be changed after approval: remove the subscription and request access again.
+
+## Consumer → Received Events
+
+**Consumer → Received Events** summarises your recent deliveries:
+
+- **Total Events** (last 30 days) and **Event Sources**.
+- **Event Distribution:** the event types you've received, with counts. Expand a row to see the
+  provider repository, your repository and the count. 🛡️ marks Shield-encrypted events.
+	- **Check real-time workflow status** opens a monitor showing whether each workflow is *Running* or
+	  *Dormant*. It refreshes every 2 seconds using *your* GitHub authorization, and shows your GitHub
+	  API quota. Use **Stop/Resume Auto-Refresh** to control it.
+	- **Edit workflow in github.dev** opens the workflow file.
+- **Event Graph:** a timeline over 30 days.
+- **Subscribed Services:** each service, its provider repository and event type, and which of your
+  repositories receive it.
+- The [dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue) panel, for the last 7 days.
+
+<Aside type="note">
+	These panels show recent activity, not a complete history, and there's no per-event detail or
+	replay here. To replay events, use [Zekt Analytics](/zekt-docs/add-ons/analytics/).
+</Aside>

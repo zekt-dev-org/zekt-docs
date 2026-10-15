@@ -16,8 +16,8 @@ provider's `event-type`, or `zekt-workflow-completed` if the provider didn't use
 | `dispatchedAt` | string | When Zekt sent it (ISO 8601, UTC, with 7 fractional digits). |
 | `payload` | any JSON, or `null` | The provider's payload. [Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard) may redact values in it, or withhold it (then `null`). With [Shield](/zekt-docs/add-ons/shield/) it's the encrypted envelope. `null` if none was sent; `{}` if the action ran without a `payload` input. |
 | `dispatch_id` | string | Unique per send (`dsp_` followed by 32 hex characters). A re-send gets a new one. Use it for `run-name`, never for deduplication. |
-| `schemaVersion` | string | Present only if the provider publishes a [schema](/zekt-docs/provider/schemas/). |
-| `schemaValid` | boolean | Present only with a schema. A label only. If the provider *enforces* its schema, a payload that doesn't conform isn't delivered at all. |
+| `schemaVersion` | string | Present only when the provider [enforces its schema](/zekt-docs/provider/schemas/#enforce-a-schema). |
+| `schemaValid` | boolean | Present only when the provider enforces its schema. A payload that doesn't conform isn't delivered at all. |
 | `isReplay` | boolean | Present only on replays. |
 | `replayId` | string | Present only on replays. |
 | `originalDeliveryId` or `originalCorrelationId` | string | Present only on replays: what was replayed. |

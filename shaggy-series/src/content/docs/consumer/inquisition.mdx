@@ -1,0 +1,76 @@
+---
+title: Filter events with Inquisition
+description: Block events you don't want from reaching your consumer repositories, using rules on the payload.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+**Inquisition** lets a consumer block incoming events that match rules on their payload. A blocked
+event is never sent to your repository. Find it under **Consumer → Inquisition** (marked *Beta*).
+
+At the top, a summary bar shows **Absolved** (delivered), **Condemned** (blocked), **Active Rules** and
+**Today**, with **Refresh** and an **Auto-refresh (30s)** option. The sub-tabs are **Rule Sets** and
+**Event Log**.
+
+## How rules work
+
+Inquisition only ever **blocks**:
+
+- A rule set blocks an event when **all** of its conditions match.
+- An event is blocked if **any** active rule set matches it. Everything else is delivered.
+- Inactive rule sets are skipped. Switch a rule set on or off with the toggle on its card.
+- If a rule can't be evaluated, the event is delivered.
+- Changes can take about 30 seconds to apply.
+
+## Create a rule set
+
+<Steps>
+
+1. Go to **Consumer → Inquisition → Rule Sets** and choose **New Rule Set** (or **Create your first
+   rule set**).
+2. Enter a **Name** (required, up to 100 characters) and an optional **Description**.
+3. Choose the **Scope**:
+	- **Global (all subscriptions)**; or
+	- **Specific subscription**: pick it from the list. A subscription here covers the whole pair of
+	  your consumer repository and the provider repository, not a single service.
+4. Add conditions with **Add Condition**: 1 to 10, all of which must match.
+5. Choose **Save Rule Set**.
+
+</Steps>
+
+### Conditions
+
+Each condition checks a field of the provider's payload: a path under `zekt.payload`, such as
+`department` or `nested.key`.
+
+| Operator | Matches when the field… |
+| --- | --- |
+| `==` / `!=` | equals / doesn't equal the value |
+| `contains` | contains the text |
+| `startsWith` | starts with the text |
+| `>` `>=` `<` `<=` | compares as a number |
+
+- Text comparisons ignore case.
+- `>`, `>=`, `<` and `<=` compare numbers only.
+- A missing field, or a non-number in a numeric comparison, means *no match*.
+- Rules can't match on the contents of [Shield](/zekt-docs/add-ons/shield/)-encrypted payloads.
+
+## See what was blocked
+
+- **Consumer → Inquisition → Event Log**, under **Condemned**, shows each blocked event: time,
+  correlation ID, route, event type and the rule set that matched.
+- The [dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue) shows the event as *Filtered*.
+- The provider sees *Filtered* in **Delivery Status**, but not your rule's name.
+
+A filtered event isn't sent, so you have no delivery usage for it.
+
+<Aside type="note">
+	Inquisition doesn't apply to replays, or to events that subscribers fire into your
+	[consumer services](/zekt-docs/consumer/consumer-services/).
+</Aside>
+
+## Limits
+
+- **30 rule sets** per account, inactive ones included (*Maximum of 30 rule sets per consumer
+  reached.*).
+- 1–10 conditions per rule set.

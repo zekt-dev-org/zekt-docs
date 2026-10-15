@@ -1,0 +1,66 @@
+---
+title: Manage services and subscribers
+description: See your services and subscribers, change visibility, list or unlist, edit, disable and delete services.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview: Provider → Services
+
+**Provider → Services** is a read-only overview of your services. Switch between **Provider
+Services** and **Consumer Services** (the latter needs the Both persona). **Add New** opens the
+service editor.
+
+| Provider Services column | Shows |
+| --- | --- |
+| Repository | With a *branch: &lt;name&gt;* badge if the service is limited to a branch. |
+| Workflow | A *Self* badge when [self-trigger](/zekt-docs/provider/workflows-and-services/#self-trigger) is on. |
+| Description, Tags | Up to 3 tags, then *+N*. |
+| Visibility | Public, Organization or Unlisted. |
+| Subscribers | How many. |
+
+For consumer services, the columns are Repository, Service Name (with a *disabled* badge), Description,
+Tags, Visibility and Direction.
+
+## Make changes: Service Descriptions → Manage Existing
+
+Changes happen in **Provider → Service Descriptions → Manage Existing**. Its columns are Repository,
+Workflow, Description, Owner Alias, Tags, Event Type, Visibility, Listed and Actions.
+
+- **Change visibility:** click the Visibility badge. In **Edit Visibility**, choose Public or
+  Organization, check the audience preview, and choose **Save Changes**. Every access request still
+  needs your approval.
+- **List or unlist:** use the **Listed** toggle. Re-listing lists the service at Organization, never
+  straight to Public. You can't unlist here while the service has approved consumers.
+- **Edit:** the pencil opens the service editor.
+- **Delete:** the bin. It's blocked while there are active subscribers (*Active Consumers Detected…
+  You must revoke their access before you can delete this service.*). Otherwise you confirm, and the
+  service is removed from the Directory, its schemas and avatar are removed, and its pending requests
+  are declined.
+
+Provider services have no enable/disable control.
+
+### Consumer services
+
+Under **Service Descriptions → Consumer Services**, each consumer service has **Edit**, **Remove
+custom avatar**, **Disable** / **Enable** and **Delete permanently**.
+
+- **Disable** asks for confirmation. A disabled service leaves the Directory and the Registry, refuses
+  new requests, can't be used in orchestration, and drops events subscribers fire into it.
+- **Delete permanently** is refused while subscribers remain, paused ones included: *Cannot delete:
+  N active subscriber(s) remain. Revoke subscriptions first.*
+
+## Subscribers: Provider → Subscribers
+
+**Provider → Subscribers** lists who subscribes to your services, with a summary such as *N active
+subscriptions from M consumers* (plus *(K inactive)* for paused ones).
+
+- There's one card per consumer, grouped by your repository, workflow and service, with a status and
+  how many of their repositories receive it.
+- Click a row to see the consumer repository, the approval date and the status (Active or Paused).
+- Ended subscriptions aren't listed. Self-trigger subscriptions are listed in their own section.
+
+<Aside type="note">
+	To revoke a subscriber, use **Provider → Access → Revoke Access**. The Subscribers tab has no
+	revoke action. See [Handle access requests](/zekt-docs/provider/access-requests/#revoke-access).
+</Aside>

@@ -1,0 +1,58 @@
+---
+title: Reviews and abuse reports
+description: Review a provider you've subscribed to, or report a provider for abuse.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Both live in a provider's **trust modal**. Open it by clicking the provider's
+[trust badge](/zekt-docs/provider/publish-to-directory/#trust-badges): in the Directory, or under
+Requests, Subscriptions or Health.
+
+## Reviews
+
+A review is about a **provider account**, not a single service. Write one in the trust modal's
+**Testimonials** tab with **Write a Review**:
+
+- an overall rating of 1–5 stars (required);
+- **Reliability**, **Communication**, **Documentation** and **Value for Money**, 1–5 each. These
+  start at 3, so set them deliberately;
+- optional text, up to 2,000 characters.
+
+**Who can review:** only an account that holds, or once held, an approved subscription to that
+provider. You can't review yourself.
+
+- You have one review per provider. Submitting again replaces it, and **Withdraw my review** deletes
+  it.
+- Reviews aren't moderated, and appear immediately.
+- Signed-in Zekt users see them in that provider's trust modal. The reviewer's name isn't shown, and
+  only reviews with text are listed.
+- Reviews don't appear on Directory cards or the public Registry, and don't change the trust badge.
+
+**✓ Verified** on a review means the reviewer has an **active** subscription to the provider,
+approved by the provider by hand or by a rule for that specific user (not by the *All Consumers*
+rule). It's checked each time the review is shown. It's not the same as the provider's
+*GitHub Verified* trust badge.
+
+## Abuse reports
+
+Use the trust modal's **Report Abuse** tab to report a provider. Any signed-in account can report
+another account, but not its own.
+
+| Field | Details |
+| --- | --- |
+| **Type** | Impersonation, Trademark, Spam, Fraud, Inappropriate Content or Other. |
+| **Description** | Required, up to 5,000 characters. |
+| **Evidence URL** | Optional, `http` or `https`. |
+| **Contact email** | How to reach you. |
+
+- You get a **Report ID**. The Zekt team reviews reports.
+- No review time is promised, there's no status page, and you aren't notified of the outcome.
+- Reports are never shown publicly.
+- Limits: 5 reports per minute, and one open report per provider (*You already have an open
+  report…*).
+
+<Aside type="note">
+	When an account is deleted, the reviews and abuse reports it was involved in are kept as described
+	in [Delete your account](/zekt-docs/operate/account/#what-happens-after-deletion).
+</Aside>

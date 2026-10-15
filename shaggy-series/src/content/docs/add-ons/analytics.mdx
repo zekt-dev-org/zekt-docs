@@ -21,39 +21,111 @@ dispatched.
 
 ## Time Travel
 
-**Analytics → Time Travel** lets you browse archived events and replay them.
+**Analytics → Time Travel** lets you browse archived events and replay them. It needs Analytics on at
+least one repository. Each archived event is listed for one account: the provider's, if the provider's
+repository has Analytics on, otherwise the consumer's.
 
 <Steps>
 
-1. Filter by time (last 24 hours, 7 days or 30 days), status (archived or replayed), source
-   repository and destination repository.
-2. Open an event to see its full payload.
-3. Preview the replay, then replay it.
+1. Filter by **Time Range** (24 hours, 7 days (the default) or 30 days), **Status** (All, Archived,
+   Replayed), **Source (Provider)** and **Destination (Consumer)**. Up to 50 rows are shown.
+2. Each row shows the event type, source → destination, status, payload (*Event*, plus *Message* when
+   a Zekt Action payload was matched, and the size) and when it was archived.
+3. To look inside, choose the eye icon (**View Payload Details**). **Archived Payload Details** has
+   tabs for the **Event Payload**, **Message Payload** and **Dispatch Payload**, each with a copy
+   button.
+4. To replay, choose **Replay This Event** (or the replay icon), then **Confirm Replay**. This re-sends
+   the archived payload to the consumer repository and triggers its workflow again. You'll see
+   *Event replayed successfully!*, and the row becomes *replayed*.
 
 </Steps>
 
 - Each archived event can be replayed **once**. A second attempt gives *Already replayed*.
-- The replay carries `zekt.isReplay` and `zekt.replayId`, and gets a new correlation ID. See the
-  [event payload reference](/zekt-docs/reference/event-payload/).
+- The replay re-sends the archived dispatch payload with a new correlation ID, and carries
+  `zekt.isReplay` and `zekt.replayId`. See the [event payload reference](/zekt-docs/reference/event-payload/).
 
 ## Webhook Replay (providers)
 
-**Analytics → Webhook Replay** has three sub-tabs: **Single Replay**, **Bulk Replay** and **Replay
-History**.
+**Analytics → Webhook Replay** replays your own deliveries. It needs at least one provider repository
+with Analytics on. It has three sub-tabs: **Single Replay**, **Bulk Replay** and **Replay History**.
 
-- The source repository must have Analytics on.
-- A replay goes to the delivery's own consumer repository by default. You can choose another target,
-  but only a consumer repository with an active subscription to the same service and Analytics on.
-- Replaying into a repository whose subscription has ended is refused.
-- Up to **10 replays per original delivery**, and up to **100 deliveries per bulk replay**. Time Travel
-  replays don't count toward the 10: they have their own once-per-event rule.
+Rules for every replay:
+
+- The source repository has Analytics on.
+- Up to **10 replays per original delivery**. Time Travel replays don't count toward this.
+- The target must still be subscribed. Otherwise: *…is no longer subscribed to this service, so
+  nothing can be replayed into it.*
+- Replays are billed to the account that starts them.
 
 A consumer replaying an event it received can only replay it into its own repository.
 
+### Replay one delivery
+
+<Steps>
+
+1. Find the delivery in **Provider → Delivery Status**, open it, and choose **Copy Delivery ID**. As
+   a shortcut, the same **Delivery Details** view has a **Webhook Replay** box showing *N/10 replays
+   used*, with **Replay This Event**.
+2. In **Single Replay**, paste the **Delivery ID**.
+3. Optionally set a **Repository Override** (`owner/repo`). Leave it blank to replay to the original
+   repository. An override must have an active subscription to the same service, the Zekt GitHub App,
+   and Analytics on.
+4. Optionally add a **Reason**.
+5. Choose **Replay Event**, then confirm. The result shows the Replay ID, New Delivery ID, Status and
+   Target Repository.
+
+</Steps>
+
+<Aside type="caution" title="Check the status">
+	Check the **Status** in the result, or in **Replay History**. A failed dispatch can currently show a
+	success heading.
+</Aside>
+
+### Replay many deliveries
+
+<Steps>
+
+1. In **Bulk Replay**, set the **Start Time** and **End Time**, or use **Last Hour**, **Last 24 Hours**
+   (the default) or **Last 7 Days**.
+2. Optionally narrow it with **Status Filter** (All, Failed Only, Completed Only, Pending Only) and
+   **Event Type**, and add a **Reason**.
+3. Choose **Start Bulk Replay** and confirm. The result shows the totals: replayed, skipped and failed.
+
+</Steps>
+
+- A bulk replay covers at most **100** deliveries: the **most recent** 100 in the range. Older ones in
+  the range aren't replayed, so narrow the range for large sets.
+- *Skipped* means the delivery is at its 10-replay limit, Analytics is off on its source, or it's
+  already being replayed.
+
+### Replay History
+
+**Replay History** lists up to 100 replays, with Replay ID, Original Delivery, Event Type, Status,
+Initiated and Reason. Filter by status (All, Completed, Failed, Pending), and click a row for details.
+Time Travel replays aren't listed here.
+
 ## Insights
 
-**Analytics → Insights** points out failed events, stale subscriptions, growth trends, cost
-trajectory and inactive repositories.
+**Analytics → Insights** covers the last 7 days: stat cards, then panels for Stability Score,
+Performance Bottleneck, Top Consumers, Event Types, Delivery Status, Activity by Hour (UTC), Source
+Channel and Recommendations. Turn on **Real-time Update** to refresh every 5 seconds.
+
+Insight cards are created when you choose **Run Analysis**; nothing runs on a schedule. Each card
+shows a severity (Critical, Warning or Info), a category, a description and a 💡 recommendation, with
+**Acknowledge** and **Dismiss**.
+
+The checks use fixed thresholds:
+
+| Check | Raised when |
+| --- | --- |
+| Failed events | 5 or more failures in 7 days (Warning); 20 or more, or a failure rate of 10% or more (Critical). |
+| Inactive provider or consumer repository | No events for 14 days (Info). |
+| Volume change | ±20% week over week (Info). |
+| Cost trajectory | Projected usage charges up 25% or more on last month (Warning); 50% or more (Critical). |
+| Inactive repositories costing money | Provider repositories with no events for 30 days or more (Info, or Warning above a set monthly amount). |
+
+The same run also looks for congestion, retry storms, slow or blocked workflows, closeness to rate
+limits, a falling success rate, silent failures and dormant consumers.
 
 ## Retention
 
