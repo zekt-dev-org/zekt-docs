@@ -1,49 +1,148 @@
 ---
 title: Payload schemas
-description: Publish versioned JSON schemas for your service's payload so subscribers don't have to guess its shape.
+description: Publish versioned JSON schemas for your service's payload, enforce them, and choose which version you follow as a subscriber.
 ---
 
-import { Aside } from '@astrojs/starlight/components';
+import { Aside, Steps } from '@astrojs/starlight/components';
 
-A service can publish versioned **JSON schemas** describing the payload it sends. Subscribers see
-exactly what they'll receive, can write their parsing logic against it, and are told when it changes.
-Public schemas also appear in the [Zekt Registry](https://www.zekt.dev/zekt-registry.html).
+A service can publish versioned **JSON schemas** for its payload. Subscribers see exactly what they'll
+receive and are told when it changes, and you can **enforce** the schema so payloads that don't match
+are never delivered. Public schemas also appear in the [Zekt Registry](https://www.zekt.dev/zekt-registry.html).
 
-## Versions and compatibility
+## Where to manage schemas
 
-Schemas use semantic versions: `major.minor.patch`. Prerelease versions such as `1.2.0-beta.1`
-also exist, but only a stable version (one without a prerelease suffix) can be a service's current
-version.
+- **Provider → Schema Handling** lists all your provider and consumer services, with their event type,
+  schema and enforcement status. Filter by type, schema or enforcement. Click a service name to open
+  its editor. **Open Zekt Registry** opens the public Registry.
+- Each service's editor (**Provider → Service Descriptions**) has a **Schema Registry** card.
 
-- A change that would break existing subscribers needs a new **major** version. Zekt refuses to
-  publish a breaking change under the same major version.
-- You can **deprecate** a version. A deprecation names a successor version and a sunset date at least
-  30 days in the future.
-- When the version a subscriber uses changes, the subscriber gets a notice on their dashboard.
+## Publish a version
 
-## How subscribers pick a version
+<Steps>
 
-Each subscriber chooses how closely to follow your versions:
+1. Open the service in its editor and turn on **Enable Schema Registry**. Save the service first if
+   it's new (*Please save the service first before defining a schema*).
+2. Choose **Define Schema**, or **Edit Schema** once a version exists. The editor's title says which
+   schema you're editing: **Broadcast Schema** for a provider service, **Input Schema** or **Output
+   Schema** for a consumer service.
+3. In the left panel, check the **Version (semver)** (pre-filled as the next minor version), add a
+   **Changelog**, and tick **Breaking Change** if you know the change breaks subscribers. **Infer from
+   Sample** builds fields from an example payload, and **Clear All Fields** starts over.
+4. Define the schema in one of the tabs:
+	- **Fields:** use **Add Field**. Each field has a name, a type (String, Integer, Number, Boolean,
+	  Array or Object), **Required** and a description. Strings can also have a **Format** (Date/Time,
+	  Date, Time, Email, URI, UUID) and a **Pattern**; strings and numbers can have **Enum** values.
+	- **JSON Schema:** edit the JSON Schema (Draft 2020-12) directly. Once you edit the JSON, the field
+	  builder is read-only for that edit.
+	- **Workflow Snippet:** an example for your workflow.
+5. Choose **Publish Schema**.
 
-| Pin | Follows |
+</Steps>
+
+### Version rules
+
+- Versions are semantic versions: `major.minor.patch`. Prerelease versions such as `1.2.0-beta.1`
+  are allowed, but never become the current version.
+- A new version must be greater than every existing one.
+- Up to **20 versions** per schema. The card shows how many you've used.
+- Size and content limits are on the [Limits](/zekt-docs/reference/limits/#schemas) page.
+
+### Breaking changes
+
+Zekt decides whether a version is breaking. Your **Breaking Change** tick can mark a version breaking,
+but can't overrule Zekt's verdict.
+
+- A breaking change within the same line (same major version; same minor for `0.x`) is refused, and
+  the message tells you which version to publish it as instead, a new major.
+- For a **provider service's** schema, a change that **accepts more** payloads is breaking, for
+  example dropping a required field or widening a type. Narrowing is safe.
+- For a **consumer service's input** schema, **narrowing** is breaking.
+- Anything Zekt can't prove safe, such as `oneOf`/`allOf` or a changed `$ref` or pattern, counts as
+  breaking.
+
+### Secret screening
+
+Publishing screens the schema and the changelog for secrets. Tokens, keys, connection strings, URLs
+with credentials and card numbers **block** the publish (*Cannot Publish — Potential Secrets
+Detected*). If screening flags example values such as GUIDs, email addresses or IP addresses,
+replace them with neutral placeholders and publish again.
+
+## Enforce a schema
+
+Turn on the toggle in the **Enforcement** column of **Provider → Schema Handling**. It's available
+once a version is published (*Publish a schema first to enable enforcement.*).
+
+- **Provider service:** the payload your workflow sends is checked against the current version (the
+  highest stable one). If it doesn't match, **nothing is delivered** to any subscriber.
+- **Consumer service:** each subscriber's payload is checked against the version its own version
+  policy resolves to, and only that subscriber's send is blocked.
+
+Events go through without a check when enforcement is off, no schema is published, the event has no
+custom payload, or the payload is Shield-encrypted.
+
+Blocked payloads appear in **Provider → Delivery Status** under the **Schema Violations** filter. The
+detail shows *Schema Enforcement Blocked This Payload* with up to 10 errors. Deliveries also show a
+**Schema:** line, for example *Matched schema v1.2.0*.
+
+With enforcement on, delivered events carry `zekt.schemaVersion` and `zekt.schemaValid` (see the
+[event payload reference](/zekt-docs/reference/event-payload/)).
+
+## Show the schema before access
+
+Turn on **Show schema before access** in the Schema Registry card, then save the service. It needs
+**Enable Schema Registry** on.
+
+| Service visibility | Who sees the schema before access |
 | --- | --- |
-| **Latest** | Every new version. |
-| **Major** | New minor and patch versions within one major version. |
-| **Minor** | New patch versions within one minor version. |
-| **Exact** | One version only. |
+| Public | Everyone in the Directory, and on the public Registry. |
+| Organization | The service's audience in the Directory. Never on the Registry. |
+| Unlisted | Not available: the toggle is disabled. |
 
-## Who can see the schema
+You and your approved subscribers always see the schema.
 
-- Approved subscribers can always see the schema.
-- With **Show schema before access** turned on, the service's Directory audience can also see it
-  before requesting access, but only while the service is listed (Organization or Public). See
-  [visibility](/zekt-docs/provider/publish-to-directory/).
+## Delete a version
+
+Open **View Versions** and choose **Delete v…** (active versions only). Deletion is refused when a
+subscriber pinned that version, a subscriber's policy resolves to it, or it's the latest version and
+there are active subscriptions. The refusal (*… is in use*, *Not deleted.*) offers **Force delete**
+after you type the version number.
+
+After a force delete, subscribers keep receiving events, checks move to the next most recent version,
+and affected subscribers get a notice.
+
+## Deprecation
+
+Deprecating a version (with a successor and a sunset date at least 30 days ahead) is handled by the
+platform. There's no console control for it yet.
+
+## For subscribers
+
+Choose which version you follow in **Consumer → Subscriptions**: use the **Schema** button on the
+subscription, then **Version policy**.
+
+| Policy | Follows |
+| --- | --- |
+| **Latest** | The current version. |
+| **Major** | The newest stable version in the major version you acknowledged (or of the current version, if you haven't acknowledged one). |
+| **Minor** | The same, within the major.minor version. |
+| **Exact** | The version you pin with **Pin v…**. If it's retired, its successor; otherwise the current version. |
+
+Choose **Save policy** to keep it. **Acknowledge v…** records the version you've reviewed.
+
+- When the version you follow changes, you see a banner in that view, and a notice under
+  [Profile → Messages](/zekt-docs/operate/messages/).
+- Your policy never holds back delivery. Events keep arriving whatever version you follow.
 
 ## Output schemas
 
-A service that takes part in [orchestration](/zekt-docs/orchestration/overview/), whether a provider
-service or a [consumer service](/zekt-docs/consumer/consumer-services/), can also publish an **output
-schema**. It describes the values the service returns to the workflow that called it.
+A [consumer service](/zekt-docs/consumer/consumer-services/) can also publish an **output schema**,
+describing the values it returns when it runs as an [orchestration](/zekt-docs/orchestration/overview/)
+step. Find it under **Service Descriptions → Consumer Services → edit → Schema Registry → Output
+Schema**. The tab appears only when **Supports Orchestration** is on.
+
+- Outputs are checked after each step, but a mismatch only **warns**. It never fails the step.
+- Subscribers get no notices about output schema changes.
+- Provider services have no output schema in the console.
 
 <Aside type="tip">
 	Publish a schema before you list a service publicly. A clear contract is the quickest way to

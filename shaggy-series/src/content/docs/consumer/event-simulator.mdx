@@ -1,0 +1,50 @@
+---
+title: Test with the Event Simulator
+description: Send a test repository_dispatch to one of your consumer repositories to check that your workflow triggers.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The **Event Simulator** (**Consumer → Event Simulator**) sends a real `repository_dispatch` to one of
+your enabled consumer repositories. Use it to check that your workflow **triggers** on an event type.
+
+<Aside type="caution" title="It's a real event">
+	The simulator sends the event with *your* GitHub authorization and starts real workflow runs, which
+	use your GitHub Actions minutes.
+</Aside>
+
+## Send a test event
+
+<Steps>
+
+1. Go to **Consumer → Event Simulator**. If you see *GitHub Authorization Required*, go to
+   **Profile → GitHub Authorization** and choose **Authorize GitHub** first.
+2. Choose the **Target Repository** (only enabled consumer repositories are listed).
+3. Set the **Event Type**: the value your workflow's `types:` listens for. The default is `zekt-test`.
+4. Choose a **Payload Source**:
+	- **Use Template**: Webhook Trigger, Deployment Trigger, CI Pipeline Trigger or Custom Payload; or
+	- **Load from Recent Delivery**: choose **Select Service**, then **Load Sample Payload** to reuse a
+	  recent delivery to that repository (Shield-encrypted and redacted deliveries aren't offered).
+5. Check the **JSON Payload** (*✓ Valid JSON*). An empty payload sends `{}`. Payloads over 100 KB show
+   a warning.
+6. Choose **Send Test Event**.
+7. Open your repository's **Actions** tab to see the run.
+
+</Steps>
+
+## The test event's shape is different
+
+The simulator puts your test payload at the **top level** of `client_payload`, not under
+`zekt.payload` as real deliveries do. It also adds a `zekt` object with `isSimulated: true`.
+
+So use the simulator to check that your workflow **triggers** on the event type. To test how your
+workflow handles the payload, use a real delivery or a
+[Time Travel replay](/zekt-docs/add-ons/analytics/#time-travel).
+
+## Records and limits
+
+- A simulated event creates no delivery record and no per-delivery usage. It shows as *Event
+  simulator* under **Other sends (last 7 days)** in the
+  [dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue).
+- Available with the Consumer or Both persona. The target repository must be enabled and active.
+- It counts toward the limit of 60 changes per minute (see [Limits](/zekt-docs/reference/limits/#rate-limits)).

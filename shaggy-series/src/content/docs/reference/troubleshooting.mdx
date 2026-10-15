@@ -14,11 +14,9 @@ description: Fixes for the most common problems — events that don't arrive, fa
    **default branch**. The workflow file must be there.
 4. **Check the subscription and the repository.** The subscription must be active
    (**Consumer → Subscriptions**), and the repository enabled (**Consumer → Repos**).
-5. **Try the Event Simulator** (**Consumer → Event Simulator**). If it reports *No workflows detected*,
-   the cause is one of these:
-	- no workflow listens for `repository_dispatch`;
-	- the event type doesn't match `types`;
-	- the workflow is slow to start.
+5. **Try the [Event Simulator](/zekt-docs/consumer/event-simulator/)** (**Consumer → Event Simulator**)
+   with the same event type, then check your repository's **Actions** tab. If no run starts, either no
+   workflow listens for `repository_dispatch`, or its `types:` doesn't match the event type.
 
 Zekt doesn't check that your workflow file exists, so there's no specific error for a missing
 workflow.
