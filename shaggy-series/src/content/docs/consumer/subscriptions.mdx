@@ -24,7 +24,9 @@ For each repository, there are two actions:
   undo it, request access again.
 
 The schema version policy is the only setting you can change on an existing subscription. Branch
-limits can't be changed after approval: remove the subscription and request access again.
+limits can't be changed after approval. To change them, remove the subscription and request access
+again with the new branches. The provider has to approve again, unless an auto-approval rule covers
+you, and events sent between the removal and the new approval aren't delivered to you.
 
 ## Consumer → Received Events
 
