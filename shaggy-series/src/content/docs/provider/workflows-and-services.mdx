@@ -60,7 +60,8 @@ With **Enable Self-trigger** on, the service's own repository also receives the 
 if it had subscribed. Zekt creates this self-subscription automatically, with no approval needed.
 Use it to hand work from one workflow to another in the same repository, with delivery tracking.
 
-- To prevent loops, an event is re-dispatched to the same repository at most once.
+- To prevent loops, an event is re-dispatched to the same repository at most once. Anything beyond
+  that shows as *Not sent* in the [dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue).
 - Self-trigger deliveries are badged **Self**.
 - It isn't a normal subscription: you can't unsubscribe or revoke it. Turn the toggle off instead.
 

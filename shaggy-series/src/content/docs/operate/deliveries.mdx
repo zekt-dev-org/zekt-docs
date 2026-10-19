@@ -26,7 +26,7 @@ it started a run, and how that run finished.
 | **Completed** | The receiving run finished. The row shows the Dispatched, Confirmed and Completed times, and a retry count. The run's conclusion is in the [dispatch queue](#dispatch-queue)'s send log. |
 | **Failed** | This attempt was refused or errored. Each attempt has its own row. |
 | **Schema Violations** | The payload failed the service's enforced [schema](/zekt-docs/provider/schemas/) and wasn't delivered. |
-| **Filtered** | Blocked by the consumer's Inquisition filter rules. |
+| **Filtered** | Blocked by the consumer's [Inquisition](/zekt-docs/consumer/inquisition/) filter rules. |
 
 A row can also show a schema check: valid, invalid, not validated or unavailable.
 

@@ -38,11 +38,89 @@ Zekt never changes a payload in transit. Each repository in the chain runs its o
 - [Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard) scans every outgoing provider payload,
   so it also covers what a relay repository sends.
 
+### When Zekt relays
+
+When a run in the Chainlink repository that was triggered by `repository_dispatch` completes, Zekt
+relays it downstream only if **all** of these hold:
+
+1. The run called the [Zekt Action](/zekt-docs/provider/zekt-action/). Completion alone never relays.
+2. The run isn't an orchestration step.
+3. The relay workflow is whitelisted.
+4. The message wasn't blocked, for example by a Shield requirement.
+5. Your account is in good standing.
+
+Then:
+
+- **Subscribers** to the relay workflow's provider service get the event, even if the relay run
+  failed, so they should check its conclusion.
+- **Consumer services** the relay workflow fires into get it too, unless the relay run failed.
+
+### What goes downstream
+
+- The event type and `zekt.payload` are the **relay's own**. The inbound payload is **not** forwarded
+  automatically, so copy what you need into the new payload.
+- `workflow_run` describes the relay's run, and downstream branch filters match the relay run's
+  branch.
+- The downstream `correlationId` belongs to the relay's run.
+
+### A relay workflow
+
+Before you start:
+
+- this repository subscribes to the upstream service, as its consumer repository;
+- this workflow is published as a provider service that downstream accounts subscribe to;
+- the workflow is whitelisted.
+
+```yaml
+name: Relay build events
+run-name: ${{ github.event.client_payload.zekt.dispatch_id }}
+on:
+  repository_dispatch:
+    types: [build-complete]          # the upstream service's event type
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  relay:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build downstream payload
+        id: build
+        env:
+          INBOUND: ${{ toJSON(github.event.client_payload.zekt.payload) }}
+          UPSTREAM_CONCLUSION: ${{ github.event.client_payload.workflow_run.conclusion }}
+        run: |
+          payload=$(jq -c --arg c "$UPSTREAM_CONCLUSION" '{upstream: ., upstream_conclusion: $c}' <<<"$INBOUND")
+          echo "payload=$payload" >> "$GITHUB_OUTPUT"
+      - uses: zekt-dev-org/zekt-action@v3
+        with:
+          event-type: build-relayed    # what downstream subscribers receive
+          payload: ${{ steps.build.outputs.payload }}
+```
+
+<Aside type="caution" title="Set run-name to the inbound dispatch_id">
+	Zekt works out how many hops an event has taken by matching the relay's run to the event that
+	triggered it. Without `run-name` set to `client_payload.zekt.dispatch_id`, the relay counts as the
+	start of a new chain.
+</Aside>
+
 ## Hop limit
 
-Set a hop limit per repository, from **2 to 10**, in the **Repos** tab. An event that would go beyond
-the limit isn't forwarded, and shows as *Not sent* in the
-[dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue).
+The payload carries no hop information. Zekt tracks hops itself, and the dashboard shows *Hop N of M*
+on deliveries.
+
+- The original sender's delivery is hop 0, and each relay adds 1.
+- Each Chainlink repository has its own **maxHops**, from **2 to 10**, set in the **Repos** tab. A relay
+  can send only while its outgoing hop is below its own maxHops, so the *k*-th relay in a chain needs
+  maxHops of at least *k* + 1.
+- When a relay is past its hop limit, the downstream send isn't made. It shows as *Not sent*, with the
+  hop limit as the reason, in the [dispatch queue](/zekt-docs/operate/deliveries/#dispatch-queue).
+- The hop limit doesn't apply to consumer services a relay fires into.
+
+<Aside type="caution" title="The default is 2">
+	With the default maxHops of 2, only the **first** relay in a chain can forward. Raise maxHops on
+	later relays.
+</Aside>
 
 ## Disable Chainlink
 
