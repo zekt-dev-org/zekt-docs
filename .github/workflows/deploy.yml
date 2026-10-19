@@ -53,12 +53,31 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy to GitHub Pages
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # Runs can finish out of order. Only deploy if this commit is still main's HEAD,
+      # so an older run can never overwrite a newer site.
+      - name: Check this is still the latest commit on main
+        id: head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          latest=$(gh api "repos/$REPO/commits/main" --jq .sha)
+          if [ "$latest" = "$SHA" ]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipping deploy: $SHA is no longer the latest commit on main ($latest)."
+          fi
+
       - name: Deploy
         id: deployment
+        if: steps.head.outputs.deploy == 'true'
         uses: actions/deploy-pages@v4
