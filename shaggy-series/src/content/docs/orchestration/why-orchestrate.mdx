@@ -1,0 +1,122 @@
+---
+title: Why orchestrate with Zekt
+description: Let developers request work from services owned by other teams and organizations, in one request, without sharing secrets or building trigger plumbing.
+---
+
+import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import OrchestrationFlow from '../../../components/OrchestrationFlow.astro';
+
+A developer needs a new environment: a subscription, a resource group in it, a key vault in that
+group. Each piece is owned by a different team, maybe in a different GitHub organization. With
+Zekt, the developer's workflow sends **one request**. Each team's own workflow does its part, in
+its own repository, and the result comes back to the developer.
+
+<OrchestrationFlow />
+
+## What Zekt takes off your hands
+
+Without a broker, every pair of repositories needs its own wiring. The calling repository needs a
+token or GitHub App with access to the other repository. It has to trigger the other workflow, wait
+for the run, and find a way to read its result. That's repeated for every team and every step, and
+handled differently each time.
+
+With Zekt, the requesting workflow names the services it wants, in order or in parallel, and Zekt
+does the rest:
+
+| | Wiring it yourself | With Zekt |
+| --- | --- | --- |
+| **Secrets in the calling workflow** | A token or app with access to each target repository | None. Your workflow holds no credentials for the repositories that do the work, and the [Zekt Action](/zekt-docs/provider/zekt-action/) signs in with GitHub Actions OIDC |
+| **Who may call a service** | Whoever holds the token | The service owner approves each account's [access](/zekt-docs/provider/access-requests/), by hand or by rule |
+| **Passing results on** | Custom glue per step | Each step's outputs feed later steps with `$zekt{{ steps.<id>.outputs.<field> }}` |
+| **Knowing how it went** | Read each run yourself | One result event, plus step-by-step tracking in the console |
+
+## What you get
+
+<CardGrid>
+	<Card title="One request, many teams" icon="random">
+		Up to 20 steps from different owners: teams in your organization, other organizations, or
+		personal accounts. Run them in order, in parallel, or with dependencies between them.
+	</Card>
+	<Card title="No shared secrets" icon="approve-check">
+		Each service runs in its owner's repository, with that team's own secrets and permissions. Your
+		workflow sends inputs and gets outputs back. Nobody shares tokens or repository access.
+	</Card>
+	<Card title="Approval stays with the owner" icon="puzzle">
+		Zekt checks that your account has an approved subscription to every service before anything
+		starts, and again before each step. If any step isn't approved, nothing starts.
+	</Card>
+	<Card title="One result, fully tracked" icon="list-format">
+		When the run ends, Zekt sends the status and every step's outputs back to your repository. You
+		and the service owners follow the steps in **Management → Orchestrations**.
+	</Card>
+</CardGrid>
+
+## Who it's for
+
+**Developers who request services.** Ask for what you need in one workflow step. You don't need to
+know how each team provisions things, and you don't need access to their repositories.
+
+**Platform and service teams.** Turn a workflow you already have into a service other teams can
+call. Your business logic stays in your own workflow YAML: Zekt dispatches the request and carries
+the outputs, but never dictates what your workflow does. You decide who may call it, and you see
+who calls it and how each call went.
+
+## What a request looks like
+
+The requesting workflow sends a plan to the Zekt Action. Here, the second step uses the first
+step's output:
+
+```json
+{
+  "default_service_owner": "platform-team",
+  "services": [
+    { "step_id": "create-sub", "service_slug": "new-subscription", "input": { "name": "team-a" } },
+    {
+      "step_id": "create-rg",
+      "service_slug": "new-resource-group",
+      "input": { "subscriptionId": "$zekt{{ steps.create-sub.outputs.subscription_id }}" }
+    }
+  ]
+}
+```
+
+[Orchestrate several services](/zekt-docs/orchestration/overview/) shows the full workflow, the plan
+fields and the result event.
+
+## Good to know
+
+- The requesting repository is [enabled as a provider](/zekt-docs/provider/enable-repository/), and
+  your account has an approved subscription to each service in the plan.
+- The account that starts the orchestration pays for all of it. See
+  [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
+- For the other limits, see [Limits](/zekt-docs/orchestration/overview/#limits).
+
+<Aside type="caution" title="Inputs and outputs aren't for secrets">
+	[Zekt Shield](/zekt-docs/add-ons/shield/) doesn't encrypt orchestration inputs and outputs. Pass
+	names and identifiers, not credentials. Each service keeps its secrets in its own repository.
+</Aside>
+
+## Next steps
+
+<CardGrid>
+	<LinkCard
+		title="Orchestrate several services"
+		href="/zekt-docs/orchestration/overview/"
+		description="Submit a plan, pass outputs between steps and handle the result."
+	/>
+	<LinkCard
+		title="Offer a consumer service"
+		href="/zekt-docs/consumer/consumer-services/"
+		description="Let other accounts call one of your repositories as an orchestration step and return outputs."
+	/>
+	<LinkCard
+		title="Find a service and request access"
+		href="/zekt-docs/consumer/request-access/"
+		description="Browse the Directory and subscribe to the services your plan needs."
+	/>
+	<LinkCard
+		title="Workflows and services"
+		href="/zekt-docs/provider/workflows-and-services/"
+		description="Turn a workflow you already have into a service others can call."
+	/>
+</CardGrid>
