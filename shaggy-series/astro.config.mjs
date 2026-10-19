@@ -75,7 +75,10 @@ export default defineConfig({
 				},
 				{
 					label: 'Orchestration',
-					items: [{ label: 'Orchestrate several services', slug: 'orchestration/overview' }],
+					items: [
+						{ label: 'Why orchestrate with Zekt', slug: 'orchestration/why-orchestrate' },
+						{ label: 'Orchestrate several services', slug: 'orchestration/overview' },
+					],
 				},
 				{
 					label: 'Operate',

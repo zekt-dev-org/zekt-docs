@@ -1,0 +1,307 @@
+---
+// Diagram for the orchestration pitch page: one request in, Zekt in the middle, services owned by
+// other teams doing the work, one result back. Plain HTML/CSS so it follows the light and dark
+// themes and reflows on narrow screens. Keep every claim in here in step with
+// orchestration/why-orchestrate.mdx and orchestration/overview.mdx.
+
+const lock =
+	'<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
+const services = [
+	{
+		n: 1,
+		owner: 'Cloud team',
+		scope: 'your organization',
+		name: 'Create subscription',
+		io: 'returns subscription_id',
+	},
+	{
+		n: 2,
+		owner: 'Network team',
+		scope: 'your organization',
+		name: 'Create resource group',
+		io: 'uses subscription_id',
+	},
+	{
+		n: 3,
+		owner: 'Security team',
+		scope: 'another organization',
+		name: 'Create key vault',
+		io: 'uses the resource group',
+	},
+];
+---
+
+<figure class="zf not-content" aria-labelledby="zf-caption">
+	<div class="zf-node zf-requester">
+		<span class="zf-kicker">Requester</span>
+		<strong>Your workflow</strong>
+		<span>One request: a plan of three steps</span>
+		<span class="zf-note"><Fragment set:html={lock} /> Holds no credentials for the services' repositories</span>
+	</div>
+
+	<div class="zf-arrow" aria-hidden="true"><span>↓</span><small>plan</small></div>
+
+	<div class="zf-node zf-zekt">
+		<strong>Zekt</strong>
+		<ul>
+			<li>Checks every subscription is approved before anything starts</li>
+			<li>Dispatches each step to the service's repository</li>
+			<li>Passes each step's outputs to the steps that need them</li>
+			<li>Tracks every step</li>
+		</ul>
+	</div>
+
+	<div class="zf-arrow zf-arrow-pair" aria-hidden="true">
+		<span>↓<small>dispatch</small></span>
+		<span>↑<small>outputs</small></span>
+	</div>
+
+	<ol class="zf-services">
+		{
+			services.map((s, i) => (
+				<>
+					<li class="zf-boundary">
+						<span class="zf-owner">
+							{s.owner}
+							<em>{s.scope}</em>
+						</span>
+						<div class="zf-node zf-service">
+							<span class="zf-step">Step {s.n}</span>
+							<strong>{s.name}</strong>
+							<code>{s.io}</code>
+						</div>
+						<span class="zf-note">
+							<Fragment set:html={lock} /> Its own secrets and permissions
+						</span>
+					</li>
+					{i < services.length - 1 && (
+						<li class="zf-link" aria-hidden="true">
+							<span>→</span>
+						</li>
+					)}
+				</>
+			))
+		}
+	</ol>
+
+	<div class="zf-arrow" aria-hidden="true"><span>↓</span></div>
+
+	<div class="zf-node zf-result">
+		<span class="zf-check" aria-hidden="true">✓</span>
+		<strong>Result back to your repository</strong>
+		<span>Status · each step's outputs · tracking in the console</span>
+	</div>
+
+	<figcaption id="zf-caption">
+		One request from your workflow runs a chain of services owned by other teams. Each team's
+		workflow does the work in its own repository; Zekt connects them.
+	</figcaption>
+</figure>
+
+<style>
+	.zf {
+		--zf-surface: var(--sl-color-gray-6);
+		--zf-border: var(--sl-color-gray-5);
+		--zf-text: var(--sl-color-white);
+		--zf-muted: var(--sl-color-gray-3);
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0;
+		container-type: inline-size;
+		margin: 2rem 0;
+		font-size: var(--sl-text-sm);
+		line-height: 1.45;
+		color: var(--zf-muted);
+	}
+
+	.zf-node {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.25rem;
+		padding: 1rem 1.25rem;
+		text-align: center;
+		background: var(--zf-surface);
+		border: 1px solid var(--zf-border);
+		border-radius: 0.75rem;
+	}
+
+	.zf-node strong {
+		color: var(--zf-text);
+		font-size: var(--sl-text-lg);
+		font-weight: 600;
+	}
+
+	.zf-kicker,
+	.zf-step,
+	.zf-owner {
+		font-size: var(--sl-text-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--zf-muted);
+	}
+
+	.zf-owner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+
+	.zf-owner em {
+		font-style: normal;
+		text-transform: none;
+		letter-spacing: 0;
+	}
+
+	.zf-note {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		gap: 0.35rem;
+		margin-top: 0.25rem;
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-accent-high);
+	}
+
+	.zf-requester {
+		max-width: 28rem;
+		width: 100%;
+		align-self: center;
+	}
+
+	.zf-zekt {
+		background: var(--sl-color-accent-low);
+		border: 2px solid var(--sl-color-accent);
+	}
+
+	.zf-zekt ul {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.5rem;
+		width: 100%;
+		margin: 0.5rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.zf-zekt li {
+		padding: 0.5rem 0.75rem;
+		color: var(--zf-text);
+		background: var(--sl-color-bg);
+		border: 1px solid var(--zf-border);
+		border-radius: 0.5rem;
+	}
+
+	.zf-arrow {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.4rem 0;
+		font-size: var(--sl-text-lg);
+		color: var(--zf-muted);
+	}
+
+	.zf-arrow small,
+	.zf-arrow-pair small {
+		font-size: var(--sl-text-xs);
+		margin-left: 0.3rem;
+	}
+
+	.zf-arrow-pair {
+		gap: 2.5rem;
+	}
+
+	.zf-services {
+		display: flex;
+		align-items: stretch;
+		gap: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.zf-boundary {
+		flex: 1 1 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.75rem;
+		border: 1px dashed var(--zf-border);
+		border-radius: 0.75rem;
+	}
+
+	.zf-service {
+		width: 100%;
+		flex: 1;
+		justify-content: center;
+	}
+
+	.zf-service strong {
+		font-size: var(--sl-text-base);
+	}
+
+	.zf-service code {
+		font-size: var(--sl-text-xs);
+		padding: 0.1rem 0.4rem;
+		border-radius: 0.25rem;
+		color: var(--sl-color-accent-high);
+		background: var(--sl-color-bg);
+	}
+
+	.zf-link {
+		display: flex;
+		align-items: center;
+		padding: 0 0.4rem;
+		font-size: var(--sl-text-lg);
+		color: var(--zf-muted);
+	}
+
+	.zf-result {
+		border-color: var(--sl-color-accent);
+	}
+
+	.zf-check {
+		display: grid;
+		place-items: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		border: 2px solid var(--sl-color-accent);
+		border-radius: 50%;
+		color: var(--sl-color-accent-high);
+		font-weight: 700;
+	}
+
+	.zf figcaption {
+		margin-top: 0.75rem;
+		text-align: center;
+		font-size: var(--sl-text-xs);
+		color: var(--zf-muted);
+	}
+
+	@container (max-width: 30rem) {
+		.zf-zekt ul {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@container (max-width: 36rem) {
+		.zf-services {
+			flex-direction: column;
+		}
+
+		.zf-link {
+			justify-content: center;
+			padding: 0.25rem 0;
+		}
+
+		.zf-link span {
+			transform: rotate(90deg);
+		}
+	}
+</style>
