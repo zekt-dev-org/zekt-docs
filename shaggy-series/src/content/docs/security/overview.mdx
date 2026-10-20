@@ -14,7 +14,7 @@ legal terms, see the [Privacy Policy](https://www.zekt.dev/privacy-policy.html) 
 | Where | How you authenticate |
 | --- | --- |
 | The console at www.zekt.dev | GitHub sign-in. See [GitHub access](/zekt-docs/security/github-access/). |
-| MCP and the VS Code extension | [Zekt API tokens](/zekt-docs/operate/vscode-and-mcp/#api-tokens) (`zekt_…`, as a Bearer token), with an optional expiry, revocable at any time. |
+| MCP | [Zekt API tokens](/zekt-docs/operate/vscode-and-mcp/#api-tokens) (`zekt_…`, as a Bearer token), with an optional expiry, revocable at any time. |
 | The Zekt Action in your workflows | GitHub Actions OIDC (`id-token: write`), with no secret. Zekt checks the token against the repository's numeric GitHub ID. |
 
 Data is encrypted in transit (TLS).
