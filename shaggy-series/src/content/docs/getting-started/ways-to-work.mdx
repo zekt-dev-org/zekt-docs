@@ -1,0 +1,110 @@
+---
+title: Ways to work with Zekt
+description: People use the web console, workflows use GitHub Actions, and agents use MCP. All three work on the same Zekt account and the same data.
+---
+
+import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+You don't have to be a person clicking through a console to use Zekt. A developer can set up a
+service in the web console, a GitHub Actions workflow can send its events, and an AI agent can
+approve the access requests that come in. Each of them uses the way of working with Zekt that
+suits it, and all of them act on the **same Zekt account and the same data**.
+
+## Three ways in
+
+<CardGrid>
+	<Card title="Web console, for people" icon="laptop">
+		Sign in at [www.zekt.dev](https://www.zekt.dev) with GitHub. Everything is here: setting up
+		repositories and services, the Directory, access, deliveries, your account and billing.
+	</Card>
+	<Card title="GitHub Actions, for your workflows" icon="github">
+		Your workflows send events and start orchestrations with the
+		[Zekt Action](/zekt-docs/provider/zekt-action/). They need no secrets: the action signs in
+		with the workflow run's GitHub OIDC token.
+	</Card>
+	<Card title="MCP, for agents" icon="rocket">
+		AI agents and other non-personal workloads connect through the Model Context Protocol, with an
+		API token that a person creates for them. MCP is the preferred way for agents to work with Zekt.
+	</Card>
+</CardGrid>
+
+| | Web console | GitHub Actions | MCP |
+| --- | --- | --- | --- |
+| **For** | People | Workflows in repositories enabled on Zekt | AI agents and other non-personal workloads |
+| **Signs in with** | Your GitHub identity | The workflow run's GitHub OIDC token. No secrets to store | An API token (`zekt_…`) created under **Profile → API Access** |
+
+The [VS Code extension](/zekt-docs/operate/vscode-and-mcp/) connects to Zekt through MCP, with an
+API token, so it is an MCP client rather than a fourth way in.
+
+<Aside type="note" title="No public REST API">
+	Zekt has no public REST API today. For automation outside GitHub Actions, use
+	[MCP](/zekt-docs/operate/vscode-and-mcp/#mcp).
+</Aside>
+
+## One account, one set of data
+
+No channel keeps its own copy of anything. The console, your workflows and your agents all read
+and write the same account, so what one of them does, the others see:
+
+- **A subscription approved from an agent is the same subscription you see in the console.**
+  Subscribing, approving or denying an access request, revoking a subscriber, unsubscribing and
+  replaying an event give the same result, under the same rules, whether you do them in the
+  console or through MCP.
+- **Events and orchestrations sent by your workflows** appear in the console's delivery tracking
+  and under **Management → Orchestrations**, and an agent can read the same delivery status and
+  event history through MCP.
+
+So you can split the work the way that suits you: set things up in the console, let workflows do
+the sending, and hand routine decisions to an agent.
+
+## People and agents
+
+A **person** signs in to the web console with GitHub. A person is also who creates the API tokens
+that agents use, under **Profile → API Access**.
+
+An **agent** never signs in as a person. It uses an API token:
+
+- The token belongs to the **Zekt account**, not to the person who created it. What an agent does
+  with it is attributed to your account.
+- The token carries only the **scopes** you give it: `read`, `dispatch`, `replay` and `manage`.
+  An agent that only watches deliveries needs no more than `read`.
+- Each token has its own rate limit, and you can revoke it at any moment.
+
+Give each agent its own token, with only the scopes it needs, so you can see where each token is
+used and revoke one without affecting the others. See
+[API tokens](/zekt-docs/operate/vscode-and-mcp/#api-tokens).
+
+## What each channel does today
+
+The channels don't all offer every operation. Each does what fits the one using it:
+
+| Task | Web console | GitHub Actions | MCP |
+| --- | :---: | :---: | :---: |
+| Enable or disable a repository | ✓ | | |
+| Set up a provider service and its description | ✓ | | Create, set visibility, delete |
+| Offer a consumer service | ✓ | | |
+| Browse the Directory | ✓ | | Provider services |
+| Request access, subscribe, unsubscribe | ✓ | | ✓ |
+| Approve, deny or revoke access | ✓ | | ✓ |
+| Send events and payloads | | ✓ | |
+| Submit an orchestration | | ✓ | |
+| Follow an orchestration | ✓ | Its own run | |
+| Delivery status, event history, replay | ✓ | | ✓ |
+| Account, members, billing, API tokens, analytics | ✓ | | |
+
+- **Enabling a repository** stays in the console on purpose: it needs *your* GitHub identity, so a
+  person always does it.
+- **Set up services in the console.** A service created through MCP may need its details completed
+  in the console before it behaves like one set up there.
+- **Sending events** is done by your workflows, with the
+  [Zekt Action](/zekt-docs/provider/zekt-action/). Dispatching isn't available through MCP.
+
+For the full list of MCP tools, see [What you can do through MCP](/zekt-docs/operate/vscode-and-mcp/#what-you-can-do-through-mcp).
+
+## Next steps
+
+<CardGrid>
+	<LinkCard title="Set up MCP and API tokens" href="/zekt-docs/operate/vscode-and-mcp/" />
+	<LinkCard title="Send a payload with the Zekt Action" href="/zekt-docs/provider/zekt-action/" />
+	<LinkCard title="Core concepts" href="/zekt-docs/getting-started/concepts/" />
+</CardGrid>

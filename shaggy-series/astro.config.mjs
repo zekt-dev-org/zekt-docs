@@ -50,6 +50,7 @@ export default defineConfig({
 						{ label: 'What is Zekt?', slug: 'getting-started/what-is-zekt' },
 						{ label: 'Quickstart', slug: 'getting-started/quickstart' },
 						{ label: 'Core concepts', slug: 'getting-started/concepts' },
+						{ label: 'Ways to work with Zekt', slug: 'getting-started/ways-to-work' },
 						{ label: 'Sign up and sign in', slug: 'getting-started/sign-up' },
 					],
 				},
