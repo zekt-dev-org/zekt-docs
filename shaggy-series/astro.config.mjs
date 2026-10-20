@@ -94,7 +94,7 @@ export default defineConfig({
 						{ label: 'Audit log', slug: 'operate/audit-log' },
 						{ label: 'Your account', slug: 'operate/account' },
 						{ label: 'Members and Flock', slug: 'operate/members' },
-						{ label: 'VS Code, MCP and API keys', slug: 'operate/vscode-and-mcp' },
+						{ label: 'MCP and API tokens', slug: 'operate/vscode-and-mcp' },
 						{ label: 'Messages and notifications', slug: 'operate/messages' },
 						{ label: 'Reviews and abuse reports', slug: 'operate/reviews-and-reports' },
 						{ label: 'Support and feedback', slug: 'operate/support' },

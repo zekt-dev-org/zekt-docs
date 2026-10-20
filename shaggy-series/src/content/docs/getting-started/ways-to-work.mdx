@@ -33,9 +33,6 @@ suits it, and all of them act on the **same Zekt account and the same data**.
 | **For** | People | Workflows in repositories enabled on Zekt | AI agents and other non-personal workloads |
 | **Signs in with** | Your GitHub identity | The workflow run's GitHub OIDC token. No secrets to store | An API token (`zekt_…`) created under **Profile → API Access** |
 
-The [VS Code extension](/zekt-docs/operate/vscode-and-mcp/) connects to Zekt through MCP, with an
-API token, so it is an MCP client rather than a fourth way in.
-
 <Aside type="note" title="No public REST API">
 	Zekt has no public REST API today. For automation outside GitHub Actions, use
 	[MCP](/zekt-docs/operate/vscode-and-mcp/#mcp).

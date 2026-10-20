@@ -1,18 +1,13 @@
 ---
-title: VS Code, MCP and API keys
-description: Manage Zekt outside the web console with the VS Code extension or any MCP client, using scoped API tokens.
+title: MCP and API tokens
+description: Connect AI agents and other MCP clients to Zekt, using scoped API tokens.
 ---
 
 import { Aside, Steps } from '@astrojs/starlight/components';
 
-You manage Zekt in the web console at [www.zekt.dev](https://www.zekt.dev). You can also work with
-it from outside the console:
-
-- **[VS Code extension](#vs-code-extension)**: manage Zekt from your editor.
-- **[MCP](#mcp)**: connect AI assistants and other MCP clients to Zekt through the Model Context
-  Protocol.
-
-Both sign in with an **API token**. Programmatic access is through MCP. The REST endpoints the console
+You manage Zekt in the web console at [www.zekt.dev](https://www.zekt.dev). AI agents and other
+MCP clients work with it through the **[Model Context Protocol](#mcp)**, signing in with an
+**API token**. Programmatic access is through MCP. The REST endpoints the console
 uses aren't a public API. For how the console, GitHub Actions and MCP work on the same account, see
 [Ways to work with Zekt](/zekt-docs/getting-started/ways-to-work/).
 
@@ -31,11 +26,11 @@ Tokens** and **MCP Setup Docs**. API Access is shown to accounts that pay their 
 <Steps>
 
 1. Go to **Profile → API Access** and create a new token.
-2. Give it a name that says where it will be used, for example `vscode-laptop` or `release-pipeline`.
+2. Give it a name that says where it will be used, for example `triage-agent` or `release-pipeline`.
 3. Choose its **scopes** (see below).
 4. Choose an expiry: **30**, **90** (the default), **180** or **365 days**, or **No expiration**.
 5. Copy the token. **It's shown only once.** Store it in a secret store, such as GitHub Secrets or
-   your editor's secret storage.
+   your operating system's credential store.
 
 </Steps>
 
@@ -71,59 +66,6 @@ A token can create new tokens, but only with these limits:
 
 You can only create a token with **No expiration** while signed in to the console.
 
-### Tokens for Flock members
-
-A Shepherd account can create and revoke tokens on behalf of an accepted Disciple account. See
-[Members and Flock](/zekt-docs/operate/members/#flock-shepherd-and-disciple-accounts).
-
-## VS Code extension
-
-Install **Zekt — Cross-Org Event Dispatch** (`zekt-dev-org.zekt-mcp`) from the
-[VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp). It
-needs VS Code 1.95 or later.
-
-### Sign in
-
-<Steps>
-
-1. [Create an API token](#create-a-token) in **Profile → API Access**.
-2. In VS Code, run **Zekt: Sign In** (or **Zekt: Configure API Token**) and paste the token. There's no
-   browser sign-in.
-3. The extension checks the token. Your account must be active, with a payment method on file.
-
-</Steps>
-
-The token is kept in VS Code's secret storage, which uses your operating system's credential store.
-**Zekt: Sign Out** clears it, and offers to remove the MCP configuration.
-
-### MCP configuration
-
-After you sign in, the extension adds a `zekt` server to `.vscode/mcp.json` in your first workspace
-folder. It does this automatically (the `zekt.autoConfigureMcp` setting, on by default), or when you run
-**Zekt: Setup MCP Server Configuration**. Other servers already in the file are kept.
-
-<Aside type="danger" title="The MCP file holds your token in plain text">
-	`.vscode/mcp.json` contains your API token. The extension adds it to `.gitignore` only if a
-	`.gitignore` already exists. Make sure `.vscode/mcp.json` is git-ignored, and never commit it.
-</Aside>
-
-### Commands
-
-| When | Commands |
-| --- | --- |
-| Always | **Zekt: Configure API Token**, **Zekt: Setup MCP Server Configuration**, **Zekt: Open Dashboard** |
-| Signed out | **Zekt: Sign In**, **Zekt: Sign Up for Zekt** |
-| Signed in | **Zekt: Sign Out**, **Zekt: Check Delivery Status** (`Ctrl+Shift+Z S`), **Zekt: List Subscribers**, **Zekt: Browse Provider Directory**, **Zekt: Replay Event**, **Zekt: Event History**, **Zekt: Subscribe to Provider**, **Zekt: Account Summary**, **Zekt: Manage Workflows**, **Zekt: Manage Services**, **Zekt: Create Service**, **Zekt: List Pending Access Requests**, **Zekt: Browse Service Catalog**, **Zekt: List My Consumer Repos**, **Zekt: List My Subscriptions** |
-
-The Zekt sidebar has these views: **Account**, **Providers**, **Directory**, **Consumers**, **Recent
-Activity** and **Approve & Reject**. Right-click items to whitelist or blacklist a workflow, connect a
-workflow to a service, publish or unpublish a service and set its visibility, remove a service, revoke
-a subscriber, subscribe or unsubscribe, and approve or deny requests. The status bar shows whether
-you're connected.
-
-The extension can't send events. Events are sent only by the [Zekt Action](/zekt-docs/provider/zekt-action/)
-in GitHub Actions.
-
 ## MCP
 
 Zekt is a remote MCP server over Streamable HTTP. Each request is independent (stateless).
@@ -136,7 +78,7 @@ Zekt is a remote MCP server over Streamable HTTP. Each request is independent (s
    available to accounts that manage their own billing, not to Disciple accounts.
 2. Copy the server address from **Profile → API Access → MCP Setup Docs**.
 3. Add the server to your client, sending the token in an `Authorization: Bearer` header. Tokens in
-   the URL are refused. For VS Code or Cursor:
+   the URL are refused. For example, in an `mcp.json` file:
 
    ```json
    {
