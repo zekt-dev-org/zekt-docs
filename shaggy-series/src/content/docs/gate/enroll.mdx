@@ -1,0 +1,31 @@
+---
+title: "Step 1: Enroll a directory"
+description: Bind your Microsoft Entra directory to a GitHub organization on your Zekt account, and send the approval link to your Entra administrator.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Enrolling binds one Entra directory to one GitHub organization on your Zekt account. It's the first
+of [three setup steps](/zekt-docs/gate/overview/#set-it-up).
+
+**Who does it:** someone with the [**Owner** role](/zekt-docs/operate/members/#roles) on the Zekt
+account who is also an admin of the GitHub organization. One person must hold both.
+
+## Before you start
+
+Get your directory's **tenant ID** from your Entra administrator. In the Microsoft Entra admin
+center, it's under **Overview → Tenant ID**. A domain name isn't the same thing.
+
+## Enroll
+
+<Steps>
+
+1. On www.zekt-gate.dev, select **Start enrollment**.
+2. You continue on www.zekt.dev. Sign in, choose the Zekt account and the GitHub organization, and
+   accept the terms.
+3. Zekt Gate gives you a message to forward to your Entra administrator. It contains the approval
+   link for [step 2](/zekt-docs/gate/consent/).
+
+</Steps>
+
+Nothing changes in your Entra directory during this step.

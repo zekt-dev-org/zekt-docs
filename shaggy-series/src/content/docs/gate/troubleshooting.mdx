@@ -1,0 +1,79 @@
+---
+title: Zekt Gate troubleshooting and limits
+description: What each Zekt Gate approval screen, API response and application state means, what to do about it, and Zekt Gate's limits.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Approval screens
+
+These are the screens an Entra administrator can land on in
+[step 2](/zekt-docs/gate/consent/), by title.
+
+| Screen | What it means | What to do |
+| --- | --- | --- |
+| **Approval was not completed** | The approval was declined, or the account you signed in with can't grant admin consent in the directory. Nothing changed. | Sign in with an account that can grant tenant-wide admin consent, and follow the link again. |
+| **This link is no longer valid** | The link expired, or a newer link replaced it, for example after the tenant ID was changed in step 1. Nothing changed. | Ask the person who sent the link for a new one. |
+| **This took a little too long** | The approval page was open for more than 10 minutes. Nothing changed. | Follow the link again. |
+| **This could not be confirmed** | Zekt Gate couldn't confirm the approval with Microsoft, so nothing was connected. Most often, you signed in to a different directory from the one named in step 1. | Ask the person who sent the link to start again, and sign in to the directory named in step 1. |
+| **This directory is already in use** | The directory is already connected to a Zekt account. A directory can serve only one. Nothing changed. | Ask the person who sent the link to contact Zekt. |
+| **This enrollment has expired** | The enrollment the link belongs to is no longer active, so nothing was connected. | Start again from [step 1](/zekt-docs/gate/enroll/). |
+| **Zekt did not confirm this** | Your approval went through, but Zekt didn't answer in time. The connection may have completed. | **Don't try again.** Ask the person who sent the link to check with Zekt before anything else is started. |
+| **Zekt did not complete this** | Your approval went through, but Zekt didn't complete the connection, so nothing was connected. | Ask the person who sent the link to check with Zekt. |
+
+## API responses
+
+Response bodies are JSON.
+
+| Response | What it means | What to do |
+| --- | --- | --- |
+| `401` `{"decision":"refused"}` | Zekt Gate refused the call. No reason is given, on purpose. Possible causes: the token wasn't accepted, the application isn't on the account's list, the directory isn't enrolled, trust is stopped, the token belongs to a person (delegated) rather than an application, or the Zekt account isn't in good standing. | Check the application's row under **Applications** in the Zekt Gate App. The row shows the application's state; a refused call isn't recorded there. |
+| `403` `{"decision":"refused","reason":"role_required"}` | The token doesn't hold **Zekt Gate Caller**. | Grant `Gate.Caller` with admin consent, then get a **new** token. Tokens are cached for up to about an hour, and a token issued before the grant still has no role. |
+| `429` `{"decision":"refused"}` or `{"error":"rate_limited"}` | Too many calls. The response has a `Retry-After` header. | Wait the number of seconds in `Retry-After`. |
+| `404` `{"error":"service_not_found"}` | There's no such service, or it isn't one this directory can see. The answer is the same for both, on purpose. | [List the workflows](/zekt-docs/gate/api/#list-workflows) again and use an id from that list. Ids are opaque: don't build or guess them. If the service has gone from the list, it was removed or is no longer under the directory's GitHub organization. |
+| `404` `{"error":"not_enrolled"}` | Zekt no longer has this directory enrolled, for example after Zekt Gate was discontinued for it. | Someone with the Owner role on the Zekt account checks the directory in the Zekt Gate App. To use it again, enroll it again from [step 1](/zekt-docs/gate/enroll/). |
+| `503` `{"error":"unavailable"}` | Zekt didn't answer, or answered something Zekt Gate couldn't use. The response has a `Retry-After` header. | Try again after the number of seconds in `Retry-After`. |
+
+An empty list is a real answer: Zekt Gate never uses one to mean "unavailable".
+
+<Aside>
+Starting a run through Zekt Gate isn't available yet, so its responses aren't listed here.
+</Aside>
+
+## Application states in the Zekt Gate App
+
+Each application's row under **Applications** shows its state.
+
+| State | What it means | What to do |
+| --- | --- | --- |
+| **Not yet seen calling** | The application is on the list, but no call from it has reached Zekt Gate yet. | — |
+| *This application called, but it does not hold Zekt Gate Caller.* | The application called without the role. | Grant it `Gate.Caller` with admin consent, have it get a new token and call again, then select **Refresh**. A token issued before the grant still has no role. |
+| **Ready** | The application holds Zekt Gate Caller and is on the list. | Nothing else is needed on Zekt Gate's side. |
+
+## Workflows that aren't ready
+
+In the App's **Workflows** list, a **Not ready** row says why. New reasons can appear, so treat this
+as an open list. After a fix, select **Check again** on the row.
+
+| The App says | What to do |
+| --- | --- |
+| This workflow can't be started from outside GitHub. | Add `workflow_dispatch` to it. |
+| This workflow doesn't define its inputs, so Zekt Gate can't build a form for it. | Declare its inputs, with a type and description each. |
+| One or more inputs have no type or description. | Add both to every input. |
+| An input uses a type Zekt Gate doesn't accept. | Use `string`, `boolean`, `choice` or `number`. |
+| A choice input has no options. | List its options. |
+| This workflow has more inputs than GitHub allows. | Reduce them to 25. |
+| This service has no published schema. | Publish one at Zekt. |
+| Zekt doesn't allow this workflow to run. | Allow it at Zekt. |
+| This workflow is switched off in GitHub. | Enable it in GitHub. |
+| This workflow's repository is archived. | Unarchive it, or remove the service at Zekt. |
+| Zekt can't read this workflow right now. | Try again. Nothing is wrong with your schema. |
+| This workflow can't be started from here. | No fix is given: the App doesn't recognize the reason. |
+
+## Limits
+
+| Limit | Value |
+| --- | --- |
+| Applications on an account's list | Up to 50 |
+| Calls per application | About 30 a minute, then `429`. It's "about" because calls are counted per server, not globally. |
+| Approving in step 2 | A deadline set by Zekt. Once it passes, start again from step 1. |

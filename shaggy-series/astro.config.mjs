@@ -133,8 +133,15 @@ export default defineConfig({
 				{
 					label: 'Zekt Gate',
 					items: [
-						{ label: 'Set up Zekt Gate', slug: 'gate/set-up' },
+						{ label: 'What is Zekt Gate?', slug: 'gate/overview' },
+						{ label: '1. Enroll a directory', slug: 'gate/enroll' },
+						{ label: '2. Approve in Entra', slug: 'gate/consent' },
+						{ label: '3. Add your applications', slug: 'gate/applications' },
+						{ label: 'The Zekt Gate App', slug: 'gate/app' },
+						{ label: 'API', slug: 'gate/api' },
 						{ label: 'Permissions', slug: 'gate/permissions' },
+						{ label: 'Security', slug: 'gate/security' },
+						{ label: 'Troubleshooting and limits', slug: 'gate/troubleshooting' },
 					],
 				},
 			],

@@ -1,0 +1,104 @@
+---
+title: Zekt Gate security
+description: What Zekt Gate can and can't do in your directory, how to stop or resume trust, how to discontinue Zekt Gate, and what it keeps.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+## What Zekt Gate gets
+
+Zekt Gate gets only the [permissions](/zekt-docs/gate/permissions/) you grant in your own directory.
+It doesn't read your users, groups or directory roles, calls no Microsoft Graph API, and manages
+nothing in your directory.
+
+- Zekt Gate never stores tokens, and never logs or echoes them.
+- Every call is checked by Zekt Gate and by Zekt. If either can't tell whether the call is allowed,
+  it's refused.
+
+## Narrowing access needs little, widening needs everything
+
+This is deliberate: you can always cut access quickly, but giving it back takes every check.
+
+| Action | What it needs | Takes effect |
+| --- | --- | --- |
+| [Stop trusting the directory](#stop-trusting-a-directory) | Your Zekt sign-in, with the **Owner** role on the account. No directory sign-in and no Zekt Gate role. | Immediately |
+| [Remove an application](/zekt-docs/gate/app/#applications) | A current directory sign-in and the Owner role. No Zekt Gate role. | On the next request |
+| Withdraw admin consent | An Entra administrator, under **Enterprise applications → Zekt-Gate → Permissions** | — |
+| [Resume trust](#resume-trust) | A current directory sign-in, the **Zekt Gate Administrator** role, and the Owner role | Immediately |
+| [Add an application](/zekt-docs/gate/app/#applications) | A current directory sign-in, the Zekt Gate Administrator role, and the Owner role | On the next request |
+
+Zekt is asked about your Owner role at the moment you act. A **no** always refuses. If Zekt can't
+answer, the actions that narrow access (stopping trust, removing an application) still go ahead, and
+the actions that widen it (resuming trust, adding an application) are refused.
+
+## Stop trusting a directory
+
+Use this if the directory is compromised, or in any other emergency. It works even when you can't, or
+shouldn't, sign in to the directory.
+
+<Steps>
+
+1. In the [Zekt Gate App](/zekt-docs/gate/app/), open the directory's page and go to **Options**.
+2. Under **For a breach**, select **Emergency: stop trusting now**. There's no confirmation step.
+
+</Steps>
+
+- Zekt Gate refuses tokens from the directory immediately. The directory's status becomes
+  **Disconnected**, which in the App means trust was stopped, not that the directory was
+  disconnected at Zekt.
+- Within a few minutes, the GitHub organization connected to the directory is released at Zekt, so
+  it can be connected again.
+- Zekt is asked whether you still have the Owner role. If it says no, the stop is refused. If Zekt
+  can't answer, the stop still goes ahead.
+
+<Aside type="caution">
+Stopping trust doesn't stop the charge for the directory. To end it,
+[discontinue Zekt Gate](#discontinue-zekt-gate) for the directory.
+</Aside>
+
+## Resume trust
+
+Select **Resume trusting this directory** on the directory's page. You need a current directory
+sign-in, the Zekt Gate Administrator role in that directory, and Zekt must confirm that you have the
+Owner role. If Zekt can't answer, it's refused. It takes effect immediately.
+
+If the GitHub organization was released, connect it again at Zekt. The App links to **Connect the
+organisation at Zekt**.
+
+## Discontinue Zekt Gate
+
+The planned way to stop using Zekt Gate for a directory.
+
+<Steps>
+
+1. On the directory's page, under **Options**, select **Discontinue Zekt Gate**. A page explains who
+   does what.
+2. Select **Continue to Zekt to end the enrolment**, and end the enrollment at Zekt. To back out,
+   select **Keep this directory connected** instead.
+3. Withdraw the consent in your directory. **How to withdraw the consent** shows how. When it's done,
+   select **I have withdrawn the consent**.
+
+</Steps>
+
+Tokens are refused once Zekt confirms the disconnection. For an immediate stop, use
+[Emergency: stop trusting now](#stop-trusting-a-directory). To use Zekt Gate again, enroll again from
+[step 1](/zekt-docs/gate/enroll/).
+
+## What Zekt Gate keeps
+
+- **Call history:** per application, grouped per minute, kept for 90 days.
+- **The enrollment record:** who enrolled the directory at Zekt (their GitHub identity), the terms
+  they accepted, and when the directory was connected. Kept until a year and a month after the
+  enrollment ends.
+- **Changes to the applications list:** which application, when, and the GitHub identity of the
+  person who made the change. Kept on the same clock, counted from the end of the account's last
+  connected directory.
+- **Not the Entra administrator.** Zekt Gate never records who approved in your directory. It keeps
+  only the fact that consent was given, and when.
+
+## Sign-in lifetimes
+
+| Sign-in | Lasts |
+| --- | --- |
+| Directory sign-in in the Zekt Gate App | 15 minutes |
+| Zekt Gate App session | At most 4 hours |
