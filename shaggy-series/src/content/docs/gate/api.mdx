@@ -1,0 +1,119 @@
+---
+title: Zekt Gate API
+description: How your applications call Zekt Gate, the operations available today, and what each one returns.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+Your applications call Zekt Gate's API to check that Zekt Gate recognizes them, list workflows, and
+read a workflow's inputs. Set up the application first, in
+[step 3](/zekt-docs/gate/applications/).
+
+The token scope, and the URL for the recognition check, are on the application's row in the Zekt
+Gate App, under **How**.
+
+## Authentication
+
+- **Applications only.** Get an access token from your own Entra directory with the client
+  credentials flow, and send it as a bearer token. A token issued to a person is refused.
+- The application needs **Zekt Gate Caller** (`Gate.Caller`), and must be on the account's list
+  under **Applications** in the Zekt Gate App.
+- Tokens are cached for up to about an hour. After you grant a permission, get a new token: one
+  issued before the grant doesn't carry it.
+
+## Operations
+
+All three operations need Zekt Gate Caller and take no request body.
+
+### Check the application is recognized
+
+A check only: it doesn't start or change anything. Like every call, it's also checked at Zekt (the
+account must be in good standing). It's recorded in the call history in the Zekt Gate App.
+
+```json
+{"decision":"admitted"}
+```
+
+If the application isn't recognized, you get one of the
+[refusals](/zekt-docs/gate/troubleshooting/#api-responses).
+
+### List workflows
+
+Returns the services under the directory's GitHub organization, as Zekt reports them.
+
+```json
+{
+  "outcome": "listed",
+  "asOf": "<ISO-8601 time>",
+  "services": [
+    {
+      "id": "<opaque id>",
+      "workflowName": "<name>",
+      "serviceSlug": "<slug>",
+      "description": "<text>",
+      "providerAlias": "<alias>",
+      "switchedOn": false,
+      "launchable": true
+    }
+  ]
+}
+```
+
+- `serviceSlug`, `description` and `providerAlias` may be missing.
+- `id` is opaque. Use it as it is; don't build or guess one.
+- `switchedOn` and `launchable` are for starting workflows, which isn't available yet.
+- When `launchable` is `false`, the service also has `notLaunchableBecause`. Treat its values as an
+  open list: new ones can appear. Today's values are:
+
+  | Value | Meaning |
+  | --- | --- |
+  | `input_not_defined` | One or more inputs have no type or description. |
+  | `schema_not_published` | The service has no published schema. |
+  | `unrecognised` | A reason Zekt Gate doesn't know. |
+
+When Zekt has nothing for this directory, you get a real answer, not an error:
+
+```json
+{"outcome":"none_recorded","asOf":"<ISO-8601 time>"}
+```
+
+### Read a workflow's inputs
+
+Use an `id` from the list.
+
+```json
+{
+  "outcome": "described",
+  "asOf": "<ISO-8601 time>",
+  "launchable": true,
+  "inputs": [
+    {
+      "name": "<name>",
+      "type": "string",
+      "required": true,
+      "default": "<value>",
+      "options": ["<a>", "<b>"],
+      "description": "<text>"
+    }
+  ]
+}
+```
+
+- `type` is `string`, `boolean`, `choice` or `number`. `type`, `default`, `options` and
+  `description` may be missing. `options` appears for `choice` inputs.
+- `"inputs": []` means the workflow declares no inputs.
+- If `inputs` is missing entirely, Zekt couldn't read the workflow. Don't treat that as "no inputs".
+
+## In every response
+
+- `asOf` is when Zekt read the answer.
+- Fields that would be `null` are left out.
+- Responses aren't cached (`Cache-Control: no-store`).
+- Each response carries a correlation id. Quote it when you contact support.
+
+Errors are listed under [API responses](/zekt-docs/gate/troubleshooting/#api-responses).
+
+<Aside type="caution">
+Starting a workflow and reading a started run aren't available yet. They'll need
+**Zekt Gate Requestor** (`Gate.Requestor`).
+</Aside>

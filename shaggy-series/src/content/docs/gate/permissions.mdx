@@ -1,0 +1,70 @@
+---
+title: Zekt Gate permissions
+description: The Microsoft Entra permissions you grant Zekt Gate, what each one allows, what Gate never gets, and the checks held at Zekt.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+[Zekt Gate](https://www.zekt-gate.dev) is a separate product from Zekt Core. It lets your own
+applications call Zekt using identities from your Microsoft Entra directory. This page lists every
+permission involved: the ones you grant in Entra, and the checks Zekt holds on its side.
+
+## Granted in your Entra directory
+
+You grant all of these in your own directory.
+
+| Permission | Type | How it's granted | Allows |
+| --- | --- | --- | --- |
+| **Connect this directory to Zekt Gate** (`Enrollment.Connect`) | Delegated | Admin consent, at [step 2 of setup](/zekt-docs/gate/consent/). An ordinary user can't consent to it. | Adding Zekt Gate to your directory, as the **Zekt-Gate** enterprise application, so your directory can issue tokens for it. Nothing at runtime: no API call depends on it. |
+| **Sign in and read user profile** (Microsoft Graph `User.Read`) | Delegated | Admin consent, at step 2 of setup | Signing in. Microsoft requires it for any sign-in. Zekt Gate makes no Microsoft Graph calls. |
+| **Zekt Gate Administrator** (`Gate.Administrator`) | App role, for people | Assigned on the Zekt-Gate enterprise application, under **Users and groups** | The two actions that widen access: **adding an application** and **resuming trust**. |
+| **Zekt Gate Caller** (`Gate.Caller`) | App role, for applications | Application permission on your application's **API permissions**, with admin consent | The caller check, listing workflows, and reading a workflow's inputs. |
+| **Zekt Gate Requestor** (`Gate.Requestor`) | App role, for applications | Application permission on your application's **API permissions**, with admin consent | Starting a run and reading that run. `Gate.Caller` alone can't start anything. |
+
+After step 2, the two delegated permissions appear under **Enterprise applications → Zekt-Gate →
+Permissions**, with admin consent.
+
+You can assign `Gate.Administrator` to individual people on every Entra edition. Assigning it to a
+group needs Microsoft Entra ID P1 or P2. [Step 3: Add your applications](/zekt-docs/gate/applications/) shows
+where to grant the app roles.
+
+Removing an application and stopping trust don't need `Gate.Administrator`.
+
+<Aside type="caution">
+Starting runs through Zekt Gate isn't available yet. You can grant `Gate.Requestor` now, but no run
+can be started through Gate until it is.
+</Aside>
+
+### Only applications call the API
+
+The Gate API accepts **application tokens only**. Tokens issued to a person (delegated tokens) are
+refused. People use the Zekt Gate App; your applications use the API.
+
+### A permission alone isn't enough
+
+Every API call also needs all of these:
+
+- the application is on your account's list under **Applications** in the Zekt Gate App;
+- your directory is trusted (trust hasn't been stopped);
+- your Zekt account is entitled to use Zekt Gate.
+
+## What Zekt Gate doesn't get
+
+- No application permissions on Microsoft Graph.
+- No access to other users or groups in your directory.
+- No control of your directory. Gate never reads directory admin roles.
+
+## Checks held at Zekt
+
+Some checks aren't in Entra at all. Zekt makes them:
+
+- **Enrolling a directory** binds one Entra directory to one GitHub organization. You must be an
+  admin of that GitHub organization.
+- **Widening access** (adding an application, resuming trust) also needs the
+  [**Owner** role](/zekt-docs/operate/members/#roles) on your Zekt account, on top of
+  `Gate.Administrator`. Any other role is refused.
+
+## Names that don't exist
+
+You may see permission names such as `zekt.orchestrations.create` and `zekt.services.read` in older
+material. They were an early proposal and were never built. `Gate.Call` has been retired. The roles in the table above are the only ones Zekt Gate uses.

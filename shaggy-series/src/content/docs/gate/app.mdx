@@ -1,0 +1,118 @@
+---
+title: The Zekt Gate App
+description: Manage your connected directories, the applications allowed to call, call history and workflows in the Zekt Gate App.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+The Zekt Gate App, at www.zekt-gate.dev/app, is where you manage Zekt Gate once
+[setup](/zekt-docs/gate/overview/#set-it-up) is done.
+
+## Open the App
+
+<Steps>
+
+1. On www.zekt-gate.dev, sign in with Zekt from the header (**Sign in with**, with the Zekt logo).
+2. Open the account menu and choose **Zekt Gate App**.
+
+</Steps>
+
+**Zekt Gate App** appears in the menu once the account has at least one connected directory. Until
+then, the App tells you your enrollment is still in progress.
+
+**Your enrollments** lists each directory with its tenant ID and its status.
+
+### Directory statuses
+
+| Status | What it means |
+| --- | --- |
+| **Not started**, **Enrolling** | Enrollment is in progress. |
+| **Awaiting administrator** | A directory has been named, and is waiting on its administrator to [approve](/zekt-docs/gate/consent/). |
+| **Finishing at Zekt** | The directory proved itself, but Zekt hasn't finished connecting it. |
+| **Connected** | Tokens from this directory are accepted. |
+| **Disconnected** | Tokens are refused because you [stopped trusting](/zekt-docs/gate/security/#stop-trusting-a-directory) the directory. It doesn't mean the directory was disconnected at Zekt. |
+| **Suspended** | Tokens are refused because the Zekt account isn't in good standing. The fix is at Zekt, not in Zekt Gate. |
+| **Permission withdrawn** | Tokens are refused because Zekt Gate has recorded that the consent was withdrawn in your directory. |
+| **Unknown** | A state the App doesn't recognize. It's treated as stopped. |
+
+## A directory's page
+
+Without signing in to the directory, you see its status, whether its tokens are accepted, the GitHub
+organization it's connected to, and **Options**.
+
+### Sign in to the directory
+
+The configuration and call history are behind a sign-in to the directory itself.
+
+<Steps>
+
+1. Under **Prove you still administer this directory**, select **Sign in to this directory at
+   Microsoft**.
+2. A box then shows the directory, when you proved it, until when, and your **Zekt Gate role**:
+   **Administrator** or **None**.
+
+</Steps>
+
+- You don't need a Zekt Gate role to sign in.
+- The directory sign-in lasts 15 minutes. After that, sign in again.
+- Without the **Zekt Gate Administrator** role you can see the directory's configuration and remove
+  applications, but not add one or resume trust. Once someone
+  [assigns you the role](/zekt-docs/gate/applications/#choose-who-manages-zekt-gate), select
+  **Check again**.
+
+### Who called
+
+Calls to Zekt Gate, with **Date & time**, **App**, **Application (client) ID** and **Status**. Calls
+are grouped per minute and kept for 90 days.
+
+### Workflows
+
+One row per service under the directory's GitHub organization. Each row shows **Ready** or
+**Not ready**, and **Switched on at Zekt** or **Switched off at Zekt**.
+
+- **Ready** means Zekt reports that the workflow can be started from outside GitHub, every input is
+  declared with a type and a description, and the service has a published schema. Zekt Gate can
+  then build a form for it: **Preview its form** shows it.
+- **Not ready** shows a sentence saying why, and how to fix it. See
+  [workflows that aren't ready](/zekt-docs/gate/troubleshooting/#workflows-that-arent-ready).
+- **Check again** reads that one service from Zekt again. Use it after you've fixed something.
+
+**Ready** doesn't mean the workflow can be started today. Starting a workflow through Zekt Gate isn't
+available yet, and would also need the service to be **Switched on at Zekt**.
+
+### Applications
+
+The applications allowed to call Zekt Gate. The list belongs to your Zekt account and covers every
+directory the account has connected. It can hold up to 50 applications.
+
+Each row shows the application's name, its **Application (client) ID**, when it was **Registered**,
+and **Seen calling** or **Not yet seen calling**, with **Refresh** and **Remove** buttons.
+**Recent changes** lists additions and removals.
+
+To add an application, you need the Zekt Gate Administrator role and the
+[**Owner** role](/zekt-docs/operate/members/#roles) on the Zekt account:
+
+<Steps>
+
+1. Under **Add an application**, enter the **Application (client) ID**.
+2. Enter **A name you will recognise**, 1 to 64 characters.
+3. Select **Add application**.
+
+</Steps>
+
+To remove one, select **Remove**, then **Remove it**. The application can no longer call Zekt Gate
+from any directory on the account. It takes effect on the next request. It needs the Owner role on
+the Zekt account, but no Zekt Gate role.
+If it's the last application on the list, no application can call Zekt Gate afterwards.
+
+### Access
+
+Shows what the directory and each application may reach. It's for display only: it shows limits but
+doesn't apply them, and changing access isn't available yet.
+
+### Options
+
+- **Discontinue Zekt Gate** ends Zekt Gate for the directory.
+- **Emergency: stop trusting now**, under **For a breach**, stops trusting the directory at once.
+
+Both are explained in [Security](/zekt-docs/gate/security/).

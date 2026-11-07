@@ -1,0 +1,71 @@
+---
+title: "Step 3: Add your applications"
+description: Choose who manages Zekt Gate, grant your applications permission in Entra, and add them to Zekt Gate so they can call it.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+In this step you choose who manages Zekt Gate, and let your applications call it. It's the last of
+[three setup steps](/zekt-docs/gate/overview/#set-it-up), done after
+[step 2](/zekt-docs/gate/consent/).
+
+**Who does it:** usually the team that owns the applications, such as your developer-portal team.
+
+## Choose who manages Zekt Gate
+
+People who add applications or resume trust need the **Zekt Gate Administrator** role
+(`Gate.Administrator`, see [what it allows](/zekt-docs/gate/permissions/)).
+
+<Steps>
+
+1. In the Microsoft Entra admin center, open **Enterprise applications → Zekt-Gate → Users and
+   groups** and select **Add user/group**.
+2. Choose the people, and the role **Zekt Gate Administrator**.
+
+</Steps>
+
+You can assign individual people on every Entra edition. Assigning a group needs Microsoft Entra ID
+P1 or P2. In the Zekt Gate App, after signing in to the directory, an assigned person sees
+**Zekt Gate role** **Administrator**.
+
+## Give your application permission
+
+<Steps>
+
+1. If your application isn't registered in Entra yet, open **App registrations → New registration**.
+   Copy its **Application (client) ID** from **Overview**.
+2. Open **App registrations →** your application **→ API permissions → Add a permission → APIs my
+   organization uses → Zekt Gate → Application permissions**.
+3. Tick `Gate.Caller`, add the permission, then select **Grant admin consent**.
+
+</Steps>
+
+<Aside>
+**Zekt Gate** only appears under **APIs my organization uses** after step 2 is done.
+</Aside>
+
+## Add the application to Zekt Gate
+
+<Steps>
+
+1. Open the [Zekt Gate App](/zekt-docs/gate/app/), choose the directory and select
+   **Sign in to this directory at Microsoft**.
+2. Under **Applications → Add an application**, enter the **Application (client) ID** and
+   **A name you will recognise** (1 to 64 characters), then select **Add application**.
+
+</Steps>
+
+You need the Zekt Gate Administrator role and the [**Owner** role](/zekt-docs/operate/members/#roles)
+on the Zekt account to add an application.
+
+The list belongs to your Zekt account: an application on it can call from every directory the account
+has connected. It can hold up to 50 applications.
+
+The application shows **Not yet seen calling** until it makes its first call. Each application's row
+has a **How** section with the token scope and the URL for the recognition check.
+
+## Remove an application
+
+Select **Remove** next to the application in the same list, then **Remove it**. The application can
+no longer call Zekt Gate from any directory on the account. It takes effect on the next request. It
+needs the Owner role on the Zekt account, but no Zekt Gate role.

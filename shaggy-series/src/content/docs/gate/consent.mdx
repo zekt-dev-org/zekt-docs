@@ -1,0 +1,42 @@
+---
+title: "Step 2: Approve in Entra"
+description: An administrator of your Microsoft Entra directory approves Zekt Gate, which adds it to the directory as the Zekt-Gate enterprise application.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+In this step, an administrator of your Entra directory approves Zekt Gate. It's the second of
+[three setup steps](/zekt-docs/gate/overview/#set-it-up), and starts from the approval link sent after
+[step 1](/zekt-docs/gate/enroll/).
+
+**Who does it:** an administrator of the directory who can grant tenant-wide admin consent, such as a
+Global Administrator. They don't need a Zekt account. Microsoft, not Zekt Gate, decides who can grant
+that consent; so far, Zekt Gate has been tested only with a Global Administrator.
+
+## Approve
+
+<Steps>
+
+1. Open the approval link and sign in as an administrator of the directory named in step 1.
+2. The consent screen lists two permissions: **Connect this directory to Zekt Gate** and
+   **Sign in and read user profile**. Select **Accept**.
+3. Zekt Gate now appears in the Microsoft Entra admin center under **Enterprise applications** as
+   **Zekt-Gate**.
+
+</Steps>
+
+[Permissions](/zekt-docs/gate/permissions/) explains what each of the two permissions allows.
+
+<Aside>
+The approval link has a deadline set by Zekt. Once it passes, the enrollment has to start again from
+step 1. If the approval doesn't go through, see
+[approval screens](/zekt-docs/gate/troubleshooting/#approval-screens).
+</Aside>
+
+## Withdraw consent
+
+To withdraw consent later, open **Enterprise applications → Zekt-Gate → Permissions → Admin consent**.
+
+## Next
+
+[Step 3: Add your applications](/zekt-docs/gate/applications/).

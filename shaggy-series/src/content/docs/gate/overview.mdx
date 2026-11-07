@@ -1,0 +1,78 @@
+---
+title: What is Zekt Gate?
+description: Zekt Gate lets systems that sign in with Microsoft Entra ID, such as a developer portal, use Zekt without a GitHub identity.
+---
+
+import { Aside, Card, CardGrid } from '@astrojs/starlight/components';
+
+[Zekt Gate](https://www.zekt-gate.dev) is a separate product from Zekt Core. It's for companies whose
+developer portals, internal tools and services sign in with Microsoft Entra ID, a Backstage portal
+being the typical case, and that want to use Zekt from them.
+
+Zekt Core's own identity is GitHub, which suits GitHub Actions and the
+[Zekt Action](/zekt-docs/provider/zekt-action/). Zekt Gate lets your Entra-based systems reach Zekt
+without a GitHub identity.
+
+## What it does
+
+<CardGrid>
+	<Card title="Trusts your directory" icon="approve-check">
+		Accepts tokens issued by your own Entra directory, once the directory is enrolled and an
+		administrator has approved Zekt Gate in it.
+	</Card>
+	<Card title="Lets your applications call Zekt" icon="rocket">
+		The applications you list call Zekt through Zekt Gate, with the
+		[permissions](/zekt-docs/gate/permissions/) you grant them in your own directory.
+	</Card>
+	<Card title="Zekt Gate App" icon="laptop">
+		At www.zekt-gate.dev/app: your connected directories, the applications allowed to call, who
+		called, stopping and resuming trust, and a Workflows list read from Zekt.
+	</Card>
+</CardGrid>
+
+<Aside type="caution">
+Starting a workflow through Zekt Gate isn't available yet. Today, an application can check that Zekt
+Gate recognizes it, list workflows, and read a workflow's inputs.
+</Aside>
+
+## What it doesn't do
+
+- **It isn't a second orchestration platform.** Services, the Directory, orchestration, billing and
+  your account stay in Zekt Core. Zekt Gate is a thin entry point in front of it.
+- **It doesn't replace GitHub Actions or the Zekt Action.** Those keep working as they are.
+- **It has no login of its own and creates no Zekt accounts.** You sign in through Zekt (with
+  GitHub), then to your directory.
+- **It doesn't reach into your directory.** It doesn't read your users, groups or directory roles,
+  calls no Microsoft Graph API, holds no application permissions in your directory, and doesn't
+  manage anything there.
+- **People can't call the API with their own tokens.** Only applications can.
+
+## How it relates to Zekt Core
+
+- One Entra directory connects to one GitHub organization, and is held by one Zekt account. The
+  Workflows list shows the services under that organization, as Zekt reports them.
+- Every call is checked twice: by Zekt Gate (the directory is trusted, the application is listed, the
+  permission is held) and by Zekt (the account is in good standing). Both must say yes. If either
+  can't tell, the call is refused.
+
+## Before you start
+
+You need:
+
+- a Zekt account, and one person who both has the [**Owner** role](/zekt-docs/operate/members/#roles)
+  on it and is an admin of the GitHub organization the directory will connect to;
+- a Microsoft Entra ID directory, and an administrator of it who can grant tenant-wide admin consent;
+- for anything to show under **Workflows**, services under that GitHub organization. An empty list
+  still shows that the connection works.
+
+## Set it up
+
+Setup takes three steps, done in order. Each is usually done by a different person.
+
+| Step | Who does it | Where |
+| --- | --- | --- |
+| [1. Enroll a directory](/zekt-docs/gate/enroll/) | Someone with the Owner role on the Zekt account who is also an admin of the GitHub organization | www.zekt-gate.dev, then www.zekt.dev |
+| [2. Approve in Entra](/zekt-docs/gate/consent/) | An administrator of your Entra directory. They don't need a Zekt account. | Microsoft Entra admin center |
+| [3. Add your applications](/zekt-docs/gate/applications/) | The team that owns the applications that will call Zekt Gate | Microsoft Entra admin center and the Zekt Gate App |
+
+In your directory, Zekt Gate appears as the enterprise application **Zekt-Gate**, with a hyphen.
