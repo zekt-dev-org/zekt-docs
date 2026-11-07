@@ -1,0 +1,100 @@
+---
+title: Set up Zekt Gate
+description: Connect your Microsoft Entra directory to Zekt Gate in three steps, each usually done by a different person.
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+Setting up [Zekt Gate](https://www.zekt-gate.dev) takes three steps, done in order. Each is usually
+done by a different person.
+
+| Step | Who does it | Where |
+| --- | --- | --- |
+| [1. Enroll](#1-enroll-your-zekt-account) | Someone with the [**Owner** role](/zekt-docs/operate/members/#roles) on the Zekt account who is also an admin of the GitHub organization | www.zekt-gate.dev, then www.zekt.dev |
+| [2. Consent](#2-consent-in-your-entra-directory) | An administrator of your Entra directory who can grant tenant-wide admin consent. They don't need a Zekt account. | Microsoft Entra admin center |
+| [3. Register applications](#3-register-your-applications) | The team that owns the applications that will call Zekt Gate | Microsoft Entra admin center and the Zekt Gate App |
+
+## Before you start
+
+Find your directory's **tenant ID**: in the Microsoft Entra admin center, open **Overview** and copy
+**Tenant ID**. Step 1 asks for it. A domain name isn't the same thing.
+
+## 1. Enroll your Zekt account
+
+Enrolling binds one Entra directory to one GitHub organization.
+
+<Steps>
+
+1. On www.zekt-gate.dev, select **Start enrollment**.
+2. You continue on www.zekt.dev. Sign in, choose the Zekt account and the GitHub organization, and
+   accept the terms.
+3. Zekt Gate gives you a message to forward to your Entra administrator. It contains the approval
+   link for step 2.
+
+</Steps>
+
+Nothing changes in your Entra directory during this step.
+
+## 2. Consent in your Entra directory
+
+<Steps>
+
+1. Open the approval link and sign in as an administrator of the directory.
+2. The consent screen lists two permissions: **Connect this directory to Zekt Gate** and
+   **Sign in and read user profile**. Select **Accept**.
+3. Zekt Gate now appears in the Microsoft Entra admin center under **Enterprise applications** as
+   **Zekt-Gate**.
+
+</Steps>
+
+To withdraw consent later, open **Enterprise applications → Zekt-Gate → Permissions → Admin consent**.
+
+## 3. Register your applications
+
+### Choose who manages Zekt Gate
+
+People who add applications or resume trust need the `Gate.Administrator` role
+([what it allows](/zekt-docs/gate/permissions/)).
+
+<Steps>
+
+1. In the Microsoft Entra admin center, open **Enterprise applications → Zekt-Gate → Users and
+   groups** and select **Add user/group**.
+2. Choose the people, and the role **Zekt Gate Administrator**.
+
+</Steps>
+
+You can assign individual people on every Entra edition. Assigning a group needs Microsoft Entra ID
+P1 or P2. In the Zekt Gate App, an assigned person sees **Zekt Gate role: Administrator** on the
+directory screen.
+
+### Give your application permission
+
+<Steps>
+
+1. If your application isn't registered in Entra yet, open **App registrations → New registration**.
+   Copy its **Application (client) ID** from **Overview**.
+2. Open **App registrations →** your application **→ API permissions → Add a permission → APIs my
+   organization uses → Zekt Gate → Application permissions**.
+3. Tick `Gate.Caller`, add the permission, then select **Grant admin consent**.
+
+</Steps>
+
+<Aside>
+**Zekt Gate** only appears under **APIs my organization uses** after step 2 is done.
+</Aside>
+
+### Add the application to Zekt Gate
+
+<Steps>
+
+1. Open the Zekt Gate App at www.zekt-gate.dev/app, choose the directory and select
+   **Sign in to this directory**.
+2. Open **Applications**, then paste the application (client) ID and give it a name.
+
+</Steps>
+
+The application shows **Not yet seen calling** until it makes its first call.
+
+To remove an application, select **Remove** next to it in the same list. It takes effect on the next
+request.

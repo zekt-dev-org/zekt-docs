@@ -130,6 +130,13 @@ export default defineConfig({
 						{ label: 'Glossary', link: 'https://www.zekt.dev/zekt-terminology.html', attrs: { target: '_blank' } },
 					],
 				},
+				{
+					label: 'Zekt Gate',
+					items: [
+						{ label: 'Set up Zekt Gate', slug: 'gate/set-up' },
+						{ label: 'Permissions', slug: 'gate/permissions' },
+					],
+				},
 			],
 		}),
 	],

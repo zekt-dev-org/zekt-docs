@@ -49,7 +49,13 @@ The only two inputs are:
 2. **fact briefs** sent by a zektMainWeb session, checked against the code. Facts tagged unverified
    in a brief are not published as fact.
 
-Where a fact is missing, ask the zektMainWeb side; don't infer it. Anything not yet backed by a
+**Zekt Gate pages** (owner decision, 2026-11-07) also take fact briefs sent by a zekt-gate session,
+checked against Gate's code, and, once Gate keeps one, live entries in Gate's own release-entry
+file, with the same "is it live" test. These sources apply to the Zekt Gate pages only; Core facts
+still come only from zektMainWeb. Nothing is read from the zekt-gate repository directly: it all
+arrives in a brief.
+
+Where a fact is missing, ask the zektMainWeb side (or the zekt-gate side, for Gate); don't infer it. Anything not yet backed by a
 release entry or a brief is "awaiting brief" and must not ship as fact. Say so in the PR description.
 
 ### What may be read from zektMainWeb
@@ -69,7 +75,9 @@ The allow-list is enforced by these instructions, not by access control. Follow 
   into pages drift silently.
 - **Never publish** Azure resource names, endpoints, environment names, settings, tokens or secrets,
   security/auth internals beyond what a customer needs to act, billing mechanics, or incident detail.
-- Zekt Gate (zekt-gate.dev) is a separate product; keep it out of the Core docs.
+- Zekt Gate (zekt-gate.dev) is a separate product. Document it only in the **Zekt Gate** sidebar
+  group (`shaggy-series/src/content/docs/gate/`); keep it out of the Core pages, and don't present
+  Gate features as part of Zekt Core.
 
 ### Terminology
 
