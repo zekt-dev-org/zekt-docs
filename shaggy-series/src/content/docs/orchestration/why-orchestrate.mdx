@@ -83,11 +83,22 @@ step's output:
 [Orchestrate several services](/zekt-docs/orchestration/overview/) shows the full workflow, the plan
 fields and the result event.
 
+## Services that orchestrate further
+
+A service you call can itself orchestrate other services, up to 5 levels below your orchestration.
+You see that it did, how many orchestrations it started and how they went. Their steps and details
+stay with the service owner. A failed nested orchestration fails the step that started it. See
+[nested orchestrations](/zekt-docs/orchestration/overview/#nested-orchestrations).
+
+The console's Overview draws every orchestration, nested ones included:
+
+![The Orchestrations Overview graph: two requesting runs fanned out into several orchestrations, steps that orchestrated onwards into nested orchestrations, and orchestrations with step conditions](../../../assets/orchestration-overview-graph.png)
+
 ## Good to know
 
 - The requesting repository is [enabled as a provider](/zekt-docs/provider/enable-repository/), and
   your account has an approved subscription to each service in the plan.
-- The account that starts the orchestration pays for all of it. See
+- The account that starts the orchestration pays for all of it, nested orchestrations included. See
   [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
 - For the other limits, see [Limits](/zekt-docs/orchestration/overview/#limits).
 
