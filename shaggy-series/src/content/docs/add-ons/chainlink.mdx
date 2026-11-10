@@ -9,6 +9,23 @@ Normally a repository is either a provider or a consumer. **Chainlink** lets one
 both: it receives events from upstream services and sends its own events downstream. That way,
 events can chain across repositories: A → B → C, across organizations if needed.
 
+## Who does what in a chain
+
+| Link | What it is | Needs Chainlink? |
+| --- | --- | --- |
+| **First** (A) | An ordinary [provider service](/zekt-docs/provider/workflows-and-services/). Its workflow sends an event with the [Zekt Action](/zekt-docs/provider/zekt-action/), exactly as without a chain. | No |
+| **Middle** (B) | A **relay**: it receives the event from the link before it, decides what to pass on, and sends its own event to the next link. It's a consumer and a provider at once. | Yes |
+| **Last** (C) | An ordinary consumer that [receives events](/zekt-docs/consumer/receive-events/) and doesn't send any further. | No |
+
+So only the links in the middle are Chainlink repositories. A relay usually does one of three things
+with what it receives:
+
+- **forwards** it as it is;
+- **reduces** it, removing information the next link shouldn't get;
+- **enriches or transforms** it into what the next step needs.
+
+[Forward, reduce or enrich](#forward-reduce-or-enrich) shows each one.
+
 ## Requirements
 
 Your account needs the **Both** persona. Otherwise the Chainlink sidebar item is hidden, and
@@ -63,6 +80,36 @@ Then:
   branch.
 - The downstream `correlationId` belongs to the relay's run.
 
+### The first link
+
+The chain starts with an ordinary provider workflow. Nothing in it is specific to Chainlink: its
+event type is what the first relay listens for.
+
+```yaml
+name: Build
+on:
+  push:
+    branches: [main]
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "build and push the image here"
+      - uses: zekt-dev-org/zekt-action@v3
+        with:
+          event-type: build-complete
+          payload: |
+            {
+              "image": "ghcr.io/acme/web:${{ github.sha }}",
+              "commit": "${{ github.sha }}",
+              "requested_by": "${{ github.actor }}"
+            }
+```
+
 ### A relay workflow
 
 Before you start:
@@ -103,6 +150,42 @@ jobs:
 	triggered it. Without `run-name` set to `client_payload.zekt.dispatch_id`, the relay counts as the
 	start of a new chain.
 </Aside>
+
+### Forward, reduce or enrich
+
+The relay decides what goes downstream in its **Build downstream payload** step. Swap that step's
+`jq` line for the one you need. Each reads the inbound payload from `INBOUND`, as in the workflow
+above.
+
+**Forward as is**: the next link gets the same data.
+
+```bash
+payload=$(jq -c . <<<"$INBOUND")
+```
+
+**Reduce**: remove what the next link shouldn't see, such as who requested the build.
+
+```bash
+payload=$(jq -c 'del(.requested_by)' <<<"$INBOUND")
+```
+
+**Enrich or transform**: reshape the data for the next step, and add what this link knows.
+
+```bash
+payload=$(jq -c --arg env "staging" '{image: .image, environment: $env, approved: true}' <<<"$INBOUND")
+```
+
+Whichever you choose:
+
+- The inbound payload isn't forwarded unless you put it in the new payload. Zekt doesn't change it on
+  the way.
+- Pass the inbound payload to your script through `env`, as above, rather than writing
+  `${{ github.event.client_payload… }}` inside `run:`. Its content then can't be run as part of the
+  script.
+- `zekt.payload` is `null` when the link before sent none. If that link uses
+  [Shield](/zekt-docs/add-ons/shield/), it's the encrypted envelope, not the data:
+  [decrypt it](/zekt-docs/add-ons/shield/#decrypt-in-your-workflow) before you reduce or reshape it.
+- [Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard) still scans what the relay sends.
 
 ## Hop limit
 
