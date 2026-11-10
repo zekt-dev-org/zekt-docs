@@ -1,21 +1,26 @@
 ---
 title: Ways to work with Zekt
-description: People use the web console, workflows use GitHub Actions, and agents use MCP. All three work on the same Zekt account and the same data.
+description: People use the web console or the VS Code extension, workflows use GitHub Actions, and agents use MCP. All four work on the same Zekt account and the same data.
 ---
 
 import { Aside, Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 You don't have to be a person clicking through a console to use Zekt. A developer can set up a
-service in the web console, a GitHub Actions workflow can send its events, and an AI agent can
-approve the access requests that come in. Each of them uses the way of working with Zekt that
+service in the web console or from VS Code, a GitHub Actions workflow can send its events, and an AI
+agent can approve the access requests that come in. Each of them uses the way of working with Zekt that
 suits it, and all of them act on the **same Zekt account and the same data**.
 
-## Three ways in
+## Four ways in
 
 <CardGrid>
 	<Card title="Web console, for people" icon="laptop">
 		Sign in at [www.zekt.dev](https://www.zekt.dev) with GitHub. Everything is here: setting up
 		repositories and services, the Directory, access, deliveries, your account and billing.
+	</Card>
+	<Card title="VS Code extension, for developers" icon="vscode">
+		Most of what the web console offers, from your editor. The
+		[Zekt extension for VS Code](https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp)
+		works with Zekt over MCP.
 	</Card>
 	<Card title="GitHub Actions, for your workflows" icon="github">
 		Your workflows send events and start orchestrations with the
@@ -28,10 +33,10 @@ suits it, and all of them act on the **same Zekt account and the same data**.
 	</Card>
 </CardGrid>
 
-| | Web console | GitHub Actions | MCP |
-| --- | --- | --- | --- |
-| **For** | People | Workflows in repositories enabled on Zekt | AI agents and other non-personal workloads |
-| **Signs in with** | Your GitHub identity | The workflow run's GitHub OIDC token. No secrets to store | An API token (`zekt_…`) created under **Profile → API Access** |
+| | Web console | VS Code extension | GitHub Actions | MCP |
+| --- | --- | --- | --- | --- |
+| **For** | People | Developers working in VS Code | Workflows in repositories enabled on Zekt | AI agents and other non-personal workloads |
+| **Signs in with** | Your GitHub identity | Connects over MCP. See its [Marketplace page](https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp) | The workflow run's GitHub OIDC token. No secrets to store | An API token (`zekt_…`) created under **Profile → API Access** |
 
 <Aside type="note" title="No public REST API">
 	Zekt has no public REST API today. For automation outside GitHub Actions, use
@@ -40,8 +45,8 @@ suits it, and all of them act on the **same Zekt account and the same data**.
 
 ## One account, one set of data
 
-No channel keeps its own copy of anything. The console, your workflows and your agents all read
-and write the same account, so what one of them does, the others see:
+No channel keeps its own copy of anything. The console, the VS Code extension, your workflows and
+your agents all read and write the same account, so what one of them does, the others see:
 
 - **A subscription approved from an agent is the same subscription you see in the console.**
   Subscribing, approving or denying an access request, revoking a subscriber, unsubscribing and
@@ -97,10 +102,12 @@ The channels don't all offer every operation. Each does what fits the one using 
   [Zekt Action](/zekt-docs/provider/zekt-action/). Dispatching isn't available through MCP.
 
 For the full list of MCP tools, see [What you can do through MCP](/zekt-docs/operate/vscode-and-mcp/#what-you-can-do-through-mcp).
+The VS Code extension works over MCP and isn't listed separately here yet.
 
 ## Next steps
 
 <CardGrid>
+	<LinkCard title="Get the Zekt extension for VS Code" href="https://marketplace.visualstudio.com/items?itemName=zekt-dev-org.zekt-mcp" />
 	<LinkCard title="Set up MCP and API tokens" href="/zekt-docs/operate/vscode-and-mcp/" />
 	<LinkCard title="Send a payload with the Zekt Action" href="/zekt-docs/provider/zekt-action/" />
 	<LinkCard title="Core concepts" href="/zekt-docs/getting-started/concepts/" />
