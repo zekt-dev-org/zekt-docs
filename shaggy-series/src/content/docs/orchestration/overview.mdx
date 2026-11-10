@@ -102,6 +102,8 @@ Each step:
 | `depends_on` | | A list of `step_id`s that must finish first. |
 | `timeout_minutes` | | 1–1440, default 60. See [Timeouts](#timeouts-and-failures). |
 | `input_schema_version` | | A semantic version of the service's input schema. |
+| `condition` | | `true` or `false`, already worked out by your workflow. `false` leaves the step out. See [step conditions](#step-conditions). |
+| `condition_description` | | Up to 200 characters, shown beside the condition in the console. Display only, and only allowed on a step with a `condition`. |
 
 **Sequential:** each step waits for the previous one, unless it sets `depends_on`. **Parallel:**
 every step whose dependencies are met starts at once. Plans with a dependency cycle are refused.
@@ -122,6 +124,62 @@ Write `$zekt{{ steps.<step_id>.outputs.<field> }}` in a step's `input`.
   *Dispatch error: Template reference to '…' failed: …*
 - To make a step fail at dispatch when it references an output field the service hasn't declared, set
   `strict_output_schema_resolution: true` in the plan.
+
+### Step conditions
+
+Give a step a `condition` to leave it out of a run. Your workflow works out the value; Zekt never
+evaluates an expression. Write the expression **without quotes** inside `payload: |`, so GitHub turns
+it into a JSON `true` or `false`:
+
+```yaml
+          payload: |
+            {
+              "default_service_owner": "platform-team",
+              "services": [
+                {
+                  "step_id": "create-rg",
+                  "service_slug": "new-resource-group",
+                  "condition": ${{ inputs.region == 'westeurope' }},
+                  "condition_description": "Only in West Europe",
+                  "input": { "region": "westeurope" }
+                }
+              ]
+            }
+```
+
+- **`true`, or no `condition`:** the step runs as before. A plan without conditions behaves exactly as
+  it always did.
+- **`false`:** the step is **excluded**. It's never sent to the service, and costs nothing.
+- **Steps that depend on it are excluded too**, and so on down the chain. A step depends on another
+  if it lists it in `depends_on`, or reads its outputs with
+  `$zekt{{ steps.<step_id>.outputs.<field> }}`, even without `depends_on`.
+- **Excluded isn't a failure.** An orchestration whose steps all completed or were excluded ends
+  `completed`. If every step is excluded, the orchestration completes at once and nothing is sent to
+  any service, but the [result event](#the-result-event) is still sent.
+- **In `sequential` mode**, a step without its own `depends_on` waits for the nearest earlier step
+  that isn't excluded. For example, in *build → scan → ship* with scan's condition `false`, build
+  runs, then ship.
+
+<Aside type="caution">
+	Don't quote the expression. `"condition": "${{ … }}"` arrives as the text `"false"`, and the whole
+	orchestration is refused. An expression that renders to nothing (`"condition": ,`) makes the
+	payload invalid JSON; zekt-action 3.3.0 says so in its error.
+</Aside>
+
+Every step is checked when you submit, excluded or not: an excluded step naming a service you can't
+call still refuses the whole plan. Excluded steps also count towards the 20-step limit.
+
+With `wait: true`, read each step's final state from the action's `step_<step_id>_status` output. An
+excluded step sets no `step_<step_id>_outputs_*` outputs. See
+[Zekt Action outputs](/zekt-docs/reference/zekt-action/#outputs).
+
+Conditions can't do these:
+
+- Zekt doesn't evaluate expressions. The value must already be `true` or `false` when you submit.
+- A condition can't use an earlier step's outputs.
+- No step runs when a step it depends on was excluded or failed. There's nothing like GitHub's
+  `if: always()`.
+- There's no condition on the whole orchestration. Use GitHub's own `if:` on the step that submits it.
 
 ## The result event
 
@@ -151,19 +209,37 @@ jobs:
 `completed_steps`, `completed_at`, `failed_at_step`, `error_message` and `steps` (each with
 `step_id`, `service_slug`, `status` and `outputs`).
 
+A step that had a [condition](#step-conditions), or was excluded, also carries:
+
+| Field | Value |
+| --- | --- |
+| `condition` | `true` or `false`. `null` on a step excluded because of another step. |
+| `condition_description` | The step's description, if it set one. |
+| `exclusion_reason` | `condition_false` when its own condition was `false`, even if an earlier step was excluded too. `dependency_excluded` when it was excluded because a step it depends on was. |
+| `excluded_by` | For `dependency_excluded`: the step whose condition caused it. |
+
+An excluded step has no `outputs`. A step without a condition that wasn't excluded has exactly the
+fields it always had.
+
+`completed_steps` counts only the steps that ran, so it can be lower than `total_steps` on a
+`completed` orchestration. The result event has no count of excluded steps: count the steps whose
+`status` is `excluded`.
+
 ## Timeouts and failures
 
 - `timeout_minutes` limits how long Zekt waits for the service's run to **start**. A step that
   hasn't started in time becomes `timed_out`, and so does the orchestration. Once a run has started,
   GitHub's result decides the outcome.
 - A failed step fails the orchestration. Steps that haven't started become `skipped`. Parallel steps
-  already running continue.
+  already running continue. Steps that were already excluded stay `excluded`.
+- Keep the two apart: **skipped** means the step never ran because the orchestration failed, timed
+  out or was cancelled. **Excluded** means a [condition](#step-conditions) left it out.
 - If a subscription is revoked mid-way, the next step that needs it fails: *The subscription to
   service '…' is no longer active, so this step was not dispatched. Subscribe again to run it.*
 
 | Step states | Orchestration states |
 | --- | --- |
-| pending, waiting, dispatching, running, completed, failed, skipped, timed_out | pending, running, completed, failed, timed_out, cancelled |
+| pending, waiting, dispatching, running, completed, failed, skipped, timed_out, excluded | pending, running, completed, failed, timed_out, cancelled |
 
 ## Warnings
 
@@ -181,10 +257,15 @@ Any refusal when you submit refuses the whole orchestration:
 - *This account cannot start new orchestrations: &lt;reason&gt;. Resolve billing to continue.* The reason
   is *Account suspended: …*, *Account has an open payment dispute* or *Grace period ended without
   payment*. See [billing](/zekt-docs/billing/how-billing-works/#when-a-payment-fails).
+- *Step '&lt;id&gt;' has an invalid condition: expected true or false, got a string. Write the expression
+  unquoted, for example "condition": `${{ inputs.region == 'westeurope' }}`.* Instead of *a string*,
+  it can say *a number*, *null*, *an object* or *an array*. The usual cause is a quoted expression.
+- *Step '&lt;id&gt;' has a condition_description but no condition.*
+- *Step '&lt;id&gt;' condition_description is &lt;n&gt; characters; the maximum is 200.*
 
 ## Limits
 
-- 20 steps per orchestration.
+- 20 steps per orchestration, excluded steps included.
 - 5 orchestrations running at once per account by default. Contact support to raise it.
 - Nesting depth 5. An orchestration can't call back into a repository already in its chain.
 - In nested orchestrations, a failed child fails the parent's step, and cancelling a parent cancels its
@@ -210,3 +291,17 @@ Go to **Management → Orchestrations**:
 As the requester, you see each service as owner/slug, with its status, timing, errors and outputs.
 Run links for service steps are visible only to the service owner. The service owner sees the
 requesting repository and the run links of its own steps.
+
+Steps with [conditions](#step-conditions):
+
+- A step with a condition shows a **?** badge: green when the step was included, red when it was
+  excluded. Red means excluded, never failed: the step itself is drawn grey and dotted, as not run.
+  The badge's tooltip shows the value and its type, for example `false · Boolean`, then the
+  description.
+- A step excluded because of another step has no badge. Its tooltip names the step that excluded
+  it.
+- **Orchestration Processing** has an `excluded` filter. A finished orchestration's progress reads
+  like *1/3 steps · 2 excluded*.
+- A service owner never sees an excluded step of someone else's orchestration, in **Overview**
+  (*As Service Owner*), **Orchestration Processing** or **Service Invocations**. It was never sent
+  to them.
