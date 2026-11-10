@@ -27,10 +27,25 @@ No input is strictly required, but some are needed depending on what you do.
 | `status` | When sending an event (not with `orchestrate: true`) | `success` when the call succeeded. |
 | `execution_id` | `orchestrate: true` | The orchestration's ID. |
 | `execution_status` | `orchestrate: true` and `wait: true` | `completed`, `failed` or `timed_out`. |
-| `step_<step_id>_outputs_<field>` | `orchestrate: true` and `wait: true` | One output per step output field. |
+| `step_<step_id>_outputs_<field>` | `orchestrate: true` and `wait: true` | One output per step output field. An [excluded](/zekt-docs/orchestration/overview/#step-conditions) step sets none. |
+| `step_<step_id>_status` | `orchestrate: true` and `wait: true` | Each step's final state, such as `completed`, `excluded` or `failed`. Set for every step. |
+| `excluded_steps` | `orchestrate: true` and `wait: true` | The number of excluded steps, `0` when none. |
 
 Output values are strings. An object value comes through unusable, so have services return
 scalar outputs.
+
+`step_<step_id>_status` and `excluded_steps` are new in zekt-action 3.3.0. `@v3` and `@v3.3.0` both
+point at it.
+
+## Log and job summary
+
+With `orchestrate: true` and `wait: true`:
+
+- The log has one line per excluded step, for example *step 'create-rg' excluded by its condition*
+  or *step 'create-kv' excluded because 'create-rg' was excluded by its condition*.
+- The job summary has a condition column when the plan uses
+  [conditions](/zekt-docs/orchestration/overview/#step-conditions), and a status column after
+  waiting.
 
 ## Failures
 
