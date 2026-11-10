@@ -17,8 +17,9 @@ events can chain across repositories: A → B → C, across organizations if nee
 | **Middle** (B) | A **relay**: it receives the event from the link before it, decides what to pass on, and sends its own event to the next link. It's a consumer and a provider at once. | Yes |
 | **Last** (C) | An ordinary consumer that [receives events](/zekt-docs/consumer/receive-events/) and doesn't send any further. | No |
 
-So only the links in the middle are Chainlink repositories. A relay usually does one of three things
-with what it receives:
+Only the links in the middle need Chainlink. A Chainlink repository can still be the first or last
+link of a chain (for example, because it relays in another chain), and behaves there exactly like an
+ordinary one. A relay usually does one of three things with what it receives:
 
 - **forwards** it as it is;
 - **reduces** it, removing information the next link shouldn't get;
@@ -46,7 +47,10 @@ chains that marks whether each hop changed the payload.
 
 ## How a chain works
 
-Zekt never changes a payload in transit. Each repository in the chain runs its own workflow:
+Zekt passes a payload through exactly as it was sent, and never forwards an inbound payload by
+itself. The one exception is [Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard), when the
+sending account has turned it on: it can replace matching values with `***REDACTED***`, or withhold
+the whole payload. Each repository in the chain runs its own workflow:
 
 - **To pass an event on**, the middle repository's workflow sends a new event with the
   [Zekt Action](/zekt-docs/provider/zekt-action/).
@@ -83,7 +87,12 @@ Then:
 ### The first link
 
 The chain starts with an ordinary provider workflow. Nothing in it is specific to Chainlink: its
-event type is what the first relay listens for.
+event type is what the first relay listens for, in its `repository_dispatch` `types:`.
+
+- The workflow must be [whitelisted](/zekt-docs/provider/workflows-and-services/#whitelist-a-workflow)
+  for its provider service. A run of a workflow that isn't whitelisted is dropped, and nothing is sent.
+- The first relay's repository subscribes to that service. Subscriptions match the repository and
+  workflow, not the event type.
 
 ```yaml
 name: Build
@@ -177,15 +186,42 @@ payload=$(jq -c --arg env "staging" '{image: .image, environment: $env, approved
 
 Whichever you choose:
 
-- The inbound payload isn't forwarded unless you put it in the new payload. Zekt doesn't change it on
-  the way.
+- The inbound payload isn't forwarded unless you put it in the new payload.
 - Pass the inbound payload to your script through `env`, as above, rather than writing
   `${{ github.event.client_payload… }}` inside `run:`. Its content then can't be run as part of the
   script.
-- `zekt.payload` is `null` when the link before sent none. If that link uses
-  [Shield](/zekt-docs/add-ons/shield/), it's the encrypted envelope, not the data:
-  [decrypt it](/zekt-docs/add-ons/shield/#decrypt-in-your-workflow) before you reduce or reshape it.
-- [Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard) still scans what the relay sends.
+- `zekt.payload` is the previous link's payload:
+  - `{}` if its Zekt Action step had no `payload` input;
+  - `null` if it sent none, or if Redaction Guard withheld it;
+  - a Shield envelope if it used Shield (see below).
+
+  Handle `null` and `{}`. The three lines above don't fail on them: forwarding or reducing `null`
+  sends `null`, and the enrich line fills in `null` for the missing fields.
+- Keep payloads JSON objects.
+- [Redaction Guard](/zekt-docs/add-ons/shield/#redaction-guard) scans what the relay sends, with the
+  relay account's own settings.
+
+#### When the link before uses Shield
+
+If the link before used [Shield](/zekt-docs/add-ons/shield/), `zekt.payload` is the encrypted
+envelope (`"type": "zekt-shield-envelope"`), not the data.
+
+<Aside type="caution" title="Don't forward a Shield envelope as is">
+	Forwarding the envelope unchanged sends an envelope. Without Shield on the relay's repository, the
+	send is refused (*SHIELD_NOT_ENABLED: …*) and nothing is relayed. With it, the envelope reaches
+	subscribers who mostly can't decrypt it. Decrypt it first.
+</Aside>
+
+- **Decrypt:** the relay can decrypt only if its own account is a recipient. That means the account
+  uploaded a Shield public key, and the relay's repository subscribes to the upstream service. It
+  [decrypts in its own workflow](/zekt-docs/add-ons/shield/#decrypt-in-your-workflow) with its own
+  private key; Zekt never decrypts.
+- **Send on:** once decrypted, the data goes downstream in plaintext unless the relay re-encrypts
+  it. To re-encrypt for its own subscribers, send with `shield: true`. That needs Shield on the
+  relay's repository, and keys from its subscribers.
+- If the relay's own service requires Shield, a plaintext send is refused: *SHIELD_ENFORCEMENT: This
+  service requires Zero-Knowledge Encryption. The payload must be a 'zekt-shield-envelope'. Please
+  configure your Zekt Action with `shield: true`.*
 
 ## Hop limit
 
