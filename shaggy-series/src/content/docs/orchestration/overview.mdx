@@ -241,6 +241,82 @@ fields it always had.
 | --- | --- |
 | pending, waiting, dispatching, running, completed, failed, skipped, timed_out, excluded | pending, running, completed, failed, timed_out, cancelled |
 
+## Nested orchestrations
+
+A service called by a step can orchestrate further. Its own workflow, while running for that step,
+submits an orchestration with the Zekt Action's `orchestrate: true`. That **child** orchestration is
+linked to the **parent** step automatically: the workflow passes nothing extra.
+
+<Aside>
+	It only counts as nested when it's submitted from the same workflow run that's servicing the step,
+	while the step is still in progress. Submitted later (for example from a re-run of a finished
+	step's workflow) or from another run, it's an ordinary top-level orchestration, paid for by the
+	account that submitted it.
+</Aside>
+
+### Depth and loops
+
+- The top-level orchestration is depth 0. Below it come up to **5 nested levels**. The console tags
+  them **NESTED L1**, **NESTED L2** and so on.
+- A repository can't submit an orchestration if it already submitted one higher up in the same chain.
+  A step can still call a service in that repository; only that repository's workflow submitting
+  another orchestration is refused.
+- Going deeper than 5 levels, or looping back, refuses the child's submit and creates nothing (see
+  [Refusals](#refusals)). Zekt doesn't fail the parent step for it: the step ends with its own
+  workflow run. If the refused Zekt Action step fails that run, the parent step fails.
+
+### How the parent step finishes
+
+- The parent step waits for its child orchestrations, not only for its own run. If the run succeeds
+  while a child is still going, the step stays `running` until the last child finishes.
+- When every child completed, the step completes.
+- A child that ends failed, timed out or cancelled (whoever cancelled it) fails the parent step at
+  once, even while the step's own run is still going: *Child orchestration '&lt;exec-id&gt;' ended
+  failed* (or *ended timed_out*, *ended cancelled*). The parent orchestration then fails as it does
+  for any failed step.
+- If the step's own run fails, the step fails with *Workflow concluded with: &lt;conclusion&gt;*, whatever
+  its children do.
+- `timeout_minutes` still only limits how long Zekt waits for the step's run to start. It doesn't cut
+  short the wait for children: each child is bounded by its own steps' timeouts.
+- [Conditions](#step-conditions) work in a child plan as anywhere else. If every step of a child is
+  excluded, the child completes at once with no outputs, and the parent step finishes when its own
+  run does.
+
+### Outputs
+
+A child's outputs never reach the parent step automatically. The parent step's outputs are what the
+service's own workflow reports. To pass something up, that workflow submits the child with
+`wait: true`, reads the child's `step_<step_id>_outputs_<field>` outputs, and reports them as its
+own.
+
+### Cancelling
+
+- Cancelling an orchestration also cancels its children that are still in flight, and theirs, all the
+  way down. Their unfinished steps read *Cancelled because parent orchestration '&lt;id&gt;' was
+  cancelled*.
+- Cancelling doesn't stop GitHub workflow runs that are already running.
+- A parent that fails on its own, because its run fails, doesn't cancel its children. They keep
+  running.
+
+### Who requests, receives and pays
+
+- The child's **requester** is the account of the service repository whose workflow submitted it.
+  That account's approved subscriptions authorize the child's steps, and its own limit on concurrent
+  orchestrations applies.
+- The child's `zekt-orchestration-result` event goes to that submitting repository, not to the
+  top-level requester.
+- The account that started the **top-level** orchestration pays for the whole chain, nested levels
+  included. Both that account and the submitting account must be in good standing. See
+  [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
+
+### Who sees what
+
+| You are | You see |
+| --- | --- |
+| The parent's requester | In the parent step's detail, under *Nested orchestrations submitted while servicing this step*: how many children there are, and each one's status, timing, total and completed steps, and depth. The child's repository shows as *service-owned*. You don't see the child's steps, services, repositories, run links, inputs or outputs, you can't open it, and it isn't a row in your Overview. |
+| The service owner whose workflow started the child | The child in full: you're its requester. It reads *Nested orchestration (level N) — submitted while servicing step &lt;step&gt; of &lt;exec-id&gt;*. **Open parent** appears only if you also own the parent; otherwise it says *owned by the requesting account*. |
+| A service owner the child calls | The child in your Overview *As Service Owner*, like any orchestration that calls your services, with run links for your own steps only, and no excluded steps. |
+
 ## Warnings
 
 If Zekt has advisory warnings about a submitted plan, they appear as `::warning::` annotations in
@@ -262,19 +338,30 @@ Any refusal when you submit refuses the whole orchestration:
   it can say *a number*, *null*, *an object* or *an array*. The usual cause is a quoted expression.
 - *Step '&lt;id&gt;' has a condition_description but no condition.*
 - *Step '&lt;id&gt;' condition_description is &lt;n&gt; characters; the maximum is 200.*
+- *Orchestration nesting depth exceeded: maximum 5 levels of nested orchestration. A service reached
+  through an orchestration step may itself orchestrate, but the chain must terminate.* The Zekt
+  Action shows it as *Failed to submit orchestration (HTTP 429): …*.
+- *Orchestration cycle detected: '&lt;owner&gt;/&lt;repo&gt;' already appears earlier in this
+  orchestration chain. A repository cannot orchestrate back into itself, directly or through
+  intermediate services.*
+- *Could not verify whether this orchestration is nested inside another. Nothing was created; retry
+  the submission.* This is temporary: submit again.
+- *The account paying for this orchestration is not in good standing; nothing was created.* For a
+  [nested orchestration](#who-requests-receives-and-pays), the paying account is the one that started
+  the top-level orchestration.
 
 ## Limits
 
 - 20 steps per orchestration, excluded steps included.
 - 5 orchestrations running at once per account by default. Contact support to raise it.
-- Nesting depth 5. An orchestration can't call back into a repository already in its chain.
-- In nested orchestrations, a failed child fails the parent's step, and cancelling a parent cancels its
-  children.
+- Nesting depth 5: the top-level orchestration plus up to 5 [nested](#nested-orchestrations) levels.
+  A repository can't submit an orchestration if it already submitted one higher up the same chain.
 - [Shield](/zekt-docs/add-ons/shield/) doesn't encrypt orchestration inputs and outputs.
 
 ## Cost
 
-The account that starts the orchestration pays for all of it. See
+The account that starts the orchestration pays for all of it, including any
+[nested orchestrations](#who-requests-receives-and-pays). See
 [zekt.dev/zekt-pricing](https://www.zekt.dev/zekt-pricing.html).
 
 ## Follow orchestrations in the console
@@ -283,7 +370,7 @@ Go to **Management → Orchestrations**:
 
 | Tab | Shows |
 | --- | --- |
-| **Overview** | A summary, filtered *As Requester* or *As Service Owner*. |
+| **Overview** | A graph of recent orchestrations, filtered *All*, *As Requester* or *As Service Owner*. See [the Overview graph](#the-overview-graph). |
 | **Orchestration Requests** | Orchestrations you submitted, with step detail and outputs. |
 | **Orchestration Processing** | Steps dispatched by you or to you. |
 | **Service Invocations** | Who calls your services, and how those calls went. |
@@ -305,3 +392,34 @@ Steps with [conditions](#step-conditions):
 - A service owner never sees an excluded step of someone else's orchestration, in **Overview**
   (*As Service Owner*), **Orchestration Processing** or **Service Invocations**. It was never sent
   to them.
+
+### The Overview graph
+
+**Orchestrations Overview** draws recent orchestrations as cards, each followed by its steps.
+
+![The Orchestrations Overview graph: two requesting runs fanned out into several orchestrations, steps that orchestrated onwards into nested orchestrations, and orchestrations with step conditions](../../../assets/orchestration-overview-graph.png)
+
+- **Toolbar:** the window (**Last 1h**, **Last 24h**, the default, or **Last 7d**), the role
+  (**All**, **As Requester** or **As Service Owner**), a search box for an exec id, requesting
+  repository or run id, and 10 (the default), 20, 50 or 100 **rows** per page.
+- **What loads:** at most the 100 most recent orchestrations in the window, across both roles. A page
+  never splits the orchestrations of one requesting run, so it can hold more rows than its size. The
+  graph refreshes every 5 seconds while anything is active, otherwise every 30 seconds.
+- **Header:** how many orchestrations are shown, and the window. When they apply, it adds how many
+  requesting runs **fanned out** (submitted two or more orchestrations), and how many steps
+  **orchestrated onwards** (started a nested orchestration).
+- **Cards:** `exec-` and the first 8 characters of the id, the requesting repository, the status, the
+  mode (**⇉ parallel** or **→ sequential**), completed and total steps (with *n excluded* when any
+  were), and how long ago it was submitted.
+  - **SERVICE OWNER** means you own a service it calls but didn't submit it. **BOTH** means you
+    submitted it and also own a service one of its steps calls. There's no tag when you're only the
+    requester.
+  - **NESTED L&lt;n&gt;** marks a [nested orchestration](#nested-orchestrations) and its level.
+- **Purple bracket** (*same requesting run*): joins the orchestrations one workflow run submitted,
+  with their count and the run number. Click it to show only that run.
+- **Teal** (*nested orchestration*): a mark on a step whose workflow run submitted nested
+  orchestrations, and a line from that step to the child's card when both are on the same page. As
+  the parent's requester you don't see the child's card, so you see the mark but not the line.
+- **Legend:** the status colours are always shown. The condition entries appear only when a shown
+  orchestration uses conditions, and *same requesting run* and *nested orchestration* only when the
+  page has them.
