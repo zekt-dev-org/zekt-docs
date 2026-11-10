@@ -85,12 +85,16 @@ fields and the result event.
 
 ## Services that orchestrate further
 
-A service you call can itself orchestrate other services, up to 5 levels below your orchestration.
+A service you call can itself orchestrate other services: a chain can go up to 5 nested levels below
+the top-level orchestration.
 You see that it did, how many orchestrations it started and how they went. Their steps and details
 stay with the service owner. A failed nested orchestration fails the step that started it. See
 [nested orchestrations](/zekt-docs/orchestration/overview/#nested-orchestrations).
 
-The console's Overview draws every orchestration, nested ones included:
+The console's Overview draws the orchestrations you requested and those that call your services. A
+nested orchestration appears there for its own requester and for the service owners it calls, not
+for you. Here, the account is also the requester of the nested orchestrations, so they appear too
+(tagged **BOTH**):
 
 ![The Orchestrations Overview graph: two requesting runs fanned out into several orchestrations, steps that orchestrated onwards into nested orchestrations, and orchestrations with step conditions](../../../assets/orchestration-overview-graph.png)
 
