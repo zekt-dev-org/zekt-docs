@@ -210,6 +210,15 @@ jobs:
 - The step's result follows the GitHub run's conclusion. A run that reports outputs and then fails
   still fails the step.
 
+### Orchestrate further
+
+Your workflow can call other services by submitting its own
+[nested orchestration](/zekt-docs/orchestration/overview/#nested-orchestrations) while it runs for the
+step. A consumer repository can't submit orchestrations, so this needs
+[Chainlink](/zekt-docs/add-ons/chainlink/) on the service's repository, plus your own subscriptions to
+the services the child calls. See
+[When the service is a consumer service](/zekt-docs/orchestration/overview/#when-the-service-is-a-consumer-service).
+
 ## Disabling the service
 
 Disabling a consumer service hides it, refuses new requests, and **drops** subscriber events: they

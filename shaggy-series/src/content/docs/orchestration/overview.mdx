@@ -34,8 +34,13 @@ group*, each owned by a different team, triggered from one workflow.
 
 - The requesting repository is [enabled as a provider](/zekt-docs/provider/enable-repository/).
   Otherwise you get: *Repository '…' is not enabled for Zekt. Enable it in the Zekt portal first.*
+  For a [nested orchestration](#nested-orchestrations), that's the called service's own repository.
+  A consumer service's repository needs [Chainlink](#when-the-service-is-a-consumer-service) for it.
 - Your account has an approved subscription to each service you call. The approval belongs to the
   **account**, so any of your provider repositories can use it.
+- For a consumer-service step, the workflow that submits the orchestration is approved on that
+  subscription. A subscription that names no workflows covers them all. To add a workflow, request
+  the service for it.
 - Each step targets a **provider service** or a [consumer service](/zekt-docs/consumer/consumer-services/).
   Zekt looks for a provider service first. A consumer-service target must be enabled and of the
   *Subscribers fire events to me* kind.
@@ -254,6 +259,34 @@ linked to the **parent** step automatically: the workflow passes nothing extra.
 	account that submitted it.
 </Aside>
 
+### When the service is a consumer service
+
+A [consumer service](/zekt-docs/consumer/consumer-services/) runs in a consumer repository, and a
+consumer repository can't submit orchestrations. For a consumer service to orchestrate further,
+enable [Chainlink](/zekt-docs/add-ons/chainlink/) on its repository. Chainlink gives the repository
+the provider side that submitting needs.
+
+Chainlink is the only way. Enabling the same repository as a provider directly is refused:
+*Repository '…' is already enabled as a consumer repository. A repository cannot be both a provider
+and a consumer.*
+
+The account that owns the consumer service needs:
+
+- **Chainlink on the service's repository.** That takes the **Both** persona and the Chainlink
+  add-on. See [Zekt Chainlink](/zekt-docs/add-ons/chainlink/#requirements).
+- **An approved subscription to every service the child plan calls.** That account is the child's
+  [requester](#who-requests-receives-and-pays), so its subscriptions are the ones checked.
+- **The submitting workflow approved** on each of those subscriptions, as for any
+  [consumer-service step](#before-you-start).
+
+Without Chainlink, the child's submission is refused and nothing is created. The Zekt Action step
+fails with *Failed to submit orchestration (HTTP 403): Repository '&lt;owner&gt;/&lt;repo&gt;' is not
+enabled for Zekt. Enable it in the Zekt portal first.* That fails the service's run and, with it, the
+parent step, unless the Zekt Action step sets `continue-on-error`.
+
+A provider service's repository is already a provider, so it needs nothing extra to orchestrate
+further.
+
 ### Depth and loops
 
 - The top-level orchestration is depth 0. Below it come up to **5 nested levels**. The console tags
@@ -329,6 +362,12 @@ Any refusal when you submit refuses the whole orchestration:
 - *Service '&lt;owner&gt;/&lt;slug&gt;' not found or you are not authorized to use it.* This covers a
   service that doesn't exist, one you have no subscription to, and one that can't be called. Check
   your subscription to that owner and slug.
+- *Workflow '&lt;path&gt;' is not approved to call service '&lt;owner&gt;/&lt;slug&gt;'.* Your
+  subscription to that consumer service doesn't name the submitting workflow. Request the service
+  for that workflow. See [Before you start](#before-you-start).
+- *Repository '&lt;owner&gt;/&lt;repo&gt;' is not enabled for Zekt. Enable it in the Zekt portal
+  first.* The submitting repository isn't an enabled provider repository. From a consumer service's
+  workflow, enable [Chainlink](#when-the-service-is-a-consumer-service) on its repository.
 - *Rate limit exceeded: maximum N concurrent orchestrations per customer.*
 - *This account cannot start new orchestrations: &lt;reason&gt;. Resolve billing to continue.* The reason
   is *Account suspended: …*, *Account has an open payment dispute* or *Grace period ended without
