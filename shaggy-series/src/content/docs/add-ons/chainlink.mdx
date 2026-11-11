@@ -29,8 +29,21 @@ ordinary one. A relay usually does one of three things with what it receives:
 
 ## Requirements
 
-Your account needs the **Both** persona. Otherwise the Chainlink sidebar item is hidden, and
-enabling gives *Chainlink requires a dual-role (both provider and consumer) account*.
+- Your account needs the **Both** persona. Otherwise the Chainlink sidebar item is hidden, and
+  enabling gives *Chainlink requires a dual-role (both provider and consumer) account*.
+- Your account needs the Chainlink add-on. Otherwise enabling gives *Chainlink add-on is not enabled
+  for your account. Contact support to activate.*
+
+Chainlink is the only way for one repository to be both. Enabling a consumer repository as a provider
+directly is refused: *Repository '…' is already enabled as a consumer repository. A repository cannot
+be both a provider and a consumer.*
+
+## Orchestrate from a consumer service
+
+Chainlink is also what lets a [consumer service](/zekt-docs/consumer/consumer-services/) called from an
+orchestration submit a [nested orchestration](/zekt-docs/orchestration/overview/#nested-orchestrations).
+Submitting needs a provider repository, and a plain consumer repository is refused. See
+[When the service is a consumer service](/zekt-docs/orchestration/overview/#when-the-service-is-a-consumer-service).
 
 ## Enable a repository
 
