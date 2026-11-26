@@ -28,7 +28,7 @@ Tokens** and **MCP Setup Docs**. API Access is shown to accounts that pay their 
 1. Go to **Profile → API Access** and create a new token.
 2. Give it a name that says where it will be used, for example `triage-agent` or `release-pipeline`.
 3. Choose its **scopes** (see below).
-4. Choose an expiry: **30**, **90** (the default), **180** or **365 days**, or **No expiration**.
+4. Choose an expiry: **30**, **90** (the default), **180** or **365 days**.
 5. Copy the token. **It's shown only once.** Store it in a secret store, such as GitHub Secrets or
    your operating system's credential store.
 
@@ -64,7 +64,7 @@ A token can create new tokens, but only with these limits:
 - the new token's scopes must be a subset of its own;
 - it must have an expiry, no later than the creating token's own expiry.
 
-You can only create a token with **No expiration** while signed in to the console.
+Every new token expires, after 1 to 365 days. Tokens created earlier without an expiry keep working.
 
 ## MCP
 
